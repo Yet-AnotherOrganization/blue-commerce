@@ -1,5 +1,11 @@
 import { PrismaClient } from "../generated/prisma";
 
-const prisma = new PrismaClient();
+const globalForPrisma = global as unknown as { prisma: PrismaClient }
 
-export default prisma;
+export const prisma =
+  globalForPrisma.prisma ||
+  new PrismaClient({
+    log: ['query'], // Terminalde SQL sorgularını görmek için
+  })
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
