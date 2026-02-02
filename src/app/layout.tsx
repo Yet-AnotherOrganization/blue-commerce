@@ -17,11 +17,11 @@ export default function RootLayout({ children }) {
       <body className='relative w-[100vw] '>
         <BackgroundImage />
         <StoreProvider>
-          <Header className='w-[100vw]' />
-          <main className='  w-[100vw] min-h-[78vh] border-t-1'>
+          <Header />
+          <main className='w-[100vw] min-h-[78vh] border-t-1'>
             {children}
           </main>
-          <Footer className='w-[100vw]' />
+          <Footer />
 
         </StoreProvider>
       </body>

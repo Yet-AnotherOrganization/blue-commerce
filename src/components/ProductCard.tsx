@@ -39,7 +39,7 @@ const ProductCard = ({ params }: { params: ProductParams }) => {
         setIsDivHovered(false);
       }}
     >
-      <div className="flex-col items-center justify-between hover:translate-y-[-5px] hover:shadow-black transition-all bg-gradient-to-b from-blue-100 to-white  p-4 shadow-md rounded-xl border-gray-500 flex max-w-[200px]">
+      <div className="flex-col items-center justify-between hover:translate-y-[-5px] hover:shadow-black transition-all bg-gradient-to-b from-blue-100 to-white  p-4 shadow-md rounded-md border-gray-500 flex max-w-[200px]">
         <a className="text-center" href={`/product/${params.id}`}>
           <div className="w-[7.5rem] h-[7.5rem] lg:h-[10rem] lg:w-[10rem] flex justify-center items-center">
             <img
@@ -90,7 +90,7 @@ const ProductCard = ({ params }: { params: ProductParams }) => {
             transition={{ duration: 0.2 }}
             className="text-white flex z-10 lg:flex-row flex-col text-[9px] font-semibold text-nowrap gap-[4px] px-2"
           >
-            <div className="p-[0.125rem] lg:p-1 rounded-2xl bg-orange-400 text-center">
+            {/* <div className="p-[0.125rem] lg:p-1 rounded-2xl bg-orange-400 text-center">
               <span>Trending</span>
             </div>
             <div className="p-[0.125rem] lg:p-1 rounded-2xl bg-blue-400 text-center">
@@ -98,7 +98,7 @@ const ProductCard = ({ params }: { params: ProductParams }) => {
             </div>
             <div className="p-[0.125rem] lg:p-1 rounded-2xl bg-green-400 text-center">
               <span>1Y Warranty</span>
-            </div>
+            </div> */}
           </motion.div>
           <motion.button
             animate={{

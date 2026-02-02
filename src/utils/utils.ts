@@ -82,7 +82,8 @@ export const getCart = async (id: string): Promise<ProductParams[] | null> => {
   if (!user || !id) {
     console.log('first condition ran');
     console.log(getAnonymousCart());
-    const promises: Promise<ProductParams>[] = getAnonymousCart().map(async (i) => {
+    const cart = getAnonymousCart() || [];
+    const promises: Promise<ProductParams>[] = cart.map(async (i) => {
       return await getSpecificProduct(i);
     });
 

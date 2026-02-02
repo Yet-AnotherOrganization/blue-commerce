@@ -3,7 +3,7 @@ import './style.css'
 
 type Props = {}
 
-const BackgroundImage = (props: Props) => {
+const BackgroundImage = (props: Props): React.ReactElement => {
   return (
     <div className='bg-image -z-10 absolute top-0 bottom-0 left-0 right-0'>
       <div className='w-full relative h-full'>
