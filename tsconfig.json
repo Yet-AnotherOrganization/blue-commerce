@@ -5,18 +5,19 @@
       "dom.iterable",
       "esnext"
     ],
-    "allowImportingTsExtensions": true
-    ,
+    "allowImportingTsExtensions": true,
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": false,
+    "strict": true,
     "noEmit": true,
     "incremental": true,
     "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "target": "ES2023",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "ignoreDeprecations": "6.0",
     "jsx": "preserve",
     "plugins": [
       {
@@ -31,8 +32,9 @@
     "**/*.tsx",
     "src/utils/utils.ts",
     "src/components/Header.tsx",
-    "src/redux/store.js"
-, "src/components/PriceComponent"  ],
+    "src/redux/store.js",
+    "src/components/PriceComponent"
+  ],
   "exclude": [
     "node_modules"
   ]
