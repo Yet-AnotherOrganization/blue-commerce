@@ -14,59 +14,61 @@ datasource db {
 }
 
 model User {
-  id String @id @default(cuid())
-  email String @unique
-  name String?
-  password String
-  phone String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  orders Order[]
-  reviews Review[]
+  id        String        @id @default(cuid())
+  email     String        @unique
+  name      String?
+  password  String
+  phone     String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  orders    Order[]
+  reviews   Review[]
+  status    AccountStatus @default(DISABLED)
 }
 
 model Order {
-  id String @id @default(cuid())
-  createdAt DateTime @default(now())
-  items OrderItem[]
-  ownerId String
-  owner User @relation(fields: [ownerId],references: [id])
-  status OrderStatus @default(PENDING)
+  id        String      @id @default(cuid())
+  createdAt DateTime    @default(now())
+  items     OrderItem[]
+  ownerId   String
+  owner     User        @relation(fields: [ownerId], references: [id])
+  status    OrderStatus @default(PENDING)
 }
 
 model OrderItem {
   id String @id @default(cuid())
 
   orderId String
-  order Order @relation(fields: [orderId], references: [id])
+  order   Order  @relation(fields: [orderId], references: [id])
 
   productId String
-  product Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
 
-  price Decimal
+  price    Decimal
   quantity Int
 }
 
 model Product {
-  id String @id @default(cuid())
-  name String
+  id          String      @id @default(cuid())
+  name        String
   description String
-  price Decimal
-  imageUrl String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  orderItems OrderItem[]
-  reviews Review[]
+  price       Decimal
+  imageUrl    String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orderItems  OrderItem[]
+  reviews     Review[]
 }
 
 model Review {
-  id String @id @default(cuid())
-  rating Int
-  text String
-  ownerId String
-  owner User @relation(fields: [ownerId],references: [id])
+  id        String  @id @default(cuid())
+  rating    Int
+  text      String
+  ownerId   String
+  owner     User    @relation(fields: [ownerId], references: [id])
   productId String
-  product Product @relation(fields: [productId],references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+
   @@unique([ownerId, productId]) // 1 kullanıcı 1 ürüne yalnız 1 Review atabilir.
 }
 
@@ -77,3 +79,7 @@ enum OrderStatus {
   CANCELLED
 }
 
+enum AccountStatus {
+  ENABLED
+  DISABLED
+}
