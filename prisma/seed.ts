@@ -1,19 +1,6 @@
 import { Prisma, PrismaClient, User } from "../src/generated/prisma";
 import { prisma } from "../src/lib/prisma";
 
-// const userData: Prisma.UserCreateInput[] = [
-//     {
-//         name: "Alice",
-//         email: "alice@example.com",
-//         password: "alice123",
-//     },
-//     {
-//         name: "Bob",
-//         email: "bob@example.com",
-//         password: "bob123",
-//     },
-// ]
-
 async function main() {
     // Seed data goes here
     await prisma.user.createMany({
