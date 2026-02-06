@@ -1,21 +1,47 @@
-import { Prisma, PrismaClient } from "../src/generated/prisma";
+import { Prisma, PrismaClient, User } from "../src/generated/prisma";
+import { prisma } from "../src/lib/prisma";
 
-const prisma = new PrismaClient();
-
-const userData: Prisma.UserCreateInput[] = [
-    {
-        name: "Alice",
-        email: "alice@example.com",
-        password: "alice123",
-    },
-    {
-        name: "Bob",
-        email: "bob@example.com",
-        password: "bob123",
-    },
-]
+// const userData: Prisma.UserCreateInput[] = [
+//     {
+//         name: "Alice",
+//         email: "alice@example.com",
+//         password: "alice123",
+//     },
+//     {
+//         name: "Bob",
+//         email: "bob@example.com",
+//         password: "bob123",
+//     },
+// ]
 
 async function main() {
     // Seed data goes here
+    await prisma.user.createMany({
+        data: [
+            {
+                name: "Yılmaz",
+                email: "yilmaz1989@gmail.com",
+                password: "123456",
+            }
+        ],
+    })
 
+    const allUsers: User[] = await prisma.user.findMany({
+        include: {
+            reviews: true,
+            orders: true
+        }
+    })
+
+    console.log("ALL USERS: ", allUsers)
 }
+
+main()
+    .then(async ():Promise<void> => {
+        await prisma.$disconnect()
+    })
+    .catch(async (e):Promise<Error | void> => {
+        console.error(e)
+        await prisma.$disconnect()
+        process.exit(1)
+    })
