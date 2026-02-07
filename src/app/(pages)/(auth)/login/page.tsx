@@ -11,11 +11,9 @@ const login = () => {
       <div className='border-2 border-neutral-500 rounded-xl p-4 flex gap-3 flex-col justify-center items-center'>
         <h1>Already a Member?</h1>
 
-        <div>
-          Email Login is Currently Not Available
-        </div>
+        
 
-        <Button />
+        {/* <Button /> */}
       </div>
     </div>
   )
