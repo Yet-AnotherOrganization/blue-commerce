@@ -2,6 +2,7 @@
 import { prisma } from "../lib/prisma";
 import { compare } from 'bcryptjs';
 
+
 export async function loginAction(formData: FormData) {
 
     const email = formData.get('email') as string;
@@ -28,7 +29,7 @@ export async function loginAction(formData: FormData) {
     // if passes match then trigger NextAuth
 
     try {
-
+        await signIn
     }
     catch (err: any) {
         return { error: err.message }
