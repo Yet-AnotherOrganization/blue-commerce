@@ -11,6 +11,8 @@ import "slick-carousel/slick/slick-theme.css";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import Slider from "../../components/Carousel";
+import { prisma } from "../../lib/prisma";
+import { Product } from "../../generated/prisma";
 
 const MainPage = async ({
   searchParams,
@@ -18,11 +20,18 @@ const MainPage = async ({
   searchParams: { sort: string; category: string };
 }) => {
 
-  const q = {
-    sort: searchParams.sort || "",
-    category: searchParams.category || "",
-  };
-  const products = await getProducts(q);
+  const products:Product[] = await prisma.product.findMany({
+    where: {
+      stock: {gt: 0}
+    },
+    include:{
+      category: true
+    },
+    orderBy:{
+      createdAt: "desc"
+    }
+  })
+  
 
   return (
     <main className="w-[100vw]">
@@ -63,7 +72,7 @@ const MainPage = async ({
       {/* Popular Products Section */}
       <div className="flex justify-center">
         <div className="grid-container mx-[3vw] mb-10 md:px-6 px-6 w-[90vw] mt-5">
-          {Array.isArray(products) ? (products.map((product: ProductParams, i: number): React.ReactNode => (<ProductCard key={product.id} params={product} />))) : (<div>Error loading products.</div>)}
+          {Array.isArray(products) ? (products.map((product: Product, i: number): React.ReactNode => (<ProductCard key={product.id} product={product} />))) : (<div>Error loading products.</div>)}
         </div>
       </div>
 

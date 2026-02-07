@@ -18,6 +18,7 @@ model User {
   orders    Order[]
   reviews   Review[]
   status    AccountStatus @default(DISABLED)
+  avatar    String?
 }
 
 model Order {
@@ -52,6 +53,17 @@ model Product {
   updatedAt   DateTime    @updatedAt
   orderItems  OrderItem[]
   reviews     Review[]
+  categoryId  String
+  category    Category    @relation(fields: [categoryId], references: [id])
+  stock Int
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  description String
+  imageUrl    String?
+  products    Product[]
 }
 
 model Review {

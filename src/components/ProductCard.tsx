@@ -1,14 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { ProductParams } from "../constants/constants";
 import { addToCart, getCart, reloadCart } from "../utils/utils";
 import "./css/index.css";
-import { v4 as randomUUID } from "uuid";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { Product } from "../generated/prisma";
 
-const ProductCard = ({ params }: { params: ProductParams }) => {
+const ProductCard = ({ product }: { product: Product }) => {
   const dispatch = useDispatch();
   const [id, setId] = useState(null);
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -18,10 +17,10 @@ const ProductCard = ({ params }: { params: ProductParams }) => {
   const [width,setWidth] = useState<number>(0)
 
   useEffect(() => {
-    const userExists = JSON.parse(localStorage.getItem("user"));
-    const randomID = randomUUID();
-    setId(userExists ? JSON.parse(localStorage.getItem("user")).uid : randomID);
-    window?setIsClient(true):''
+    // const userExists = JSON.parse(localStorage.getItem("user"));
+    // const randomID = randomUUID();
+    // setId(userExists ? JSON.parse(localStorage.getItem("user")).uid : randomID);
+    // window?setIsClient(true):''
   }, []);
 
   useEffect(()=>{
@@ -40,7 +39,7 @@ const ProductCard = ({ params }: { params: ProductParams }) => {
       }}
     >
       <div className="flex-col items-center justify-between hover:translate-y-[-5px] hover:shadow-black transition-all bg-gradient-to-b from-blue-100 to-white  p-4 shadow-md rounded-md border-gray-500 flex max-w-[200px]">
-        <a className="text-center" href={`/product/${params.id}`}>
+        <a className="text-center" href={`/product/${product.id}`}>
           <div className="w-[7.5rem] h-[7.5rem] lg:h-[10rem] lg:w-[10rem] flex justify-center items-center">
             <img
               onMouseEnter={() => {
@@ -49,7 +48,7 @@ const ProductCard = ({ params }: { params: ProductParams }) => {
               onMouseLeave={() => {
                 setIsHovered(false);
               }}
-              src={params?.photoURL}
+              src={product?.imageUrl}
               style={{ zIndex: `${isHovered ? "9999999999" : "1"}` }}
               alt=""
               className={`${
@@ -59,28 +58,28 @@ const ProductCard = ({ params }: { params: ProductParams }) => {
           </div>
 
           <div className="flex items-center justify-center h-16 my-2">
-            {params ? (
+            {product ? (
               <p className="font-semibold text-center p-1 overflow-auto">
-                {params.name}
+                {product.name}
               </p>
             ) : (
               <span>Loading Product...</span>
             )}
           </div>
           <div className="flex justify-center items-center text-yellow-500">
-            {[...Array(5)].map((_, index) => {
-              return index < (params.stars?.stars || 3) ? (
+            {/* {[...Array(5)].map((_, index) => {
+              return index < (product.stars?.stars || 3) ? (
                 <FaStar key={index} />
               ) : (
                 <FaRegStar key={index} />
               );
-            })}
+            })} */}
 
-            <span className="text-black px-1">{params.stars?.count || 0}</span>
+            {/* <span className="text-black px-1">{product.stars?.count || 0}</span> */}
           </div>
           <div className="text-center w-full">
             <h1 className="md:text-[2rem] text-[1rem] font-semibold">
-              ${params?.price}
+              ${product?.price.toString()}
             </h1>
           </div>
         </a>
@@ -111,10 +110,10 @@ const ProductCard = ({ params }: { params: ProductParams }) => {
             justify-self-center md:p-2 md:m-2 m-1 p-1 rounded-xl hover:brightness-125 
             relative
             border-black text-[0.7rem] md:text-[1rem]"
-            onClick={() => {
-              addToCart(id, params.id), reloadCart(id, dispatch), dispatch({type:'OPEN_CART_MODAL'});
-              setIsClicked(true);!isClicked?setTimeout(() => setIsClicked(false), 2000):'';
-            }}
+            // onClick={() => {
+            //   addToCart(id, product.id), reloadCart(id, dispatch), dispatch({type:'OPEN_CART_MODAL'});
+            //   setIsClicked(true);!isClicked?setTimeout(() => setIsClicked(false), 2000):'';
+            // }}
           >
             <motion.span
             animate={{y:isClicked?30:0,opacity:isClicked?0:100}}
