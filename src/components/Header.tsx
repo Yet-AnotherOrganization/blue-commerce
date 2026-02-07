@@ -6,10 +6,9 @@ import { IoIosMenu } from "react-icons/io";
 import { FaSearch, FaUser } from "react-icons/fa";
 import { listenCart } from '../utils/utils';
 import { useSelector, useDispatch } from 'react-redux'
-import { auth } from '../firebase/config';
 import { RootState, } from '../redux/store';
 import { FaShoppingCart } from "react-icons/fa";
-import { v4 as randomUUID } from 'uuid';
+// import { v4 as randomUUID } from 'uuid';
 import { useRouter } from 'next/navigation';
 import CartModal from './CartModal';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
@@ -19,7 +18,7 @@ const Header = () => {
 
   const [sidebar, setSidebar] = useState(false)
   const headerRef = useRef(null)
-  const [user, setUser] = useState<{ uid: string, displayName: string }>(null)
+  // const [user, setUser] = useState<{ uid: string, displayName: string }>(null)
   const cart = useSelector((store: RootState) => store.generalReducer.cart)
   const [cartLen, setCartLen] = useState(0)
   const [prevCartLen, setPrevCartLen] = useState(0);
@@ -28,7 +27,7 @@ const Header = () => {
   const formRef = useRef<HTMLInputElement>(null)
   const router: AppRouterInstance = useRouter()
   const isCartOpen: boolean = useSelector((store: RootState) => store.cartDisplayReducer.cartDisplay)
-  const [isMobile, setIsMobile] = useState<boolean>(null)
+  // const [isMobile, setIsMobile] = useState<boolean>(null)
 
   const dispatch = useDispatch()
 
@@ -37,11 +36,12 @@ const Header = () => {
 
   useEffect(() => {
     const headerInfo = () => {
-      const storedCartData = JSON.parse(localStorage.getItem('cart'));
-      const cartLength = storedCartData ? storedCartData.length : 0; // Use 0 if the cart data is not available
-      setCartLen(cartLength);
 
-      setIsMobile(window.innerWidth < 768 ? true : false)
+      // const storedCartData = JSON.parse(localStorage.getItem('cart'));
+      // const cartLength = storedCartData ? storedCartData.length : 0; // Use 0 if the cart data is not available
+      // setCartLen(cartLength);
+
+      // setIsMobile(window.innerWidth < 768 ? true : false)
     };
 
     headerInfo()
@@ -50,14 +50,14 @@ const Header = () => {
 
     const fetch = async () => {
 
-      const currentUser = JSON.parse(localStorage.getItem('user'));
-      setUser(currentUser ? currentUser : { uid: randomUUID() })
-      if (currentUser) {
-        await listenCart(currentUser.uid);
+      // const currentUser = JSON.parse(localStorage.getItem('user'));
+      // setUser(currentUser ? currentUser : { uid: randomUUID() })
+      // if (currentUser) {
+      //   await listenCart(currentUser.uid);
 
-      } else {
-        console.log("Couldn't fetch current user");
-      }
+      // } else {
+      //   console.log("Couldn't fetch current user");
+      // }
     };
 
     fetch();
@@ -83,28 +83,28 @@ const Header = () => {
 
     // return () => window.removeEventListener('scroll', scrollHandler);
   }
-    , [auth, cart]); // cart was added later on
+    , [cart]); // cart was added later on
 
   useEffect(() => {
 
-    if (cartLen > prevCartLen) {
-      if (cartText.current instanceof HTMLElement) {
-        cartText.current.style.color = 'rgb(0,255,0)';
-        setTimeout(() => {
-          cartText.current.style.color = 'rgb(83, 176, 255)';
-        }, 2000);
-      }
-    } else if (cartLen < prevCartLen) {
-      if (cartText.current instanceof HTMLElement) {
-        cartText.current.style.color = 'red';
-        setTimeout(() => {
-          cartText.current.style.color = 'rgb(83, 176, 255)';
-        }, 2000);
-      }
-    }
+    // if (cartLen > prevCartLen) {
+    //   if (cartText.current instanceof HTMLElement) {
+    //     cartText.current.style.color = 'rgb(0,255,0)';
+    //     setTimeout(() => {
+    //       cartText.current.style.color = 'rgb(83, 176, 255)';
+    //     }, 2000);
+    //   }
+    // } else if (cartLen < prevCartLen) {
+    //   if (cartText.current instanceof HTMLElement) {
+    //     cartText.current.style.color = 'red';
+    //     setTimeout(() => {
+    //       cartText.current.style.color = 'rgb(83, 176, 255)';
+    //     }, 2000);
+    //   }
+    // }
 
     // Update the previous cart length
-    setPrevCartLen(cartLen);
+    // setPrevCartLen(cartLen);
   }, [cartLen]);
 
 
@@ -112,9 +112,9 @@ const Header = () => {
 
   const onSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    const searchInput = formRef.current as HTMLInputElement
-    const encodedSearchQuery = encodeURI(searchInput.value)
-    formRef.current.value.trim() === "" ? router.push('/') : router.push(`/search?q=${encodedSearchQuery}`)
+    // const searchInput = formRef.current as HTMLInputElement
+    // const encodedSearchQuery = encodeURI(searchInput.value)
+    // formRef.current.value.trim() === "" ? router.push('/') : router.push(`/search?q=${encodedSearchQuery}`)
   }
 
 
@@ -142,7 +142,9 @@ const Header = () => {
         </div>
 
         {/* <a href="/cart"> */}
-        <button ref={cartText} onClick={() => { isMobile ? router.push('/cart') : (!isCartOpen ? dispatch({ type: 'OPEN_CART_MODAL' }) : '') }}
+        <button ref={cartText} onClick={() => {
+          // isMobile ? router.push('/cart') : (!isCartOpen ? dispatch({ type: 'OPEN_CART_MODAL' }) : '') 
+        }}
           className='text-blue-400 cursor-default cart-text flex items-center hover:translate-y-[-3px] hover:shadow-lg transition-all relative bg-white rounded-xl font-semibold p-2 justify-center'>
           <div className='relative'>
             <span className='text-white text-sm lg:text-[20px] font-semibold absolute top-[40%] left-[60%] transform -translate-x-1/2 -translate-y-1/2'>{cartLen}</span>
@@ -158,7 +160,11 @@ const Header = () => {
         {/* </a> */}
 
         <div className='flex gap-[20px] justify-between items-center'>
-          <a href={auth.currentUser ? `/profile/${user?.uid}` : '/login'}><div className='flex items-center justify-start gap-4 text-2xl lg:text-[40px]'><FaUser /><span className='text-[20px] hidden lg:block'>{user?.displayName}</span></div></a>
+          <a href={
+            '/login'
+            // auth.currentUser ? `/profile/${user?.uid}` : '/login'
+          }>
+            <div className='flex items-center justify-start gap-4 text-2xl lg:text-[40px]'><FaUser /><span className='text-[20px] hidden lg:block'>DEF</span></div></a>
           <button className='text-2xl lg:text-[40px]' onClick={() => { setSidebar(true) }}><IoIosMenu /></button>
         </div>
 

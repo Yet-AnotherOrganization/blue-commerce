@@ -1,17 +1,13 @@
-import { signOut, User } from "firebase/auth";
-import { auth } from "../firebase/config";
+
 import { ProductParams } from "../constants/constants";
 
-export const getActiveUserFromStorage = ():User => {
+export const getActiveUserFromStorage = ():void => {
     if (typeof window !== 'undefined') {
       // Check if the code is running in a browser environment
-      const user:User = JSON.parse(localStorage.getItem('user'));
-      return  user;
     }
   };
 
   export const handleLogOut = async():Promise<void> =>{
-    await signOut(auth)
     localStorage.removeItem('user')
     localStorage.removeItem('cart')
     localStorage.setItem('tempCart',JSON.stringify([]))
