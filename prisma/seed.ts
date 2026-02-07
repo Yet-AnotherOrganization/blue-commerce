@@ -34,7 +34,7 @@ async function main() {
         ids.push(user.id)
     }
 
-    // CREATE STORES
+    // * CREATE STORES
 
     for (let i = 0; i < 5; i++) {
 
