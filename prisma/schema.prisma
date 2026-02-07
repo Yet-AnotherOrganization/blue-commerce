@@ -19,6 +19,15 @@ model User {
   reviews   Review[]
   status    AccountStatus @default(DISABLED)
   avatar    String?
+  role Role @default(USER)
+  store Store?
+
+}
+
+model Store {
+  id String @id @default(cuid())
+  ownerId String @unique
+  owner User @relation(fields: [ownerId], references: [id])
 }
 
 model Order {
@@ -88,4 +97,9 @@ enum OrderStatus {
 enum AccountStatus {
   ENABLED
   DISABLED
+}
+
+enum Role {
+  ADMIN
+  USER
 }
