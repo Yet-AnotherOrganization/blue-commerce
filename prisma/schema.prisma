@@ -28,6 +28,7 @@ model Store {
   id String @id @default(cuid())
   ownerId String @unique
   owner User @relation(fields: [ownerId], references: [id])
+  
 }
 
 model Order {
