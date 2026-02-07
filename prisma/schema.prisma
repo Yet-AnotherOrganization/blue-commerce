@@ -19,16 +19,44 @@ model User {
   reviews   Review[]
   status    AccountStatus @default(DISABLED)
   avatar    String?
-  role Role @default(USER)
-  store Store?
+  role      Role          @default(USER)
+  store     Store?
+  cart      Cart?
+}
 
+model Cart {
+  id String @id @default(cuid())
+
+  // whose cart is this?
+  userId String? @unique
+  user   User?   @relation(fields: [userId], references: [id])
+
+  // what does it hold?
+  items CartItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CartItem {
+  id String @id @default(cuid())
+
+  // in which cart?
+  cartId String
+  cart   Cart   @relation(fields: [cartId], references: [id])
+
+  // what item?
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
 }
 
 model Store {
-  id String @id @default(cuid())
-  ownerId String @unique
-  owner User @relation(fields: [ownerId], references: [id])
-  
+  id        String    @id @default(cuid())
+  storeName String
+  ownerId   String    @unique
+  owner     User      @relation(fields: [ownerId], references: [id])
+  products  Product[]
+  avatar    String?
 }
 
 model Order {
@@ -65,7 +93,10 @@ model Product {
   reviews     Review[]
   categoryId  String
   category    Category    @relation(fields: [categoryId], references: [id])
-  stock Int
+  stock       Int
+  sellerId    String
+  seller      Store       @relation(fields: [sellerId], references: [id])
+  carts       CartItem[]
 }
 
 model Category {
