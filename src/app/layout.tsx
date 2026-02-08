@@ -15,18 +15,17 @@ export default function RootLayout({ children }: { children: React.ReactElement 
     <html lang="en">
       <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
       <body className='relative w-[100vw] '>
-        {/* <BackgroundImage /> */}
-        <StoreProvider>
-          <Header />
-          <main className='w-[100vw] min-h-[78vh] border-t-1'>
-            <NextAuthProvider>
+        <NextAuthProvider>
+          {/* <BackgroundImage /> */}
+          <StoreProvider>
+            <Header />
+            <main className='w-[100vw] min-h-[78vh] border-t-1'>
               {children}
-            </NextAuthProvider>
-          </main>
-          <Footer />
-
-        </StoreProvider>
+            </main>
+            <Footer />
+          </StoreProvider>
+        </NextAuthProvider>
       </body>
-    </html>
+    </html >
   );
 }
