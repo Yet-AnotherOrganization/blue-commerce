@@ -12,18 +12,20 @@ import { FaShoppingCart } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
 import CartModal from './CartModal';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { useSession } from 'next-auth/react';
 
 
 const Header = () => {
 
   const [sidebar, setSidebar] = useState(false)
   const headerRef = useRef(null)
-  // const [user, setUser] = useState<{ uid: string, displayName: string }>(null)
+  const { data } = useSession();
+  const user = data?.user;
   const cart = useSelector((store: RootState) => store.generalReducer.cart)
   const [cartLen, setCartLen] = useState(0)
   const [prevCartLen, setPrevCartLen] = useState(0);
   const cartText = useRef(null)
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState<string>('')
   const formRef = useRef<HTMLInputElement>(null)
   const router: AppRouterInstance = useRouter()
   const isCartOpen: boolean = useSelector((store: RootState) => store.cartDisplayReducer.cartDisplay)
@@ -164,7 +166,7 @@ const Header = () => {
             '/login'
             // auth.currentUser ? `/profile/${user?.uid}` : '/login'
           }>
-            <div className='flex items-center justify-start gap-4 text-2xl lg:text-[40px]'><FaUser /><span className='text-[20px] hidden lg:block'>DEF</span></div></a>
+            <div className='flex items-center justify-start gap-4 text-2xl lg:text-[40px]'><FaUser /><span className='text-[20px] hidden lg:block'>{user?.name}</span></div></a>
           <button className='text-2xl lg:text-[40px]' onClick={() => { setSidebar(true) }}><IoIosMenu /></button>
         </div>
 
