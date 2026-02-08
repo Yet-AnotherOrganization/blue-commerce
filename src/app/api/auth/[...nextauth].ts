@@ -1,4 +1,4 @@
-import NextAuth, { AuthOptions } from 'next-auth';
+import NextAuth, { AuthOptions, Awaitable, Session } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { prisma } from '../../../lib/prisma';
 import { User } from "../../../generated/prisma";
@@ -8,7 +8,7 @@ import { JWT } from 'next-auth/jwt';
 export type SimpleUser = Pick<User, "id" | "name" | "email" | "role" | "avatar">;
 
 export const authOptions: AuthOptions = {
-    session:{
+    session: {
         strategy: "jwt"
     },
     providers: [
@@ -35,7 +35,7 @@ export const authOptions: AuthOptions = {
                 // no match => wrong pass/email
                 if (!isPassValid) return null
 
-                const simpleUser:SimpleUser = {
+                const simpleUser: SimpleUser = {
                     id: user.id,
                     name: user.name,
                     email: user.email,
@@ -47,11 +47,27 @@ export const authOptions: AuthOptions = {
             }
         })
     ],
-    callbacks:{
-        async jwt({token, user}):Promise<JWT>{
-            
+    callbacks: {
+        async jwt({ token, user }): Promise<JWT> {
+
+            if (user) {
+                token.id = user.id;
+                token.role = user.role;
+            }
+
+            return token;
+        },
+        async session({ session, token }): Promise<Session> {
+
+            if (session.user) {
+                session.user.id = token.id;
+                session.user.role = token.role;
+            }
+
+            return session;
         }
     }
 }
+
 
 export default NextAuth(authOptions)
