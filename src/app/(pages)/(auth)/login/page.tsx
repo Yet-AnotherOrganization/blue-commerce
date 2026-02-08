@@ -1,10 +1,21 @@
 import React from 'react'
 import Button from './Button'
 import LoginForm from './LoginForm'
+import { useSession } from 'next-auth/react'
+import { redirect } from 'next/navigation'
+import { getServerSession } from 'next-auth'
 
 
 
-const login = () => {
+const login = async () => {
+
+  const session = await getServerSession();
+
+
+  if (session?.user) {
+    return redirect('/')
+
+  }
 
 
   return (
