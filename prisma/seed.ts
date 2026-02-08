@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import { Category, Prisma, PrismaClient, User, Store, Product } from "../src/generated/prisma";
 import { prisma } from "../src/lib/prisma";
 import { faker } from '@faker-js/faker';
@@ -110,6 +111,23 @@ async function main() {
     }
 
     console.log("Seeding Finished")
+
+
+    // CREATE AN ADMIN USER
+
+    const password = await bcrypt.hash("123456", 10);
+
+    const admin = await prisma.user.upsert({
+        where: { email: "admin@bluecommerce.com" },
+        update: {},
+        create: {
+            name: "Admin Ayya",
+            email: "admin@bluecommerce.com",
+            password: password,
+            role: "ADMIN",
+            avatar: "https://i.pravatar.cc/150?u=admin"
+        },
+    });
 
 }
 
