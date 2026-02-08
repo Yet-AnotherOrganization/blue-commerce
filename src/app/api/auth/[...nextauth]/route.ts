@@ -2,7 +2,7 @@ import NextAuth, { AuthOptions, Awaitable, Session } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { prisma } from '../../../../lib/prisma';
 import { User } from "../../../../generated/prisma";
-import { compare, compareSync } from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 import { JWT } from 'next-auth/jwt';
 
 export type SimpleUser = Pick<User, "id" | "name" | "email" | "role" | "avatar">;
@@ -30,7 +30,7 @@ export const authOptions: AuthOptions = {
                 if (!user || !user.password) return null
 
                 // need to compare hashes
-                const isPassValid = await compare(credentials?.password, user.password);
+                const isPassValid = await bcrypt.compare(credentials?.password, user.password);
 
                 // no match => wrong pass/email
                 if (!isPassValid) return null
@@ -70,4 +70,6 @@ export const authOptions: AuthOptions = {
 }
 
 
-export default NextAuth(authOptions)
+const handler = NextAuth(authOptions)
+
+export { handler as GET, handler as POST }
