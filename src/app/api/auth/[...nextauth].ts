@@ -25,7 +25,7 @@ export const authOptions: AuthOptions = {
                 if (!user || !user.password) return null
 
                 // need to compare hashes
-                const isPassValid = compareSync(credentials?.password, user.password);
+                const isPassValid = await compare(credentials?.password, user.password);
 
                 // no match => wrong pass/email
                 if (!isPassValid) return null
