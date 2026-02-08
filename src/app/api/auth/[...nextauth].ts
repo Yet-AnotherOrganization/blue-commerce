@@ -47,6 +47,11 @@ export const authOptions: AuthOptions = {
             }
         })
     ],
+    callbacks:{
+        async jwt({token, user}):Promise<JWT>{
+            
+        }
+    }
 }
 
 export default NextAuth(authOptions)
