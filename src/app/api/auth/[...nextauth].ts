@@ -3,9 +3,14 @@ import Credentials from 'next-auth/providers/credentials';
 import { prisma } from '../../../lib/prisma';
 import { User } from "../../../generated/prisma";
 import { compare, compareSync } from 'bcryptjs';
+import { JWT } from 'next-auth/jwt';
 
+export type SimpleUser = Pick<User, "id" | "name" | "email" | "role" | "avatar">;
 
 export const authOptions: AuthOptions = {
+    session:{
+        strategy: "jwt"
+    },
     providers: [
         Credentials({
             name: "Credentials",
@@ -13,8 +18,8 @@ export const authOptions: AuthOptions = {
                 email: { label: "email", type: "text", placeholder: "Email giriniz." },
                 password: { label: "password", type: "password" }
             },
-            async authorize(credentials, req): Promise<User | null> {
-                if (!credentials?.password || credentials.email) return null;
+            async authorize(credentials, req): Promise<SimpleUser | null> {
+                if (!credentials?.password || !credentials.email) return null;
 
                 const user = await prisma.user.findUnique({
                     where: {
@@ -30,11 +35,18 @@ export const authOptions: AuthOptions = {
                 // no match => wrong pass/email
                 if (!isPassValid) return null
 
-                return user
-            }
-        }),
+                const simpleUser:SimpleUser = {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role,
+                    avatar: user.avatar
+                }
 
-    ]
+                return simpleUser
+            }
+        })
+    ],
 }
 
 export default NextAuth(authOptions)
