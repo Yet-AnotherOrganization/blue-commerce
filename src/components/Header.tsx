@@ -21,14 +21,14 @@ const Header = () => {
   const headerRef = useRef(null)
   const { data } = useSession();
   const user = data?.user;
-  const cart = useSelector((store: RootState) => store.generalReducer.cart)
+  const cart = useSelector((store: RootState) => store.cartReducer.cart)
   const [cartLen, setCartLen] = useState(0)
   const [prevCartLen, setPrevCartLen] = useState(0);
   const cartText = useRef(null)
   const [searchQuery, setSearchQuery] = useState<string>('')
   const formRef = useRef<HTMLInputElement>(null)
   const router: AppRouterInstance = useRouter()
-  const isCartOpen: boolean = useSelector((store: RootState) => store.cartDisplayReducer.cartDisplay)
+  // const isCartOpen: boolean = useSelector((store: RootState) => store.cartDisplayReducer.cartDisplay)
   // const [isMobile, setIsMobile] = useState<boolean>(null)
 
   const dispatch = useDispatch()
