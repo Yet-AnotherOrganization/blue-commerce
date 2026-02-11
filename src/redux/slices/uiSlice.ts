@@ -10,19 +10,19 @@ const uiSlice = createSlice({
     name: "uiSlice",
     initialState,
     reducers: {
-        openModal: (state, action) => {
+        openModal: (state,) => {
             state.cartModalOpen = true;
         },
-        closeModal: (state, action) => {
+        closeModal: (state,) => {
             state.cartModalOpen = false;
         },
-        toggleModal: (state, action) => {
+        toggleModal: (state,) => {
             state.cartModalOpen = !state.cartModalOpen
         },
 
         // THEME
 
-        toggleTheme: (state, action) => {
+        toggleTheme: (state,) => {
             state.theme = state.theme == 'light' ? 'dark' : 'light';
         }
     }
@@ -30,4 +30,4 @@ const uiSlice = createSlice({
 
 
 export default uiSlice;
-export const { openModal, closeModal, toggleTheme } = uiSlice.actions;
+export const { openModal, closeModal, toggleModal, toggleTheme } = uiSlice.actions;
