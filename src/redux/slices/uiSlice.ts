@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
     cartModalOpen: false,
+    theme: 'light',
 }
 
 
@@ -17,6 +18,16 @@ const uiSlice = createSlice({
         },
         toggleModal: (state, action) => {
             state.cartModalOpen = !state.cartModalOpen
+        },
+
+        // THEME
+
+        toggleTheme: (state, action) => {
+            state.theme = state.theme == 'light' ? 'dark' : 'light';
         }
     }
 })
+
+
+export default uiSlice;
+export const { openModal, closeModal, toggleTheme } = uiSlice.actions;
