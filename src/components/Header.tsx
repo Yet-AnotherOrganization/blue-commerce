@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import CartModal from './CartModal';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useSession } from 'next-auth/react';
+import { toggleModal } from '../redux/slices/uiSlice';
 
 
 const Header = () => {
@@ -145,7 +146,7 @@ const Header = () => {
 
         {/* <a href="/cart"> */}
         <button ref={cartText} onClick={() => {
-          // isMobile ? router.push('/cart') : (!isCartOpen ? dispatch({ type: 'OPEN_CART_MODAL' }) : '') 
+          dispatch(toggleModal())
         }}
           className='text-blue-400 cursor-default cart-text flex items-center hover:translate-y-[-3px] hover:shadow-lg transition-all relative bg-white rounded-xl font-semibold p-2 justify-center'>
           <div className='relative'>
