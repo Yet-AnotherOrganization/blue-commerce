@@ -48,6 +48,12 @@ model CartItem {
   // what item?
   productId String
   product   Product @relation(fields: [productId], references: [id])
+
+  // how many?
+  quantity Int @default(1)
+
+  // one item per cart (the rest go to quantity)
+  @@unique([cartId, productId])
 }
 
 model Store {
