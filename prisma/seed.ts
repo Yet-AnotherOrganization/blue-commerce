@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { Category, Prisma, PrismaClient, User, Store, Product } from "../src/generated/prisma";
+import { Category, Prisma, PrismaClient, User, Store, Product, Cart } from "../src/generated/prisma";
 import { prisma } from "../src/lib/prisma";
 import { faker } from '@faker-js/faker';
 
@@ -112,6 +112,44 @@ async function main() {
 
     console.log("Seeding Finished")
 
+    // * CREATE CARTS
+
+    let carts: Cart[] = [];
+
+    for (let user of users) {
+        const cart = await prisma.cart.create({
+            data: {
+                userId: user.id,
+            }
+        })
+    }
+
+    // * CREATE CART ITEMS
+
+    for (let cart of carts) {
+        const itemCount: any = [...Array(Math.floor(Math.random() * 5) + 1)]
+
+        const addedItemIDs = new Set<string>()
+
+        while (addedItemIDs.size < itemCount) {
+            {
+                let randomID = products[Math.floor(Math.random() * products.length)].id
+                if (addedItemIDs.has(randomID)) {
+                    console.log("already have it")
+                    continue
+                };
+
+                await prisma.cartItem.create({
+                    data: {
+                        cartId: cart.id,
+                        productId: randomID,
+                    }
+                })
+
+                addedItemIDs.add(randomID);
+            }
+        }
+    }
 
     // CREATE AN ADMIN USER
 
