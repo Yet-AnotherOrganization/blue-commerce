@@ -1,12 +1,14 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import cartSlice from './slices/cartSlice';
+import uiSlice from "./slices/uiSlice";
 
 
 export const makeStore = () => {
 
     return configureStore(({
         reducer: {
-            cartReducer: cartSlice.reducer
+            cartReducer: cartSlice.reducer,
+            uiReducer: uiSlice.reducer
         }
     }))
 
