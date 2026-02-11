@@ -148,7 +148,7 @@ const Header = () => {
         <button ref={cartText} onClick={() => {
           dispatch(toggleModal())
         }}
-          className='text-blue-400 cursor-default cart-text flex items-center hover:translate-y-[-3px] hover:shadow-lg transition-all relative bg-white rounded-xl font-semibold p-2 justify-center'>
+          className='text-blue-400 cart-text flex items-center border-2 hover:border-neutral-800 cursor-pointer border-transparent hover:shadow-lg transition-all relative bg-white rounded-xl font-semibold p-2 justify-center'>
           <div className='relative'>
             <span className='text-white text-sm lg:text-[20px] font-semibold absolute top-[40%] left-[60%] transform -translate-x-1/2 -translate-y-1/2'>{cartLen}</span>
             <FaShoppingCart className='cart-text text-2xl lg:text-[40px]' />

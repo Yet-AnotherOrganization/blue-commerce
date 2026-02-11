@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "next-auth";
 import { CartItem, Product } from "../../generated/prisma";
 import axios from 'axios';
+import { getSession, useSession } from "next-auth/react";
 
 // const userSlice = createSlice({
 //     name: "user",
@@ -38,9 +39,33 @@ export const addToCart = createAsyncThunk(
             return response.data
         }
         catch (err: any) {
-            return rejectWithValue(err.response.data)
+            return rejectWithValue(err)
         }
 
+    }
+)
+
+export const fetchCartAsync = createAsyncThunk(
+    'cart/fetchCartAsync',
+    async (_, { rejectWithValue }) => {
+        try {
+            // 1. Session'ı manuel çek (Promise döner)
+            const session = await getSession();
+
+            // 2. Token var mı kontrol et
+            if (!session) {
+                return rejectWithValue("Oturum bulunamadı");
+            }
+
+
+            const response = await axios.get(`/api/cart/${session.user.id}`);
+            console.log("cart res:", response);
+            return response.data;
+        }
+        catch (err: any) {
+            console.error(err.response.data);
+            return rejectWithValue(err.response.data)
+        }
     }
 )
 

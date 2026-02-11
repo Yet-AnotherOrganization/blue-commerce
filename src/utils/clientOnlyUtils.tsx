@@ -14,11 +14,11 @@ export const getActiveUserFromStorage = ():void => {
   }
 
   export const calculateTotalCost =
-  (cart: ProductParams[]):any => {
+  (cart: any):any => {
       if (cart) {
           try {
               const totalPrice =
-                  cart.reduce((accumulator, item) => {
+                  cart.reduce((accumulator:number, item:any) => {
                       if (item && item.price) { return accumulator + Number(item.price); } return accumulator;
                   }, 0); return <span>${totalPrice}</span>;
           }

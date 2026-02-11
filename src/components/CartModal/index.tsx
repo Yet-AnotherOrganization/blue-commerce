@@ -18,7 +18,7 @@ const CartModal = (props: Props) => {
     // const isCartOpen = useSelector((store: RootState) => store.cartDisplayReducer.cartDisplay)
     const dispatch = useDispatch()
     const cart = useSelector((store: RootState) => store.cartReducer.cart)
-    const [displayCart, setDisplayCart] = useState<ProductParams[]>([])
+    const cartModalOpen = useSelector((state: RootState) => state.uiReducer.cartModalOpen)
     const router: AppRouterInstance = useRouter()
 
 
@@ -33,6 +33,7 @@ const CartModal = (props: Props) => {
 
     return (
 
+        cartModalOpen &&
         <>
             <div className='bg-white text-black border flex flex-col justify-between overflow-hidden border-black rounded-xl h-[40vh] w-[30vw] absolute bottom-[-42vh] z-[200000]'>
                 <div className='flex justify-between items-center text-xl font-semibold px-4 py-2 border-b'><div />
@@ -48,7 +49,7 @@ const CartModal = (props: Props) => {
 
                 <div className='h-3/5 px-4 my-5 overflow-auto'>
 
-                    {displayCart?.map((item, i) => {
+                    {cart?.map((item, i) => {
 
                         return (
 
@@ -62,7 +63,7 @@ const CartModal = (props: Props) => {
 
                 <div className='flex bg-gray-200 border-t-2 justify-between border-gray-300 px-4 py-2'>
                     {/* <button className='bg-orange-400 rounded-xl text-white p-2' onClick={() => { router.push('/cart')}}>GO TO CART</button> */}
-                    <span className='p-2 rounded-xl text-white bg-blue-300'>TOTAL PRICE: {calculateTotalCost(displayCart)}</span>
+                    <span className='p-2 rounded-xl text-white bg-blue-300'>TOTAL PRICE: {calculateTotalCost(cart)}</span>
                 </div>
             </div>
         </>

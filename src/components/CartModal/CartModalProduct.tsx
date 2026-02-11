@@ -6,17 +6,17 @@ import { useDispatch } from 'react-redux'
 
 
 type Props = {
-    product:ProductParams
+  product: any
 }
 
-const CartModalProduct = ({product}: Props) => {
+const CartModalProduct = ({ product }: Props) => {
 
-  useEffect(()=>{
-  },[])
+  useEffect(() => {
+  }, [])
 
   const dispatch = useDispatch()
-  
-  const user = JSON.parse(localStorage.getItem("user"));
+
+  // const user = JSON.parse(localStorage.getItem("user"));
 
 
 
@@ -34,8 +34,10 @@ const CartModalProduct = ({product}: Props) => {
         <span>${product.price}</span>
       </div>
 
-      <button className='flex h-full items-center justify-center' onClick={() => { removeFromCart(user?.uid, product?.id), reloadCart(user?.uid, dispatch) }}>
-        < FaTrashAlt/>
+      <button className='flex h-full items-center justify-center' onClick={() => {
+        // removeFromCart(user?.uid, product?.id), reloadCart(user?.uid, dispatch) 
+      }}>
+        < FaTrashAlt />
       </button>
     </div>
   )

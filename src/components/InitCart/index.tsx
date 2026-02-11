@@ -11,11 +11,12 @@ export default function InitCart() {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        // Sadece kullanıcı giriş yapmışsa sepeti çek
-        if (session?.user) {
-            dispatch(fetchCartAsync());
-        }
-    }, [session, dispatch]); // Session değişirse (login/logout) tekrar çalışır
+        (async () => {
+            if (session?.user) {
+                const res = await dispatch(fetchCartAsync());
+            }
+        })()
+    }, [session, dispatch]);
 
-    return null; // UI render etmez, sadece mantık çalıştırır
+    return null;
 }
