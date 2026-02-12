@@ -3,6 +3,7 @@ import { User } from "next-auth";
 import { CartItem, Product } from "../../generated/prisma";
 import axios from 'axios';
 import { getSession, useSession } from "next-auth/react";
+import { CartItemWithProduct, GetCartResponse } from "../../utils/types";
 
 // const userSlice = createSlice({
 //     name: "user",
@@ -18,7 +19,7 @@ import { getSession, useSession } from "next-auth/react";
 //     }
 // })
 
-const cartInitialState: { cart: CartItem[], loading: boolean, error: any } = {
+const cartInitialState: { cart: CartItemWithProduct[], loading: boolean, error: any } = {
     cart: [],
     loading: true,
     error: false
@@ -58,9 +59,14 @@ export const fetchCartAsync = createAsyncThunk(
             }
 
 
-            const response = await axios.get(`/api/cart/${session.user.id}`);
-            console.log("cart res:", response);
-            return response.data;
+            let response: GetCartResponse = await axios.get(`/api/cart/${session.user.id}`);
+
+            const items = response.data.data.items;
+
+            console.log("cart res:", items);
+
+
+            return items;
         }
         catch (err: any) {
             console.error(err.response.data);
@@ -86,7 +92,19 @@ const cartSlice = createSlice({
                 state.error = action.payload as string
             })
             // * FULFILLED
-            .addCase(addToCart.fulfilled, (state, action: PayloadAction<CartItem[]>) => {
+            .addCase(addToCart.fulfilled, (state, action: PayloadAction<CartItemWithProduct[]>) => {
+                state.loading = false;
+                state.error = null;
+                state.cart = action.payload;
+            })
+            .addCase(fetchCartAsync.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(fetchCartAsync.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload
+            })
+            .addCase(fetchCartAsync.fulfilled, (state, action: PayloadAction<CartItemWithProduct[]>) => {
                 state.loading = false;
                 state.error = null;
                 state.cart = action.payload;
