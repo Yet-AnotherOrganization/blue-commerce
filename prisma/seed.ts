@@ -8,9 +8,11 @@ async function main() {
     console.log("Clearing old data...");
 
     await prisma.review.deleteMany();
+    await prisma.cartItem.deleteMany();
     await prisma.product.deleteMany();
     await prisma.category.deleteMany();
     await prisma.store.deleteMany();
+    await prisma.cart.deleteMany();
     await prisma.user.deleteMany();
 
 
@@ -26,7 +28,7 @@ async function main() {
             {
                 name: faker.person.fullName(),
                 email: faker.internet.email(),
-                password: faker.internet.password(),
+                password: await bcrypt.hash("123456",10),
                 avatar: faker.image.avatar()
             }
         })
@@ -110,7 +112,7 @@ async function main() {
         })
     }
 
-    console.log("Seeding Finished")
+
 
     // * CREATE CARTS
 
@@ -122,16 +124,21 @@ async function main() {
                 userId: user.id,
             }
         })
+
+        carts.push(cart);
+
+        console.log("creating cart for user: ", user.id, " cart: ", cart)
     }
 
     // * CREATE CART ITEMS
 
     for (let cart of carts) {
+        console.log(cart)
         const itemCount: any = [...Array(Math.floor(Math.random() * 5) + 1)]
 
         const addedItemIDs = new Set<string>()
 
-        while (addedItemIDs.size < itemCount) {
+        while (addedItemIDs.size < itemCount.length) {
             {
                 let randomID = products[Math.floor(Math.random() * products.length)].id
                 if (addedItemIDs.has(randomID)) {
@@ -139,7 +146,7 @@ async function main() {
                     continue
                 };
 
-                await prisma.cartItem.create({
+                const item = await prisma.cartItem.create({
                     data: {
                         cartId: cart.id,
                         productId: randomID,
@@ -147,6 +154,7 @@ async function main() {
                 })
 
                 addedItemIDs.add(randomID);
+                console.log(item)
             }
         }
     }
@@ -167,6 +175,7 @@ async function main() {
         },
     });
 
+    console.log("Seeding Finished")
 }
 
 // const allUsers: User[] = await prisma.user.findMany({
