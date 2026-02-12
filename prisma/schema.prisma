@@ -43,7 +43,7 @@ model CartItem {
 
   // in which cart?
   cartId String
-  cart   Cart   @relation(fields: [cartId], references: [id])
+  cart   Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
 
   // what item?
   productId String
@@ -51,6 +51,11 @@ model CartItem {
 
   // how many?
   quantity Int @default(1)
+
+  // stored price
+  // addedAtPrice Decimal @db.Decimal(10, 2)
+
+  metadata Json?
 
   // one item per cart (the rest go to quantity)
   @@unique([cartId, productId])
