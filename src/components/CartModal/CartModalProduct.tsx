@@ -3,10 +3,12 @@ import { ProductParams } from '../../constants/constants'
 import { FaTrashAlt } from 'react-icons/fa'
 import { reloadCart, removeFromCart } from '../../utils/utils'
 import { useDispatch } from 'react-redux'
+import { CartItemWithProduct, ProductType } from '../../utils/types'
+import { Product } from '../../generated/prisma'
 
 
 type Props = {
-  product: any
+  product: ProductType
 }
 
 const CartModalProduct = ({ product }: Props) => {
@@ -23,7 +25,7 @@ const CartModalProduct = ({ product }: Props) => {
   return (
     <div className='text-center w-full flex text-xl justify-between items-center px-4 my-2 pt-3 border-t-2'>
       <div className='w-[5rem] h-[5rem]'>
-        <img src={product.photoURL} className='object-contain rounded w-full h-full' alt="" />
+        <img src={product.imageUrl} className='object-contain rounded w-full h-full' alt="" />
       </div>
 
       <div className='flex w-1/4 h-full items-center justify-center'>

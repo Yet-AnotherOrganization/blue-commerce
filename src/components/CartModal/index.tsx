@@ -38,12 +38,12 @@ const CartModal = (props: Props) => {
             <div className='bg-white text-black border flex flex-col justify-between overflow-hidden border-black rounded-xl h-[40vh] w-[30vw] absolute bottom-[-42vh] z-[200000]'>
                 <div className='flex justify-between items-center text-xl font-semibold px-4 py-2 border-b'><div />
                     <span>CART</span>
-                    <div className='bg-red-700 rounded-full cursor-pointer relative w-8 h-8' onClick={() => dispatch({ type: 'CLOSE_CART_MODAL' })}>
+                    <button className='bg-red-700 rounded-full cursor-pointer relative w-8 h-8' onClick={() => dispatch({ type: 'CLOSE_CART_MODAL' })}>
 
                         <span
                             className='text-white'
                             style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }}>X</span>
-                    </div>
+                    </button>
                 </div>
 
 
@@ -53,7 +53,7 @@ const CartModal = (props: Props) => {
 
                         return (
 
-                            <CartModalProduct product={item} key={i} />
+                            <CartModalProduct product={item.product} key={i} />
 
                         )
                     })}
@@ -62,7 +62,7 @@ const CartModal = (props: Props) => {
 
 
                 <div className='flex bg-gray-200 border-t-2 justify-between border-gray-300 px-4 py-2'>
-                    {/* <button className='bg-orange-400 rounded-xl text-white p-2' onClick={() => { router.push('/cart')}}>GO TO CART</button> */}
+                    <button className='bg-orange-400 rounded-xl text-white p-2' onClick={() => { router.push('/cart')}}>GO TO CART</button>
                     <span className='p-2 rounded-xl text-white bg-blue-300'>TOTAL PRICE: {calculateTotalCost(cart)}</span>
                 </div>
             </div>

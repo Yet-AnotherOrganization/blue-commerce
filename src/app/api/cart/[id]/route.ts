@@ -11,13 +11,33 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 
         const cart = await prisma.cart.findUnique({
             where: {
-                id
+                userId: id
+            },
+            include: {
+                items: {
+                    include: {
+                        product: true
+                    }
+                }
             }
         })
 
+        // transform to make ready
+        cart?.items.map((item, index) => ({
+            ...item,
+            product:
+            {
+                ...item.product,
+                price: item.product.price.toNumber(),
+                createdAt: item.product.createdAt.toISOString(),
+                updatedAt: item.product.updatedAt.toISOString()
+            }
+        }
+        ))
+
         if (!cart) return res(404, 'Cart with ID was not found')
 
-        return res(200, 'Cart has been sent successfully.', cart )
+        return res(200, 'Cart has been sent successfully.', cart)
     }
     catch (err) {
         console.log(err);
