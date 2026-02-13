@@ -3,7 +3,8 @@ import { User } from "next-auth";
 import { CartItem, Product } from "../../generated/prisma";
 import axios from 'axios';
 import { getSession, useSession } from "next-auth/react";
-import { CartItemWithProduct, GetCartResponse } from "../../utils/types";
+import { CartItemWithProduct } from "../../types/product";
+import { GetCartResponse } from "../../types/api";
 
 // const userSlice = createSlice({
 //     name: "user",
