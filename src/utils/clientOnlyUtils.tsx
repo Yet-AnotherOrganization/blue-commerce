@@ -1,6 +1,6 @@
 
 import { ProductParams } from "../constants/constants";
-import { CartItemWithProduct } from "./types";
+import { CartItemWithProduct } from "../types/product";
 
 export const getActiveUserFromStorage = (): void => {
     if (typeof window !== 'undefined') {
@@ -20,7 +20,13 @@ export const calculateTotalCost =
 
         cart.map((item, i) => {
             price += item.product.price * item.quantity
+
+            console.log(price)
+            console.log(item.product.price)
+            console.log(item.quantity)
         })
 
-        return price;
+        if(Number.isNaN(price)) console.log(price)
+
+        return Number(price.toFixed(2));
     };

@@ -4,13 +4,15 @@ import LoginForm from './LoginForm'
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 import { getServerSession } from 'next-auth'
+import { authOptions } from '../../../api/auth/[...nextauth]/route'
 
 
 
 const login = async () => {
 
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
 
+  console.log(session)
 
   if (session?.user) {
     return redirect('/')

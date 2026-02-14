@@ -7,11 +7,6 @@ import { MdContactSupport } from "react-icons/md";
 
 const Links = [
     {
-        name: 'Login/Register',
-        href: '/login',
-        logo: <IoIosLogIn />
-    },
-    {
         name: 'Products',
         href: '/',
         logo: <FaShoppingBag />
