@@ -26,7 +26,6 @@ interface ClothingSpecs {
     material: string;
 }
 
-// 2. Telefon için Tip Tanımı
 interface ElectronicsSpecs {
     type: 'electronics'; // Ayırt edici etiket
     ram: string;      // "8GB"
@@ -35,7 +34,6 @@ interface ElectronicsSpecs {
     battery: number;
 }
 
-// 3. Kitap için Tip Tanımı
 interface BookSpecs {
     type: 'book';
     author: string;
@@ -45,5 +43,4 @@ interface BookSpecs {
 
 
 
-// 4. Hepsini kapsayan BİRLEŞİK TİP
 export type ProductSpecs = ClothingSpecs | ElectronicsSpecs | BookSpecs;
