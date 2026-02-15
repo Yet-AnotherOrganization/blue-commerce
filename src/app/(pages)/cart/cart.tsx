@@ -14,7 +14,6 @@ const CartDiv = () => {
 
     const [id, setId] = useState(null)
     const cart = useSelector((store: RootState) => store.cartReducer.cart)
-    const dispatch = useDispatch()
     const { data } = useSession()
     const user = data?.user;
 
