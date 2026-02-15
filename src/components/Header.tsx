@@ -23,14 +23,8 @@ const Header = () => {
   const { data } = useSession();
   const user = data?.user;
   const cart = useSelector((store: RootState) => store.cartReducer.cart)
-  const [cartLen, setCartLen] = useState(0)
-  const [prevCartLen, setPrevCartLen] = useState(0);
   const cartText = useRef(null)
-  const [searchQuery, setSearchQuery] = useState<string>('')
   const formRef = useRef<HTMLInputElement>(null)
-  const router: AppRouterInstance = useRouter()
-  // const isCartOpen: boolean = useSelector((store: RootState) => store.cartDisplayReducer.cartDisplay)
-  // const [isMobile, setIsMobile] = useState<boolean>(null)
 
   const dispatch = useDispatch()
 
@@ -108,7 +102,7 @@ const Header = () => {
 
     // Update the previous cart length
     // setPrevCartLen(cartLen);
-  }, [cartLen]);
+  }, []);
 
 
 
@@ -150,7 +144,7 @@ const Header = () => {
         }}
           className='text-blue-400 cart-text flex items-center border-2 hover:border-neutral-800 cursor-pointer border-transparent hover:shadow-lg transition-all relative bg-white rounded-xl font-semibold p-2 justify-center'>
           <div className='relative'>
-            <span className='text-white text-sm lg:text-[20px] font-semibold absolute top-[40%] left-[60%] transform -translate-x-1/2 -translate-y-1/2'>{cartLen}</span>
+            <span className='text-white text-sm lg:text-[20px] font-semibold absolute top-[40%] left-[60%] transform -translate-x-1/2 -translate-y-1/2'>{cart.length}</span>
             <FaShoppingCart className='cart-text text-2xl lg:text-[40px]' />
           </div>
 
