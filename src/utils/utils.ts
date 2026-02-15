@@ -3,6 +3,7 @@ import { ProductParams, ReviewParams, User } from "../constants/constants";
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import { ReadonlyURLSearchParams } from 'next/navigation'
 import { Option } from "../constants/constants";
+import { Cart } from "../generated/prisma";
 
 
 
@@ -25,26 +26,6 @@ export const getCart = async (id: string): Promise<void> => {
 export const listenCart = async (id: string, dispatch?: (action: {}) => void): Promise<void> => {
 }
 
-export const addToCart = async (uid: string, productId: string): Promise<void> => {
-
-  // const user = await getUser(uid)
-
-  // if (user) {
-  //   try {
-  //     const userRef = doc(db, "users", uid);
-  //     await updateDoc(userRef, {
-  //       cart: arrayUnion(productId)
-  //     })
-  //     reloadCart(uid)
-  //     return 'Successful'
-  //   } catch (err) { console.log(err) }
-  // }
-  // else {
-  //   addToAnonymousCart(productId)
-  // }
-
-
-}
 
 export const removeFromCart = async (uid: string, productId: string): Promise<void> => {
 

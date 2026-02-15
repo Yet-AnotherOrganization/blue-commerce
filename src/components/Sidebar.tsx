@@ -15,8 +15,6 @@ const Sidebar = ({ setSidebar, sidebar }: SidebarProps) => {
 
     const user = useSession().data?.user
 
-    console.log("user:", user)
-
     return (
         <div style={{ 'zIndex': '10001', 'right': `${sidebar ? '0' : '-60vw'}` }} className={`fixed top-0 pt-[10vh] bg-blue-500 text-white inline-block w-[60vw] lg:w-[15vw] h-[100vh] transition-all p-4`} >
             <button className='mb-[3vh] rounded-[50%] bg-red-700 w-[3rem] h-[3rem] font-bold text-[30px]' onClick={() => setSidebar(false)}>X</button>

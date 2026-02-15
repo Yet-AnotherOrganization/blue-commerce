@@ -11,3 +11,9 @@ export type GetCartResponse = AxiosResponse<{
     }
 }>
 
+export type CartPostBody = {
+    method: "ADD" | "REMOVE"
+    productId: string,
+    quantity: number,
+    metadata?: any
+}
