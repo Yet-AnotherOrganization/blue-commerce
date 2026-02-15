@@ -58,12 +58,20 @@ export const authOptions: AuthOptions = {
             return token;
         },
         async session({ session, token }): Promise<Session> {
+            if (token.sub) {
 
-            if (session.user) {
-                session.user.id = token.id;
-                session.user.role = token.role;
+                const existingUser = await prisma.user.findUnique({
+                    where: { id: token.sub }
+                })
+
+                if(!existingUser) throw new Error('This account was deleted.')
+
+                if (session.user) {
+                    session.user.id = token.id;
+                    session.user.role = token.role;
+                }
+
             }
-
             return session;
         }
     }
