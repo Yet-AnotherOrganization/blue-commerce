@@ -1,20 +1,21 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { addToCart, getCart, reloadCart } from "../utils/utils";
 import "./css/index.css";
 import { FaRegStar, FaStar } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { Product } from "../generated/prisma";
+import { addToCart } from "../redux/slices/cartSlice";
+import { useAppDispatch } from "../redux/hooks";
 
 const ProductCard = ({ product }: { product: Product }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [id, setId] = useState(null);
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
   const [isDivHovered, setIsDivHovered] = useState<boolean>(false);
-  const [width,setWidth] = useState<number>(0)
+  const [width, setWidth] = useState<number>(0)
 
   useEffect(() => {
     // const userExists = JSON.parse(localStorage.getItem("user"));
@@ -23,9 +24,9 @@ const ProductCard = ({ product }: { product: Product }) => {
     // window?setIsClient(true):''
   }, []);
 
-  useEffect(()=>{
-    isClient?setWidth(window.innerWidth):''
-  },[isClient])
+  useEffect(() => {
+    isClient ? setWidth(window.innerWidth) : ''
+  }, [isClient])
 
   return (
     <div
@@ -51,9 +52,8 @@ const ProductCard = ({ product }: { product: Product }) => {
               src={product?.imageUrl}
               style={{ zIndex: `${isHovered ? "9999999999" : "1"}` }}
               alt=""
-              className={`${
-                isHovered ? "scale-[200%]" : "scale-100"
-              }  transition-all w-full h-full relative rounded-xl  object-scale-up border-2 border-gray-300 shadow-sm`}
+              className={`${isHovered ? "scale-[200%]" : "scale-100"
+                }  transition-all w-full h-full relative rounded-xl  object-scale-up border-2 border-gray-300 shadow-sm`}
             />
           </div>
 
@@ -102,7 +102,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           <motion.button
             animate={{
               y: isDivHovered ? 0 : 10,
-              opacity: isDivHovered ? 100 : width<1024?100:0,
+              opacity: isDivHovered ? 100 : width < 1024 ? 100 : 0,
             }}
             transition={{ duration: 0.3 }}
             className="bg-green-500 
@@ -110,27 +110,26 @@ const ProductCard = ({ product }: { product: Product }) => {
             justify-self-center md:p-2 md:m-2 m-1 p-1 rounded-xl hover:brightness-125 
             relative
             border-black text-[0.7rem] md:text-[1rem]"
-            // onClick={() => {
-            //   addToCart(id, product.id), reloadCart(id, dispatch), dispatch({type:'OPEN_CART_MODAL'});
-            //   setIsClicked(true);!isClicked?setTimeout(() => setIsClicked(false), 2000):'';
-            // }}
+            onClick={() => {
+              dispatch(addToCart({ productId: product.id, quantity: 1 }))
+            }}
           >
             <motion.span
-            animate={{y:isClicked?30:0,opacity:isClicked?0:100}}
-            transition={{ duration: 0.3 }}
-            className=""
+              animate={{ y: isClicked ? 30 : 0, opacity: isClicked ? 0 : 100 }}
+              transition={{ duration: 0.3 }}
+              className=""
             >
               ADD TO CART
             </motion.span>
-            
-            <motion.div 
+
+            <motion.div
               className="absolute left-1/2 top-1/2 transform translate-y-[-50%] translate-x-[-50%] w-full h-full">
-            {isClient?<motion.span
-            className="absolute top-0 left-0 bottom-0 right-0 h-full w-full"
-              animate={{y:isClicked?10:-30,opacity:isClicked?100:0}}
-              transition={{ duration: 0.3 }}
-            >ITEM ADDED
-            </motion.span>:''}
+              {isClient ? <motion.span
+                className="absolute top-0 left-0 bottom-0 right-0 h-full w-full"
+                animate={{ y: isClicked ? 10 : -30, opacity: isClicked ? 100 : 0 }}
+                transition={{ duration: 0.3 }}
+              >ITEM ADDED
+              </motion.span> : ''}
             </motion.div>
           </motion.button>
         </div>

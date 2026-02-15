@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "next-auth";
 import { CartItem, Product } from "../../generated/prisma";
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { getSession, useSession } from "next-auth/react";
 import { CartItemWithProduct } from "../../types/product";
 import { GetCartResponse } from "../../types/api";
@@ -32,16 +32,29 @@ interface AddToCartPayload {
     // userEmail gibi verileri göndermene gerek yok, backend session'dan alacak!
 }
 
+interface RemoveFromCartPayload {
+    productId: string;
+    quantity: number;
+}
+
 export const addToCart = createAsyncThunk(
     'cart/addToCart',
     async (payload: AddToCartPayload, { rejectWithValue }) => {
         try {
-            const response = await axios.post('/api/cart/add', payload);
+            const response = await axios.post('/api/cart', { ...payload, method: 'ADD' });
 
-            return response.data
+            console.log("add to cart THUNK RES: ", response)
+
+            // TODO state'i doğru biçimde güncelle, Product mı yoksa CartItem mı tutulacak?
+            return response.data.data.items
         }
-        catch (err: any) {
-            return rejectWithValue(err)
+        catch (err) {
+            if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data)
+
+            if (err instanceof Error)
+                return rejectWithValue(err.message)
+
+            else rejectWithValue('Unknown error during addToCart request.')
         }
 
     }
@@ -64,14 +77,12 @@ export const fetchCartAsync = createAsyncThunk(
 
             const items = response.data.data.items;
 
-            console.log("cart res:", items);
-
 
             return items;
         }
         catch (err: any) {
-            console.error(err.response.data);
-            return rejectWithValue(err.response.data)
+            console.error(err);
+            return rejectWithValue(err)
         }
     }
 )
@@ -90,7 +101,8 @@ const cartSlice = createSlice({
             // ! REJECTED
             .addCase(addToCart.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload as string
+                state.error = action.payload
+                console.log(action.payload)
             })
             // * FULFILLED
             .addCase(addToCart.fulfilled, (state, action: PayloadAction<CartItemWithProduct[]>) => {
