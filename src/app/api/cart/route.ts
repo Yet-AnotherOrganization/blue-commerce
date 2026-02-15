@@ -38,43 +38,40 @@ export async function POST(req: Request) {
 
                     if (!product) throw new Error('The requested product is no longer on sale.');
 
-
                     const existingItem = await tx.cartItem.findUnique({
-                        where: {
+                        where:{
                             cartId_productId: {
                                 cartId: cart.id,
                                 productId: product.id
                             }
                         }
-                    });
+                    })
 
                     let newQuantity = existingItem ? existingItem.quantity : 0 + body.quantity;
 
                     if (newQuantity > product.stock) throw new Error("The number of products you requested does not exist in stocks, current stock: " + product.stock);
 
-                    let cartItem;
 
-                    // if the product already exists, then increase quantity
-                    if (existingItem) {
-
-                        cartItem = await tx.cartItem.update({
-                            where: { id: existingItem.id },
-                            data: {
-                                quantity: {
-                                    increment: body.quantity
-                                }
-                            }
-                        })
-                    }
-                    else {
-                        cartItem = await tx.cartItem.create({
-                            data: {
+                    await tx.cartItem.upsert({
+                        where: {
+                            cartId_productId: {
                                 cartId: cart.id,
-                                productId: product.id,
-                                quantity: body.quantity
+                                productId: product.id
                             }
-                        })
-                    }
+                        },
+                        update: {
+                            quantity: {
+                                increment: body.quantity
+                            }
+                        },
+                        create: {
+                            cartId: cart.id,
+                            productId: product.id,
+                            quantity: body.quantity
+                        }
+                    })
+
+
 
                     // ^ Get updated cart back
 

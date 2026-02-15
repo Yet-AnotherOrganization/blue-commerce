@@ -14,6 +14,8 @@ export default function InitCart() {
         (async () => {
             if (session?.user) {
                 const res = await dispatch(fetchCartAsync());
+
+                console.log(res)
             }
         })()
     }, [session, dispatch]);
