@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { CartItemWithProduct } from "./product";
-
+import {z} from 'zod';
 
 
 export type GetCartResponse = AxiosResponse<{
@@ -11,9 +11,4 @@ export type GetCartResponse = AxiosResponse<{
     }
 }>
 
-export type CartPostBody = {
-    method: "ADD" | "REMOVE"
-    productId: string,
-    quantity: number,
-    metadata?: any
-}
+
