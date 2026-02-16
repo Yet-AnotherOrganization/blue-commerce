@@ -1,4 +1,5 @@
 'use server'
+import { signIn } from "next-auth/react";
 import { prisma } from "../lib/prisma";
 import { compare } from 'bcryptjs';
 
@@ -29,10 +30,11 @@ export async function loginAction(formData: FormData) {
     // if passes match then trigger NextAuth
 
     try {
-        await signIn
+        await signIn('credentials')
     }
-    catch (err: any) {
-        return { error: err.message }
+    catch (err) {
+        if (err instanceof Error) return { error: err.message }
+        return err
     }
 
 }

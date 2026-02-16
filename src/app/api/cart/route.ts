@@ -3,13 +3,21 @@
 
 import { NextApiRequest } from "next";
 import { findCartByUserId, getUser, res } from "../../../utils/serverUtils";
-import { CartPostBody } from "../../../types/api";
 import { prisma } from "../../../lib/prisma";
+import { CartItemDto, CartItemSchema } from "../../../lib/zod";
 
 export async function POST(req: Request) {
     try {
 
-        const body = (await req.json()) as CartPostBody;
+        const rawBody = await req.json();
+
+        const validation = CartItemSchema.safeParse(rawBody);
+
+        if(!validation.success) {
+            return res(400, 'An invalid object was sent', validation.error)
+        }
+
+        const body = validation.data
 
         const user = await getUser();
 
@@ -39,7 +47,7 @@ export async function POST(req: Request) {
                     if (!product) throw new Error('The requested product is no longer on sale.');
 
                     const existingItem = await tx.cartItem.findUnique({
-                        where:{
+                        where: {
                             cartId_productId: {
                                 cartId: cart.id,
                                 productId: product.id
