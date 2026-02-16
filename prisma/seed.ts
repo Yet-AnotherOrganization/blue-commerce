@@ -134,7 +134,7 @@ async function main() {
 
     for (let cart of carts) {
         console.log(cart)
-        const itemCount: any = [...Array(Math.floor(Math.random() * 5) + 1)]
+        const itemCount = [...Array(Math.floor(Math.random() * 5) + 1)]
 
         const addedItemIDs = new Set<string>()
 
