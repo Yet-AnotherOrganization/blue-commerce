@@ -1,5 +1,7 @@
 # This is a deprecated version of this project, currently migrating from Firebase to PostgreSQL / Prisma
 
+# It is halfway in progress.
+
 # BluE-Commerce
 
 ![gif](preview.gif)
