@@ -87,6 +87,8 @@ export const fetchCartAsync = createAsyncThunk(
     }
 )
 
+
+
 const cartSlice = createSlice({
     name: 'cart',
     initialState: cartInitialState,
@@ -94,6 +96,8 @@ const cartSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            // ? ADD TO CART
+
             // ^ LOADING
             .addCase(addToCart.pending, (state) => {
                 state.loading = true;
@@ -110,18 +114,34 @@ const cartSlice = createSlice({
                 state.error = null;
                 state.cart = action.payload;
             })
+
+            // -------------------------------------------------------------------
+
+            // ? FETCH CART
+
+            // ^ LOADING
             .addCase(fetchCartAsync.pending, (state) => {
                 state.loading = true;
             })
+
+            // ! REJECTED
             .addCase(fetchCartAsync.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload
             })
+
+            // * FULFILLED
             .addCase(fetchCartAsync.fulfilled, (state, action: PayloadAction<CartItemWithProduct[]>) => {
                 state.loading = false;
                 state.error = null;
                 state.cart = action.payload;
             })
+
+            // --------------------------------------------------------------------
+
+            // ? EMPTY CART
+
+            .addCase()
     }
 })
 
