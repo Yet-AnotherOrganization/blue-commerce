@@ -45,7 +45,6 @@ export const addToCart = createAsyncThunk(
 
             console.log("add to cart THUNK RES: ", response)
 
-            // TODO state'i doğru biçimde güncelle, Product mı yoksa CartItem mı tutulacak?
             return response.data.data.items
         }
         catch (err) {
@@ -87,6 +86,13 @@ export const fetchCartAsync = createAsyncThunk(
     }
 )
 
+export const emptyCart = createAsyncThunk(
+    'cart/emptyCart',
+    async (_, { rejectWithValue }) => {
+
+        
+
+    })
 
 
 const cartSlice = createSlice({
@@ -141,7 +147,9 @@ const cartSlice = createSlice({
 
             // ? EMPTY CART
 
-            .addCase()
+            .addCase(emptyCart.pending, (state) => {
+                state.loading = true
+            })
     }
 })
 
