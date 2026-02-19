@@ -21,9 +21,9 @@ export const calculateTotalCost =
         cart.map((item, i) => {
             price += item.product.price * item.quantity
 
-            console.log(price)
-            console.log(item.product.price)
-            console.log(item.quantity)
+            // console.log(price)
+            // console.log(item.product.price)
+            // console.log(item.quantity)
         })
 
         if(Number.isNaN(price)) console.log(price)

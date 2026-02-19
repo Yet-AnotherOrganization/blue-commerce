@@ -7,7 +7,8 @@ import { getUser } from "../utils/serverUtils";
 export const addToCart = async (input: CartItemDto, user: User) => {
 
 
-    const { method, productId, quantity } = input;
+
+    const { method, productId } = input;
 
 
     let cart = await findCartByUserId(user.id);
@@ -21,20 +22,23 @@ export const addToCart = async (input: CartItemDto, user: User) => {
         })
     }
 
+    const product = await prisma.product.findUnique({
+        where: {
+            id: productId
+        }
+    })
+
+
     switch (method) {
         case 'ADD':
-
-            const product = await prisma.product.findUnique({
-                where: {
-                    id: productId
-                }
-            })
-
-
+            const quantity = input.quantity
             // ^ TRANSACTION BEGIN
             const result = await prisma.$transaction(async (tx) => {
 
-                if (!product) throw new Error('The requested product is no longer on sale.');
+                if (!product) throw new Error('Product is not found on the database.')
+
+
+                if (product.stock == 0) throw new Error('The requested product is no longer on sale.');
 
                 const existingItem = await tx.cartItem.findUnique({
                     where: {
@@ -98,9 +102,65 @@ export const addToCart = async (input: CartItemDto, user: User) => {
             })
             // ^ TRANSACTION OVER
             return result;
-        case "REMOVE":
-            return;
+        case "DEC":
+
+            const cartItem = await prisma.cartItem.findUnique({
+                where: {
+                    cartId_productId: {
+                        cartId: cart.id,
+                        productId: productId
+                    }
+                }
+            })
+
+            console.log("\n\n cartItem: \n", cartItem);
+
+            console.log('\n \n cartid:', cart.id, '\n\n prodid:', productId)
+
+            if (!cartItem) throw new Error('ITEM_NOT_FOUND')
+
+            if (cartItem.quantity > 1) {
+
+                // update the item and get the updated version without the description
+
+                const updatedItem = await prisma.cartItem.update({
+                    where: {
+                        cartId_productId: {
+                            cartId: cart.id,
+                            productId: productId
+                        }
+                    },
+                    data: {
+                        quantity: {
+                            decrement: 1
+                        }
+                    },
+                    include: {
+                        product: {
+                            omit: {
+                                description: true
+                            }
+                        }
+                    }
+                })
+
+                return { ...updatedItem, result: 'DECREMENT' };
+            }
+            else {
+
+                const deletedItem = await prisma.cartItem.delete({
+                    where: {
+                        cartId_productId: {
+                            cartId: cart.id,
+                            productId: productId
+                        }
+                    }
+                })
+
+                return { id: deletedItem.id, result: 'REMOVE' }
+            }
+
         default:
-            throw new Error("This request's body must be sent with a 'method' key with a value of ADD or REMOVE.")
+            throw new Error("NO_METHOD_(ADD/DEC)")
     }
 }
