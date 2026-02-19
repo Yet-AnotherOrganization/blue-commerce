@@ -32,10 +32,6 @@ interface AddToCartPayload {
     // userEmail gibi verileri göndermene gerek yok, backend session'dan alacak!
 }
 
-interface RemoveFromCartPayload {
-    productId: string;
-    quantity: number;
-}
 
 export const addToCart = createAsyncThunk(
     'cart/addToCart',
@@ -90,9 +86,38 @@ export const emptyCart = createAsyncThunk(
     'cart/emptyCart',
     async (_, { rejectWithValue }) => {
 
-        
+
 
     })
+
+interface RemoveOrDecrementFromCartPayload {
+    productId: string;
+}
+
+export const removeOrDecrement = createAsyncThunk('cart/removeOrDecrement', async (payload: RemoveOrDecrementFromCartPayload, { rejectWithValue }) => {
+
+    try {
+        console.log("The item wanted to delete:", payload)
+
+        const res = await axios.post('/api/cart', { ...payload, method: 'DEC' });
+
+
+        return res.data
+
+    }
+    catch (err: unknown) {
+        console.error('ERROR(Remove or Decrement):');
+        console.dir(err)
+
+        if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data)
+
+        if (err instanceof Error)
+            return rejectWithValue(err.message)
+
+        else rejectWithValue('Unknown error during addToCart request.')
+    }
+
+})
 
 
 const cartSlice = createSlice({
@@ -149,6 +174,25 @@ const cartSlice = createSlice({
 
             .addCase(emptyCart.pending, (state) => {
                 state.loading = true
+            })
+
+            // ---------------------------------------------------------------------
+
+            // ? Remove OR Decrement
+
+            .addCase(removeOrDecrement.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(removeOrDecrement.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload
+            })
+            .addCase(removeOrDecrement.fulfilled, (state, action: PayloadAction<CartItemWithProduct[]>) => {
+                state.loading = false;
+                state.error = null;
+
+                console.log("res we got and sent to reducer:", action.payload)
+
             })
     }
 })

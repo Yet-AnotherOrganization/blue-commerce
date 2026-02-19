@@ -9,6 +9,8 @@ import { TotalComponent } from './TotalComponent'
 import '../../../components/css/index.css'
 import { calculateTotalCost } from '../../../utils/clientOnlyUtils'
 import { useSession } from 'next-auth/react'
+import { useAppDispatch } from '../../../redux/hooks'
+import { removeOrDecrement } from '../../../redux/slices/cartSlice'
 
 const CartDiv = () => {
 
@@ -16,6 +18,7 @@ const CartDiv = () => {
     const cart = useSelector((store: RootState) => store.cartReducer.cart)
     const { data } = useSession()
     const user = data?.user;
+    const dispatch = useAppDispatch()
 
 
 
@@ -33,7 +36,9 @@ const CartDiv = () => {
                             </a>
                             <span className='text-center font-bold text-2xl'>{item?.product.name}</span>
                             <span className='font-semibold text-4xl'>${item?.product.price}</span>
-                            <button className='text-[3rem] text-red-600' onClick={() => { }}><FaTrash /></button>
+                            <button className='text-[3rem] text-red-600' onClick={async () => {
+                                await dispatch(removeOrDecrement({ productId: item.id }))
+                            }}><FaTrash /></button>
                         </div>
                     </div>
 

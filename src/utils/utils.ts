@@ -54,7 +54,9 @@ export const removeFromCart = async (uid: string, productId: string): Promise<vo
   // }
 }
 
-export const getUser = async (id: string): Promise<void> => {}
+export const getUser = async (id: string): Promise<void> => {
+  
+}
 
 export const uploadMedia = async (file:any): Promise<void> => {
 };
