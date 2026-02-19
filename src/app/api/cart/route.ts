@@ -1,5 +1,5 @@
 
-// ADD TO CART
+// ADD TO / REMOVE FROM CART
 
 import { NextApiRequest } from "next";
 import { findCartByUserId, getUser, res } from "../../../utils/serverUtils";
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
 
         const result = await addToCart(body, user);
 
-        return res(201, 'Product has successfully been added to the cart.', result)
+        return res(201, 'Product has been successfully added to the cart.', result)
 
     }
     catch (err: unknown) {

@@ -4,7 +4,6 @@ import { findCartByUserId, getUser, res } from "../../../../utils/serverUtils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/route";
 import { NextApiRequest } from "next";
-import { CartPostBody } from "../../../../types/api";
 
 // REQUEST TO GET CART 
 export async function GET(req: NextApiRequest, { params }: { params: { id: string } }) {
@@ -16,8 +15,6 @@ export async function GET(req: NextApiRequest, { params }: { params: { id: strin
         const currentUserId = user.id;
 
         if (requestedId !== currentUserId) return res(403, "You don't have access to this resource.")
-
-        const id = params.id
 
         const cart = await prisma.cart.findUnique({
             where: {
