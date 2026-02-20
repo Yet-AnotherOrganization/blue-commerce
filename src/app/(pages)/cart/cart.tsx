@@ -31,7 +31,7 @@ const CartDiv = () => {
                             <span className='font-semibold text-4xl'>${item?.product.price}</span>
                             <button className='text-[3rem] text-red-600' onClick={async () => {
                                 if (item.quantity == 1) await dispatch(removeItem(item.id))
-                                    else await dispatch(decrement)
+                                    else await dispatch(decrementItem())
                             }}><FaTrash /></button>
                         </div>
                     </div>
