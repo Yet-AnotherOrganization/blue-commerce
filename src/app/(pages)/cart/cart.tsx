@@ -1,23 +1,16 @@
 'use client'
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { ProductParams } from '../../../constants/constants'
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import { RootState } from '../../../redux/store'
-import { getCart, reloadCart, removeFromCart } from '../../../utils/utils'
 import { FaTrash } from "react-icons/fa";
 import { TotalComponent } from './TotalComponent'
 import '../../../components/css/index.css'
-import { calculateTotalCost } from '../../../utils/clientOnlyUtils'
 import { useSession } from 'next-auth/react'
 import { useAppDispatch } from '../../../redux/hooks'
-import { removeOrDecrement } from '../../../redux/slices/cartSlice'
+import { removeItem } from '../../../redux/slices/cartSlice'
 
 const CartDiv = () => {
-
-    const [id, setId] = useState(null)
     const cart = useSelector((store: RootState) => store.cartReducer.cart)
-    const { data } = useSession()
-    const user = data?.user;
     const dispatch = useAppDispatch()
 
 
@@ -37,7 +30,8 @@ const CartDiv = () => {
                             <span className='text-center font-bold text-2xl'>{item?.product.name}</span>
                             <span className='font-semibold text-4xl'>${item?.product.price}</span>
                             <button className='text-[3rem] text-red-600' onClick={async () => {
-                                await dispatch(removeOrDecrement({ productId: item.product.id }))
+                                if (item.quantity == 1) await dispatch(removeItem(item.id))
+                                    else await dispatch(decrement)
                             }}><FaTrash /></button>
                         </div>
                     </div>
