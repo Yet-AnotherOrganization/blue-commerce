@@ -37,7 +37,7 @@ const CartDiv = () => {
                             <span className='text-center font-bold text-2xl'>{item?.product.name}</span>
                             <span className='font-semibold text-4xl'>${item?.product.price}</span>
                             <button className='text-[3rem] text-red-600' onClick={async () => {
-                                await dispatch(removeOrDecrement({ productId: item.id }))
+                                await dispatch(removeOrDecrement({ productId: item.product.id }))
                             }}><FaTrash /></button>
                         </div>
                     </div>

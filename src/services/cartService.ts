@@ -1,14 +1,11 @@
 import { User } from "next-auth";
 import { prisma } from "../lib/prisma";
-import { CartItemDto } from "../lib/zod";
+import { AddItemDto, RemoveItemDto } from "../lib/zod";
 import { findCartByUserId, res } from "../utils/serverUtils";
 import { getUser } from "../utils/serverUtils";
 
-export const addToCart = async (input: CartItemDto, user: User) => {
-
-
-
-    const { method, productId } = input;
+export const addToCart = async (input: AddItemDto, user: User) => {
+    const { productId } = input;
 
 
     let cart = await findCartByUserId(user.id);
@@ -29,138 +26,127 @@ export const addToCart = async (input: CartItemDto, user: User) => {
     })
 
 
-    switch (method) {
-        case 'ADD':
-            const quantity = input.quantity
-            // ^ TRANSACTION BEGIN
-            const result = await prisma.$transaction(async (tx) => {
-
-                if (!product) throw new Error('Product is not found on the database.')
+    const quantity = input.quantity
 
 
-                if (product.stock == 0) throw new Error('The requested product is no longer on sale.');
+    // ^ TRANSACTION BEGIN
+    const result = await prisma.$transaction(async (tx) => {
 
-                const existingItem = await tx.cartItem.findUnique({
-                    where: {
-                        cartId_productId: {
-                            cartId: cart.id,
-                            productId: product.id
-                        }
-                    }
-                })
-
-                let newQuantity = existingItem ? existingItem.quantity : 0 + quantity;
-
-                if (newQuantity > product.stock) throw new Error("The number of products you requested does not exist in stocks, current stock: " + product.stock);
+        if (!product) throw new Error('Product is not found on the database.')
 
 
-                await tx.cartItem.upsert({
-                    where: {
-                        cartId_productId: {
-                            cartId: cart.id,
-                            productId: product.id
-                        }
-                    },
-                    update: {
-                        quantity: {
-                            increment: quantity
-                        }
-                    },
-                    create: {
-                        cartId: cart.id,
-                        productId: product.id,
-                        quantity: quantity
-                    }
-                })
+        if (product.stock == 0) throw new Error('The requested product is no longer on sale.');
 
-
-
-                // ^ Get updated cart back
-
-                const finalCart = await tx.cart.findUnique({
-                    where: {
-                        id: cart.id
-                    },
-                    include: {
-                        items: {
-                            include: {
-                                product: {
-                                    select: {
-                                        id: true,
-                                        name: true,
-                                        price: true,
-                                        imageUrl: true,
-                                        description: false
-                                    }
-                                }
-                            }
-                        }
-                    }
-                })
-
-                return finalCart;
-            })
-            // ^ TRANSACTION OVER
-            return result;
-        case "DEC":
-
-            const cartItem = await prisma.cartItem.findUnique({
-                where: {
-                    cartId_productId: {
-                        cartId: cart.id,
-                        productId: productId
-                    }
+        const existingItem = await tx.cartItem.findUnique({
+            where: {
+                cartId_productId: {
+                    cartId: cart.id,
+                    productId: product.id
                 }
-            })
+            }
+        })
 
-            console.log("\n\n cartItem: \n", cartItem);
+        let newQuantity = existingItem ? existingItem.quantity : 0 + quantity;
 
-            console.log('\n \n cartid:', cart.id, '\n\n prodid:', productId)
+        if (newQuantity > product.stock) throw new Error("The number of products you requested does not exist in stocks, current stock: " + product.stock);
 
-            if (!cartItem) throw new Error('ITEM_NOT_FOUND')
 
-            if (cartItem.quantity > 1) {
+        await tx.cartItem.upsert({
+            where: {
+                cartId_productId: {
+                    cartId: cart.id,
+                    productId: product.id
+                }
+            },
+            update: {
+                quantity: {
+                    increment: quantity
+                }
+            },
+            create: {
+                cartId: cart.id,
+                productId: product.id,
+                quantity: quantity
+            }
+        })
 
-                // update the item and get the updated version without the description
 
-                const updatedItem = await prisma.cartItem.update({
-                    where: {
-                        cartId_productId: {
-                            cartId: cart.id,
-                            productId: productId
-                        }
-                    },
-                    data: {
-                        quantity: {
-                            decrement: 1
-                        }
-                    },
+
+        // ^ Get updated cart back
+
+        const finalCart = await tx.cart.findUnique({
+            where: {
+                id: cart.id
+            },
+            include: {
+                items: {
                     include: {
                         product: {
-                            omit: {
-                                description: true
+                            select: {
+                                id: true,
+                                name: true,
+                                price: true,
+                                imageUrl: true,
+                                description: false
                             }
                         }
                     }
-                })
-
-                return { ...updatedItem, result: 'DECREMENT' };
+                }
             }
-            else {
+        })
 
-                const deletedItem = await prisma.cartItem.delete({
-                    where: {
-                        cartId_productId: {
-                            cartId: cart.id,
-                            productId: productId
-                        }
-                    }
-                })
+        return finalCart;
+    })
+    // ^ TRANSACTION OVER
 
-                return { id: deletedItem.id, result: 'REMOVE' }
+
+    return result;
+
+
+}
+
+export const removeFromCart = async (cartItemId: RemoveItemDto) => {
+
+    const cartItemToBeModified = await prisma.cartItem.findUnique({
+        where: {
+            id: cartItemId
+        }
+    })
+
+    if (!cartItemToBeModified) throw new Error('This product is not inside this cart.')
+
+    // HANDLE MULTIPLE
+    if (cartItemToBeModified.quantity > 1) {
+
+        const modifiedItem = await prisma.cartItem.update({
+            where: {
+                id: cartItemId
+            },
+            data: {
+                quantity: {
+                    decrement: 1
+                }
+            },
+        })
+
+        return { ...modifiedItem, action: "DECREMENTED" }
+    }
+    else {
+        await prisma.cartItem.delete({
+            where: {
+                id: cartItemId
             }
+        })
 
-        default:
-            throw new Error("NO_METHOD_(ADD/DEC)")
+        return { action: "DELETED" }
+    }
+}
+
+export const getCart = async (userId: string) => {
+    try{
+        
+    }
+    catch(err){
+        console.log(err)
     }
 }
