@@ -1,4 +1,5 @@
 import { changeItemQuantity, getCartFromUserId, removeItemFromCart } from "../../../../../services/cartService";
+import APIError from "../../../../../types/api";
 import { getUser, res } from "../../../../../utils/serverUtils";
 
 type CartItemParams = {
@@ -15,26 +16,28 @@ export async function PATCH(req: Request, { params }: CartItemParams) {
         const body = await req.json();
 
 
-        if (!itemId) {
-            return res(400, 'Query lacks item ID.')
-        }
+        if (!itemId) throw new APIError("Body is missing 'itemId' field.", 400, 'NO_ITEM_ID')
 
-        if(!body.quantity) return res(400, 'Query lacks field "quantity".')
+        if (!body.quantity) throw new APIError("Body is missing 'quantity' field.", 400, 'NO_QUANTITY')
 
         // validate
         const user = await getUser();
 
         const cart = await getCartFromUserId(user.id)
 
-        if (cart && (user.id !== cart.userId)) throw new Error('USER_NOT_AUTHORIZED')
+        if (cart && (user.id !== cart.userId)) throw new APIError('This cart does not belong to your account.', 403, 'CART_UNAUTHORIZED')
 
         const result = await changeItemQuantity(itemId, body.quantity);
 
-        return res(201, 'Action successful.', result)
+        return res(201, 'Item quantity has been successfully changed.', result)
 
     }
     catch (err: unknown) {
         console.error(err);
+
+        if (err instanceof APIError) {
+            return res(err.statusCode, err.message, err.details)
+        }
 
         return res(
             err instanceof Error ? 400 : 500,

@@ -1,11 +1,12 @@
 
-// ADD TO / REMOVE FROM CART
+import { getUser, res } from "../../../utils/serverUtils";
+import { AddItemSchema } from "../../../lib/zod";
+import { addToCart } from "../../../services/cartService";
+import APIError from "../../../types/api";
 
-import { NextApiRequest } from "next";
-import { findCartByUserId, getUser, res } from "../../../utils/serverUtils";
-import { prisma } from "../../../lib/prisma";
-import { AddItemDto, AddItemSchema, RemoveItemSchema } from "../../../lib/zod";
-import { addToCart, getCartFromUserId, removeFromCart } from "../../../services/cartService";
+
+
+// ADD TO CART
 
 export async function POST(req: Request) {
     try {
@@ -14,9 +15,7 @@ export async function POST(req: Request) {
 
         const validation = AddItemSchema.safeParse(rawBody);
 
-        if (!validation.success) {
-            return res(400, 'An invalid object was sent', validation.error)
-        }
+        if (!validation.success) throw new APIError("Body is missing 'quantity' field.", 400, 'NO_QUANTITY', validation.error)
 
         const body = validation.data
 
@@ -29,6 +28,10 @@ export async function POST(req: Request) {
     }
     catch (err: unknown) {
         console.error(err);
+
+        if (err instanceof APIError) {
+            return res(err.statusCode, err.message, err.details)
+        }
 
         return res(
             err instanceof Error ? 400 : 500,
