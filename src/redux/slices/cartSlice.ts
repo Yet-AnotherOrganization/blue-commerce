@@ -90,11 +90,31 @@ export const emptyCart = createAsyncThunk(
 
     })
 
-interface RemoveOrDecrementFromCartPayload {
-    cartItemId: string;
-}
+export const removeItem = createAsyncThunk('cart/removeItem',
+    async (payload: string, { rejectWithValue }) => {
 
-export const removeItem = createAsyncThunk('cart/removeOrDecrement',
+        try {
+            console.log("The item wanted to delete:", payload)
+
+            const res = await axios.delete(`/api/cart/items/${payload}`);
+
+
+            return;
+
+        }
+        catch (err: unknown) {
+
+            if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data)
+
+            if (err instanceof Error)
+                return rejectWithValue(err.message)
+
+            else rejectWithValue('Unknown error during addToCart request.')
+        }
+
+    })
+
+export const decrementItem = createAsyncThunk('cart/decrementItem',
     async (payload: string, { rejectWithValue }) => {
 
         try {
@@ -194,7 +214,7 @@ const cartSlice = createSlice({
                 const removedItemId = action.meta.arg
 
                 state.cart = state.cart.filter((item) => item.id !== removedItemId)
-            
+
             })
     }
 })
