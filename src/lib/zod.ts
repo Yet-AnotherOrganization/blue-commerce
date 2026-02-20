@@ -9,6 +9,8 @@ export const AddItemSchema =
 export type AddItemDto = z.infer<typeof AddItemSchema>;
 
 export const RemoveItemSchema =
-    z.string()
+    z.object({
+        cartItemId: z.string()
+    })
 
 export type RemoveItemDto = z.infer<typeof RemoveItemSchema>
