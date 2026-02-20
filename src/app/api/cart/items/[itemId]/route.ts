@@ -1,4 +1,4 @@
-import { decrementItemQuantity, getCartFromUserId, removeItemFromCart } from "../../../../../services/cartService";
+import { changeItemQuantity, getCartFromUserId, removeItemFromCart } from "../../../../../services/cartService";
 import { getUser, res } from "../../../../../utils/serverUtils";
 
 type CartItemParams = {
@@ -12,10 +12,14 @@ export async function PATCH(req: Request, { params }: CartItemParams) {
 
         const { itemId } = params;
 
+        const body = await req.json();
+
 
         if (!itemId) {
             return res(400, 'Query lacks item ID.')
         }
+
+        if(!body.quantity) return res(400, 'Query lacks field "quantity".')
 
         // validate
         const user = await getUser();
@@ -24,7 +28,7 @@ export async function PATCH(req: Request, { params }: CartItemParams) {
 
         if (cart && (user.id !== cart.userId)) throw new Error('USER_NOT_AUTHORIZED')
 
-        const result = await decrementItemQuantity(itemId);
+        const result = await changeItemQuantity(itemId, body.quantity);
 
         return res(201, 'Action successful.', result)
 

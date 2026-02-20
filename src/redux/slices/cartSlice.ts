@@ -123,7 +123,8 @@ export const decrementItem = createAsyncThunk('cart/decrementItem',
             const res = await axios.patch(`/api/cart/items/${payload}`, { quantity: -1 });
 
 
-            return res.data;
+            console.log('changeItemRes: ', res.data)
+            return res.data.data;
 
         }
         catch (err: unknown) {
@@ -135,7 +136,6 @@ export const decrementItem = createAsyncThunk('cart/decrementItem',
 
             else rejectWithValue('Unknown error during decrementItem request.')
         }
-
     })
 
 
@@ -215,6 +215,27 @@ const cartSlice = createSlice({
 
                 state.cart = state.cart.filter((item) => item.id !== removedItemId)
 
+            })
+
+            // ? Decrement
+
+            .addCase(decrementItem.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(decrementItem.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+                console.log("Error: ", action.payload)
+            })
+            .addCase(decrementItem.fulfilled, (state, action) => {
+                state.loading = false;
+                state.cart = state.cart.map((item) => { 
+                    
+                    console.log("currentItem: ", item)
+
+                    console.log("\n\n searchedItem: ", action.payload)
+                    
+                    return item.id == action.payload?.id ? { ...item, quantity: action.payload.quantity } : item})
             })
     }
 })

@@ -106,15 +106,21 @@ export const addToCart = async (input: AddItemDto, user: User) => {
 
 }
 
-export const decrementItemQuantity = async (cartItemId: string) => {
+export const changeItemQuantity = async (cartItemId: string, quantity: number) => {
 
     const cartItemToBeModified = await prisma.cartItem.findUnique({
         where: {
             id: cartItemId
+        },
+        include: {
+            product: true
         }
     })
 
     if (!cartItemToBeModified) throw new Error('This product is not inside this cart.')
+
+
+    if (cartItemToBeModified.quantity + quantity > cartItemToBeModified.product.stock) throw new Error('There is not enough of this item in stocks, current stock: ' + cartItemToBeModified.product.stock)
 
 
     const modifiedItem = await prisma.cartItem.update({
@@ -122,9 +128,7 @@ export const decrementItemQuantity = async (cartItemId: string) => {
             id: cartItemId
         },
         data: {
-            quantity: {
-                decrement: 1
-            }
+            quantity: cartItemToBeModified.quantity + quantity
         },
     })
 
