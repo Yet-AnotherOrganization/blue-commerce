@@ -51,7 +51,7 @@ export async function DELETE(req: Request, { params }: CartItemParams) {
             return res(400, 'Query lacks item ID.')
         }
 
-        // validate
+        // validate if the user exists
         const user = await getUser();
 
         const cart = await getCartFromUserId(user.id)

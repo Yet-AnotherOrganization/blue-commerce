@@ -7,7 +7,7 @@ import { TotalComponent } from './TotalComponent'
 import '../../../components/css/index.css'
 import { useSession } from 'next-auth/react'
 import { useAppDispatch } from '../../../redux/hooks'
-import { removeItem } from '../../../redux/slices/cartSlice'
+import { decrementItem, removeItem } from '../../../redux/slices/cartSlice'
 
 const CartDiv = () => {
     const cart = useSelector((store: RootState) => store.cartReducer.cart)
@@ -31,7 +31,7 @@ const CartDiv = () => {
                             <span className='font-semibold text-4xl'>${item?.product.price}</span>
                             <button className='text-[3rem] text-red-600' onClick={async () => {
                                 if (item.quantity == 1) await dispatch(removeItem(item.id))
-                                    else await dispatch(decrementItem())
+                                    else await dispatch(decrementItem(item.id))
                             }}><FaTrash /></button>
                         </div>
                     </div>

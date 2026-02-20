@@ -109,7 +109,7 @@ export const removeItem = createAsyncThunk('cart/removeItem',
             if (err instanceof Error)
                 return rejectWithValue(err.message)
 
-            else rejectWithValue('Unknown error during addToCart request.')
+            else rejectWithValue('Unknown error during removeItem request.')
         }
 
     })
@@ -120,10 +120,10 @@ export const decrementItem = createAsyncThunk('cart/decrementItem',
         try {
             console.log("The item wanted to delete:", payload)
 
-            const res = await axios.delete(`/api/cart/items/${payload}`);
+            const res = await axios.patch(`/api/cart/items/${payload}`, { quantity: -1 });
 
 
-            return;
+            return res.data;
 
         }
         catch (err: unknown) {
@@ -133,7 +133,7 @@ export const decrementItem = createAsyncThunk('cart/decrementItem',
             if (err instanceof Error)
                 return rejectWithValue(err.message)
 
-            else rejectWithValue('Unknown error during addToCart request.')
+            else rejectWithValue('Unknown error during decrementItem request.')
         }
 
     })
