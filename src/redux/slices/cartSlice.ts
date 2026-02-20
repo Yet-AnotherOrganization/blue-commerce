@@ -91,33 +91,32 @@ export const emptyCart = createAsyncThunk(
     })
 
 interface RemoveOrDecrementFromCartPayload {
-    productId: string;
+    cartItemId: string;
 }
 
-export const removeOrDecrement = createAsyncThunk('cart/removeOrDecrement', async (payload: RemoveOrDecrementFromCartPayload, { rejectWithValue }) => {
+export const removeItem = createAsyncThunk('cart/removeOrDecrement',
+    async (payload: string, { rejectWithValue }) => {
 
-    try {
-        console.log("The item wanted to delete:", payload)
+        try {
+            console.log("The item wanted to delete:", payload)
 
-        const res = await axios.post('/api/cart', { ...payload, method: 'DEC' });
+            const res = await axios.delete(`/api/cart/items/${payload}`);
 
 
-        return res.data
+            return;
 
-    }
-    catch (err: unknown) {
-        console.error('ERROR(Remove or Decrement):');
-        console.dir(err)
+        }
+        catch (err: unknown) {
 
-        if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data)
+            if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data)
 
-        if (err instanceof Error)
-            return rejectWithValue(err.message)
+            if (err instanceof Error)
+                return rejectWithValue(err.message)
 
-        else rejectWithValue('Unknown error during addToCart request.')
-    }
+            else rejectWithValue('Unknown error during addToCart request.')
+        }
 
-})
+    })
 
 
 const cartSlice = createSlice({
@@ -178,21 +177,24 @@ const cartSlice = createSlice({
 
             // ---------------------------------------------------------------------
 
-            // ? Remove OR Decrement
+            // ? Remove
 
-            .addCase(removeOrDecrement.pending, (state) => {
+            .addCase(removeItem.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(removeOrDecrement.rejected, (state, action) => {
+            .addCase(removeItem.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload
+                console.log(action.payload)
             })
-            .addCase(removeOrDecrement.fulfilled, (state, action: PayloadAction<CartItemWithProduct[]>) => {
+            .addCase(removeItem.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
 
-                console.log("res we got and sent to reducer:", action.payload)
+                const removedItemId = action.meta.arg
 
+                state.cart = state.cart.filter((item) => item.id !== removedItemId)
+            
             })
     }
 })

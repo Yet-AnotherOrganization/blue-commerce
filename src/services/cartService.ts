@@ -3,6 +3,7 @@ import { prisma } from "../lib/prisma";
 import { AddItemDto, RemoveItemDto } from "../lib/zod";
 import { findCartByUserId, res } from "../utils/serverUtils";
 import { getUser } from "../utils/serverUtils";
+import { Cart } from "../generated/prisma";
 
 export const addToCart = async (input: AddItemDto, user: User) => {
     const { productId } = input;
@@ -105,7 +106,7 @@ export const addToCart = async (input: AddItemDto, user: User) => {
 
 }
 
-export const removeFromCart = async (cartItemId: RemoveItemDto) => {
+export const decrementItemQuantity = async (cartItemId: string) => {
 
     const cartItemToBeModified = await prisma.cartItem.findUnique({
         where: {
@@ -115,38 +116,49 @@ export const removeFromCart = async (cartItemId: RemoveItemDto) => {
 
     if (!cartItemToBeModified) throw new Error('This product is not inside this cart.')
 
-    // HANDLE MULTIPLE
-    if (cartItemToBeModified.quantity > 1) {
 
-        const modifiedItem = await prisma.cartItem.update({
-            where: {
-                id: cartItemId
-            },
-            data: {
-                quantity: {
-                    decrement: 1
-                }
-            },
-        })
+    const modifiedItem = await prisma.cartItem.update({
+        where: {
+            id: cartItemId
+        },
+        data: {
+            quantity: {
+                decrement: 1
+            }
+        },
+    })
 
-        return { ...modifiedItem, action: "DECREMENTED" }
-    }
-    else {
-        await prisma.cartItem.delete({
+    return { ...modifiedItem }
+
+}
+
+export const removeItemFromCart = async (cartItemId: string) => {
+    console.log(cartItemId)
+    await prisma.cartItem.delete({
+        where: {
+            id: cartItemId
+        }
+    })
+
+    return { result: 'DELETED' }
+}
+
+export const getCartFromUserId = async (userId: string): Promise<Cart | void> => {
+    try {
+
+        const cart = await prisma.cart.findUnique({
             where: {
-                id: cartItemId
+                userId
             }
         })
 
-        return { action: "DELETED" }
-    }
-}
+        if (!cart) throw new Error('CART_NOT_FOUND')
 
-export const getCart = async (userId: string) => {
-    try{
-        
+        return cart
+
     }
-    catch(err){
+    catch (err) {
         console.log(err)
+        return;
     }
 }
