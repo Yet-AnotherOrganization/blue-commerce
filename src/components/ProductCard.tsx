@@ -39,9 +39,9 @@ const ProductCard = ({ product }: { product: Product }) => {
         setIsDivHovered(false);
       }}
     >
-      <div className="flex-col items-center justify-between hover:translate-y-[-5px] hover:shadow-black transition-all bg-gradient-to-b from-blue-100 to-white  p-4 shadow-md rounded-md border-gray-500 flex max-w-[200px]">
+      <div className="flex-col items-center justify-between hover:translate-y-[-5px] hover:shadow-gray-200 transition-all bg-gradient-to-b from-blue-100 to-white shadow-md shadow-gray-100 rounded-xl border-gray-500 flex">
         <a className="text-center" href={`/product/${product.id}`}>
-          <div className="w-[7.5rem] h-[7.5rem] lg:h-[10rem] lg:w-[10rem] flex justify-center items-center">
+          <div className="flex justify-center items-center">
             <img
               onMouseEnter={() => {
                 setIsHovered(true);
@@ -53,11 +53,11 @@ const ProductCard = ({ product }: { product: Product }) => {
               style={{ zIndex: `${isHovered ? "9999999999" : "1"}` }}
               alt=""
               className={`${isHovered ? "scale-[200%]" : "scale-100"
-                }  transition-all w-full h-full relative rounded-xl  object-scale-up border-2 border-gray-300 shadow-sm`}
+                }  transition-all w-full h-full relative rounded-t-xl  object-scale-up border-2 border-gray-300 shadow-sm aspect-square`}
             />
           </div>
 
-          <div className="flex items-center justify-center h-16 my-2">
+          <div className="flex items-center justify-center my-2">
             {product ? (
               <p className="font-semibold text-center p-1 overflow-auto">
                 {product.name}
@@ -101,11 +101,11 @@ const ProductCard = ({ product }: { product: Product }) => {
           </motion.div>
           <motion.button
             animate={{
-              y: isDivHovered ? 0 : 10,
+              y: isDivHovered ? -5 : 0,
               opacity: isDivHovered ? 100 : width < 1024 ? 100 : 0,
             }}
             transition={{ duration: 0.3 }}
-            className="bg-green-500 
+            className="bg-[#7bd0ec] 
              text-white block
             justify-self-center md:p-2 md:m-2 m-1 p-1 rounded-xl hover:brightness-125 
             relative

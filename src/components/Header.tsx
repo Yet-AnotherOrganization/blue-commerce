@@ -4,14 +4,10 @@ import Sidebar from './Sidebar'
 import './css/index.css'
 import { IoIosMenu } from "react-icons/io";
 import { FaSearch, FaUser } from "react-icons/fa";
-import { listenCart } from '../utils/utils';
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState, } from '../redux/store';
 import { FaShoppingCart } from "react-icons/fa";
-// import { v4 as randomUUID } from 'uuid';
-import { useRouter } from 'next/navigation';
 import CartModal from './CartModal';
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useSession } from 'next-auth/react';
 import { toggleModal } from '../redux/slices/uiSlice';
 
@@ -127,7 +123,9 @@ const Header = () => {
           <a href="/" className='flex gap-2'>
             {/* <img loading='lazy' src="" alt="" className='object-cover w-[4rem] h-auto lg:w-[5rem] rounded-[50%] border-4 border-black-800' /> */}
             <h1 className='hidden lg:flex items-center gap-4 font-bold md:text-[22px] lg:text-[30px]'>
-              BluE-Commerce</h1></a>
+              BluE-Commerce</h1>
+              <h1 className='lg:hidden flex text-[22px] px-10 font-bold'>BluE</h1>
+              </a>
         </div>
 
 
