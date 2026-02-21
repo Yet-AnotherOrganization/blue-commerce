@@ -10,11 +10,12 @@ export const res = <T>(
     message?: string,
     data?: T,
     errCode?: string,
-): NextResponse => {
-    return NextResponse.json(
+): NextResponse | Response => {
+    if (status !== 204) return NextResponse.json(
         { message, ...(data !== undefined && { data }) },
         { status }
     );
+    else return new Response(null, { status: 204 })
 };
 
 
