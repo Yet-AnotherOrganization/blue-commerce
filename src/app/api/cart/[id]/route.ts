@@ -3,7 +3,7 @@ import { prisma } from "../../../../lib/prisma";
 import { getUser, res, withErrorHandler } from "../../../../utils/serverUtils";
 import { NextApiRequest } from "next";
 import APIError from "../../../../types/api";
-import { emptyCart } from "../../../../services/cartService";
+import { emptyCart, getCartFromUserId } from "../../../../services/cartService";
 
 type HandlerParams = {
     params: { id: string }
@@ -51,13 +51,6 @@ export async function getHandler(req: Request, { params }: HandlerParams) {
     return res(200, 'Cart has been successfully sent.', cart)
 }
 
-export async function deleteHandler(req: Request, { params }: HandlerParams) {
-    const user = await getUser();
 
-    await emptyCart(user.id);
-
-    return res(204);
-}
 
 export const GET = withErrorHandler(getHandler);
-export const DELETE = withErrorHandler(deleteHandler);

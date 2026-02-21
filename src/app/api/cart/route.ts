@@ -1,7 +1,7 @@
 
 import { getUser, res, withErrorHandler } from "../../../utils/serverUtils";
 import { AddItemSchema } from "../../../lib/zod";
-import { addToCart } from "../../../services/cartService";
+import { addToCart, emptyCart, getCartFromUserId } from "../../../services/cartService";
 import APIError from "../../../types/api";
 
 
@@ -29,5 +29,19 @@ export async function postHandler(req: Request) {
 
 }
 
+export async function deleteHandler(req: Request) {
+    const user = await getUser();
+
+    const cart = await getCartFromUserId(user.id)
+
+    if (!cart) throw new APIError('No cart related to this user exists.', 404, 'CART_NOT_FOUND')
+
+    if (user.id != cart.userId) throw new APIError("You don't have access to this resource.", 403, 'CART_FORBIDDEN')
+
+    await emptyCart(user.id);
+
+    return res(204, 'Deleted');
+}
 
 export const POST = withErrorHandler(postHandler)
+export const DELETE = withErrorHandler(deleteHandler);
