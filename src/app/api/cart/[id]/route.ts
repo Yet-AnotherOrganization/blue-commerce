@@ -3,9 +3,14 @@ import { prisma } from "../../../../lib/prisma";
 import { getUser, res, withErrorHandler } from "../../../../utils/serverUtils";
 import { NextApiRequest } from "next";
 import APIError from "../../../../types/api";
+import { emptyCart } from "../../../../services/cartService";
+
+type HandlerParams = {
+    params: { id: string }
+}
 
 // REQUEST TO GET CART 
-export async function getHandler(req: Request, { params }: { params: { id: string } }) {
+export async function getHandler(req: Request, { params }: HandlerParams) {
     const user = await getUser();
 
 
