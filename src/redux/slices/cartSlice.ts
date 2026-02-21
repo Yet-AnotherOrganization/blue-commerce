@@ -85,7 +85,21 @@ export const fetchCartAsync = createAsyncThunk(
 export const emptyCart = createAsyncThunk(
     'cart/emptyCart',
     async (_, { rejectWithValue }) => {
+        try {
 
+            // TODO
+            return await axios.delete('/api/cart')
+
+        }
+        catch (err: unknown) {
+
+            if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data)
+
+            if (err instanceof Error)
+                return rejectWithValue(err.message)
+
+            else rejectWithValue('Unknown error during removeItem request.')
+        }
 
 
     })
@@ -187,14 +201,6 @@ const cartSlice = createSlice({
                 state.cart = action.payload;
             })
 
-            // --------------------------------------------------------------------
-
-            // ? EMPTY CART
-
-            .addCase(emptyCart.pending, (state) => {
-                state.loading = true
-            })
-
             // ---------------------------------------------------------------------
 
             // ? Remove
@@ -229,13 +235,31 @@ const cartSlice = createSlice({
             })
             .addCase(decrementItem.fulfilled, (state, action) => {
                 state.loading = false;
-                state.cart = state.cart.map((item) => { 
-                    
+                state.cart = state.cart.map((item) => {
+
                     console.log("currentItem: ", item)
 
                     console.log("\n\n searchedItem: ", action.payload)
-                    
-                    return item.id == action.payload?.id ? { ...item, quantity: action.payload.quantity } : item})
+
+                    return item.id == action.payload?.id ? { ...item, quantity: action.payload.quantity } : item
+                })
+            })
+
+            // ? Empty Cart
+
+            .addCase(emptyCart.pending, (state,action)=>{
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(emptyCart.rejected, (state,action)=>{
+                state.loading = false;
+                state.error = action.payload;
+                console.log(action.payload)
+            })
+            .addCase(emptyCart.fulfilled, (state)=>{
+                state.loading = false;
+                state.error = null;
+                state.cart = [];
             })
     }
 })

@@ -148,18 +148,13 @@ export const removeItemFromCart = async (cartItemId: string) => {
     return { result: 'DELETED' }
 }
 
-export const emptyCart = async (cartIdOrUserId: string) => {
+export const emptyCart = async (userId: string) => {
 
     await prisma.cartItem.deleteMany({
         where: {
-            OR: [
-                { cartId: cartIdOrUserId },
-                {
-                    cart: {
-                        userId: cartIdOrUserId
-                    }
-                }
-            ]
+            cart: {
+                userId
+            }
         }
     })
 
