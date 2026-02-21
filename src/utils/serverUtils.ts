@@ -7,7 +7,7 @@ import APIError from "../types/api";
 
 export const res = <T>(
     status: number,
-    message: string,
+    message?: string,
     data?: T,
     errCode?: string,
 ): NextResponse => {

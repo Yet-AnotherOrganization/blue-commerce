@@ -121,7 +121,7 @@ export const changeItemQuantity = async (cartItemId: string, quantity: number) =
     if (!cartItemToBeModified) throw new APIError('This product is not inside the specified cart.', 404, 'NOT_IN_CART')
 
 
-    if (cartItemToBeModified.quantity + quantity > cartItemToBeModified.product.stock) throw new APIError('Not enough items in stock', 401, 'SESSION_EXPIRED', {stock: cartItemToBeModified.product.stock})
+    if (cartItemToBeModified.quantity + quantity > cartItemToBeModified.product.stock) throw new APIError('Not enough items in stock', 401, 'SESSION_EXPIRED', { stock: cartItemToBeModified.product.stock })
 
 
     const modifiedItem = await prisma.cartItem.update({
@@ -146,6 +146,25 @@ export const removeItemFromCart = async (cartItemId: string) => {
     })
 
     return { result: 'DELETED' }
+}
+
+export const emptyCart = async (cartIdOrUserId: string) => {
+
+    await prisma.cartItem.deleteMany({
+        where: {
+            OR: [
+                { cartId: cartIdOrUserId },
+                {
+                    cart: {
+                        userId: cartIdOrUserId
+                    }
+                }
+            ]
+        }
+    })
+
+    return { result: 'Deleted' }
+
 }
 
 export const getCartFromUserId = async (userId: string): Promise<Cart | void> => {
