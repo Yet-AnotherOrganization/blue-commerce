@@ -1,52 +1,50 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../../../../lib/prisma";
-import { getUser, res } from "../../../../utils/serverUtils";
+import { getUser, res, withErrorHandler } from "../../../../utils/serverUtils";
 import { NextApiRequest } from "next";
+import APIError from "../../../../types/api";
 
 // REQUEST TO GET CART 
-export async function GET(req: NextApiRequest, { params }: { params: { id: string } }) {
-    try {
-        const user = await getUser();
+export async function getHandler(req: Request, { params }: { params: { id: string } }) {
+    const user = await getUser();
 
 
-        const requestedId = params.id;
-        const currentUserId = user.id;
+    const requestedId = params.id;
+    const currentUserId = user.id;
 
-        if (requestedId !== currentUserId) return res(403, "You don't have access to this resource.")
+    if (requestedId !== currentUserId) throw new APIError('This cart does not belong to you.', 403, 'CART_FORBIDDEN')
 
-        const cart = await prisma.cart.findUnique({
-            where: {
-                userId: requestedId
-            },
-            include: {
-                items: {
-                    include: {
-                        product: true
-                    }
+    const cart = await prisma.cart.findUnique({
+        where: {
+            userId: requestedId
+        },
+        include: {
+            items: {
+                include: {
+                    product: true
                 }
             }
-        })
-
-        if (!cart) return res(404, 'Cart with ID was not found')
-
-        // transform to make ready
-        cart.items.map((item, index) => ({
-            ...item,
-            product:
-            {
-                ...item.product,
-                price: item.product.price.toNumber(),
-                createdAt: item.product.createdAt.toISOString(),
-                updatedAt: item.product.updatedAt.toISOString()
-            }
         }
-        ))
+    })
+
+    if (!cart) throw new APIError('Cart with the specified ID was not found', 404, 'CART_NOT_FOUND')
+
+    // transform to make ready
+    cart.items.map((item, index) => ({
+        ...item,
+        product:
+        {
+            ...item.product,
+            price: item.product.price.toNumber(),
+            createdAt: item.product.createdAt.toISOString(),
+            updatedAt: item.product.updatedAt.toISOString()
+        }
+    }
+    ))
 
 
-        return res(200, 'Cart has been successfully sent.', cart)
-    }
-    catch (err) {
-        console.log(err);
-        return NextResponse.json({ success: false, message: "An error has occurred while fetching cart.", data: err }, { status: 500 })
-    }
+    return res(200, 'Cart has been successfully sent.', cart)
 }
+
+
+export const GET = withErrorHandler(getHandler)
