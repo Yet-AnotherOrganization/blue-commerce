@@ -1,5 +1,5 @@
 
-import { getUser, res } from "../../../utils/serverUtils";
+import { getUser, res, withErrorHandler } from "../../../utils/serverUtils";
 import { AddItemSchema } from "../../../lib/zod";
 import { addToCart } from "../../../services/cartService";
 import APIError from "../../../types/api";
@@ -8,37 +8,26 @@ import APIError from "../../../types/api";
 
 // ADD TO CART
 
-export async function POST(req: Request) {
-    try {
+export async function postHandler(req: Request) {
 
-        const rawBody = await req.json();
 
-        const validation = AddItemSchema.safeParse(rawBody);
+    const rawBody = await req.json();
 
-        if (!validation.success) throw new APIError("Body is missing 'quantity' field.", 400, 'NO_QUANTITY', validation.error)
+    const validation = AddItemSchema.safeParse(rawBody);
 
-        const body = validation.data
+    if (!validation.success) throw new APIError("Body is missing 'quantity' field.", 400, 'NO_QUANTITY', validation.error)
 
-        const user = await getUser();
+    const body = validation.data
 
-        const result = await addToCart(body, user);
+    const user = await getUser();
 
-        return res(201, 'Product has been successfully added to the cart.', result)
+    const result = await addToCart(body, user);
 
-    }
-    catch (err: unknown) {
-        console.error(err);
+    return res(201, 'Product has been successfully added to the cart.', result)
 
-        if (err instanceof APIError) {
-            return res(err.statusCode, err.message, err.details)
-        }
 
-        return res(
-            err instanceof Error ? 400 : 500,
-            err instanceof Error ? err.message : "Internal server error"
-        );
-    }
 
 }
 
 
+export const POST = withErrorHandler(postHandler)
