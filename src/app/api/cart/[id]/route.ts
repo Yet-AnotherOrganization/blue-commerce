@@ -51,5 +51,13 @@ export async function getHandler(req: Request, { params }: HandlerParams) {
     return res(200, 'Cart has been successfully sent.', cart)
 }
 
+export async function deleteHandler(req: Request, { params }: HandlerParams) {
+    const user = await getUser();
 
-export const GET = withErrorHandler(getHandler)
+    await emptyCart(user.id);
+
+    return res(204);
+}
+
+export const GET = withErrorHandler(getHandler);
+export const DELETE = withErrorHandler(deleteHandler);
