@@ -1,6 +1,6 @@
 import { changeItemQuantity, getCartFromUserId, removeItemFromCart } from "../../../../../services/cartService";
 import APIError from "../../../../../types/api";
-import { getUser, res } from "../../../../../utils/serverUtils";
+import { getUser, res, withErrorHandler } from "../../../../../utils/serverUtils";
 
 type CartItemParams = {
     params: {
@@ -8,7 +8,7 @@ type CartItemParams = {
     }
 }
 
-export async function PATCH(req: Request, { params }: CartItemParams) {
+async function patchHandler(req: Request, { params }: CartItemParams) {
     try {
 
         const { itemId } = params;
@@ -46,37 +46,28 @@ export async function PATCH(req: Request, { params }: CartItemParams) {
     }
 }
 
-export async function DELETE(req: Request, { params }: CartItemParams) {
-    try {
+async function deleteHandler(req: Request, { params }: CartItemParams) {
 
-        const { itemId } = params;
+    const { itemId } = params;
 
-        console.log("\n\n params: \n\n", params)
+    console.log("\n\n params: \n\n", params)
 
 
-        if (!itemId) {
-            return res(400, 'Query lacks item ID.')
-        }
-
-        // validate if the user exists
-        const user = await getUser();
-
-        const cart = await getCartFromUserId(user.id)
-
-        if (cart && (user.id !== cart.userId)) throw new Error('USER_NOT_AUTHORIZED')
-
-        const result = await removeItemFromCart(itemId);
-
-        return res(201, 'Action successful.', result)
-
-    }
-    catch (err: unknown) {
-        console.error(err);
-
-        return res(
-            err instanceof Error ? 400 : 500,
-            err instanceof Error ? err.message : "Internal server error"
-        );
+    if (!itemId) {
+        return res(400, 'Query lacks item ID.')
     }
 
+    // validate if the user exists
+    const user = await getUser();
+
+    const cart = await getCartFromUserId(user.id)
+
+    if (cart && (user.id !== cart.userId)) throw new APIError('This cart does not belong to you', 403, 'NOT_OF_USER')
+
+    const result = await removeItemFromCart(itemId);
+
+    return res(201, 'Action successful.', result)
 }
+
+export const PATCH = withErrorHandler(patchHandler);
+export const DELETE = withErrorHandler(deleteHandler);
