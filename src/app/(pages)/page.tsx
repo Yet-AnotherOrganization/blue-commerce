@@ -13,6 +13,7 @@ import 'react-multi-carousel/lib/styles.css';
 import Slider from "../../components/Carousel";
 import { prisma } from "../../lib/prisma";
 import { Product } from "../../generated/prisma";
+import { ProductWithCategory } from "../../types/product";
 
 const MainPage = async ({
   searchParams,
@@ -20,18 +21,30 @@ const MainPage = async ({
   searchParams: { sort: string; category: string };
 }) => {
 
-  const products:Product[] = await prisma.product.findMany({
+  const products: Product[] = await prisma.product.findMany({
     where: {
-      stock: {gt: 0}
+      stock: { gt: 0 }
     },
-    include:{
+    include: {
       category: true
     },
-    orderBy:{
+    orderBy: {
       createdAt: "desc"
     }
   })
-  
+
+  const count = 5;
+
+  const randomProducts = await prisma.$queryRaw<ProductWithCategory[]>`
+  SELECT p.*, c.name AS catName FROM "Product" p 
+  JOIN "Category" c ON p."categoryId" = c.id 
+  WHERE p.stock > 0 
+  ORDER BY RANDOM() 
+  LIMIT ${Number(count)} `
+
+  console.log("random prods: ", randomProducts)
+
+
 
   return (
     <main className="w-[100vw]">
@@ -48,7 +61,7 @@ const MainPage = async ({
       {/* CAROUSEL */}
       <div className="flex flex-col w-[100vw] text-[1.5rem] md:text-[2rem] font-semibold gap-4 justify-center items-center my-0 md:my-5">
         <span className="text-white">Special Offers For Today</span>
-        {/* <Slider items={products} style={'w-[100vw] md:w-[75vw] h-full py-1'} /> */}
+        <Slider items={randomProducts} style={'w-[100vw] md:w-[75vw] h-full py-1'} />
       </div>
 
 
