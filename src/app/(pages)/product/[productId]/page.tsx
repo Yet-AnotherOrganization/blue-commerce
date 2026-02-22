@@ -2,7 +2,7 @@
 import { ReactNode } from "react";
 import ProductButtons from "../../../../components/ProductButtons";
 import { ProductParams, ReviewParams } from "../../../../constants/constants";
-import { addToCart, getSpecificProduct, getUser } from "../../../../utils/utils";
+import { getSpecificProduct, getUser } from "../../../../utils/utils";
 import Reviews from "./reviews";
 import { IoStar, IoStarOutline } from "react-icons/io5";
 import Review from "../../../../components/Review";
@@ -15,25 +15,23 @@ import { notFound } from "next/navigation";
 type ProductWithSeller = Prisma.ProductGetPayload<{ include: { seller: true } }>
 
 const productId = async ({ params }: { params: { productId: string } }) => {
-    const currentProduct: ProductWithSeller | null = await prisma.product.findFirst({
+    const currentProduct: ProductWithSeller | null = await prisma.product.findUnique({
         where: {
-            id: {
-                equals: params.productId
-            }
+            id: params.productId
         },
         include: {
             seller: true
         }
     })
 
-    if(!currentProduct) {
+    if (!currentProduct) {
         notFound()
     }
 
     const seller = currentProduct?.seller;
 
     return (
-        <div className="mt-20 md:mt-16 lg:mt-0">
+        <div className="mt-20 md:mt-16 lg:mt-0 pb-">
 
             <div className="lg:w-auto md:mx-[3rem] 2xl:mx-[10rem] mx-4 mt-4 flex lg:flex-row flex-col justify-center  items-center bg-white border-2 border-gray-300 rounded-t-xl">
                 <div className="w-full rounded-xl md:w-full h-full flex justify-center items-center p-4 bg-white">
