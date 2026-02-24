@@ -50,7 +50,7 @@ const ProductCard = ({ product }: { product: Product }) => {
                 setIsHovered(false);
               }}
               src={product?.imageUrl}
-              style={{ zIndex: `${isHovered ? "9999999999" : "1"}` }}
+              style={{ zIndex: `${isHovered ? "3" : "1"}` }}
               alt=""
               className={`${isHovered ? "scale-[200%]" : "scale-100"
                 }  transition-all w-full h-full relative rounded-t-xl  object-scale-up border-2 border-gray-300 shadow-sm aspect-square`}

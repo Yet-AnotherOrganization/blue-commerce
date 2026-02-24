@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "next-auth";
 import { CartItem, Product } from "../../generated/prisma";
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { getSession, useSession } from "next-auth/react";
 import { CartItemWithProduct } from "../../types/product";
 import { GetCartResponse } from "../../types/api";
+import { toast } from "sonner";
 
 // const userSlice = createSlice({
 //     name: "user",
@@ -39,12 +40,10 @@ export const addToCart = createAsyncThunk(
         try {
             const response = await axios.post('/api/cart', { ...payload, method: 'ADD' });
 
-            console.log("add to cart THUNK RES: ", response)
-
             return response.data.data.items
         }
         catch (err) {
-            if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data)
+            if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data.message)
 
             if (err instanceof Error)
                 return rejectWithValue(err.message)
@@ -93,7 +92,7 @@ export const emptyCart = createAsyncThunk(
         }
         catch (err: unknown) {
 
-            if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data)
+            if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data.message)
 
             if (err instanceof Error)
                 return rejectWithValue(err.message)
@@ -118,7 +117,7 @@ export const removeItem = createAsyncThunk('cart/removeItem',
         }
         catch (err: unknown) {
 
-            if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data)
+            if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data.message)
 
             if (err instanceof Error)
                 return rejectWithValue(err.message)
@@ -143,7 +142,7 @@ export const decrementItem = createAsyncThunk('cart/decrementItem',
         }
         catch (err: unknown) {
 
-            if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data)
+            if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data.message)
 
             if (err instanceof Error)
                 return rejectWithValue(err.message)
@@ -171,6 +170,7 @@ const cartSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload
                 console.log(action.payload)
+                toast.error('Error: ' + action.payload)
             })
             // * FULFILLED
             .addCase(addToCart.fulfilled, (state, action: PayloadAction<CartItemWithProduct[]>) => {
@@ -191,6 +191,7 @@ const cartSlice = createSlice({
             // ! REJECTED
             .addCase(fetchCartAsync.rejected, (state, action) => {
                 state.loading = false;
+                toast.error('Error: ' + action.payload)
                 state.error = action.payload
             })
 
@@ -211,6 +212,7 @@ const cartSlice = createSlice({
             .addCase(removeItem.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload
+                toast.error('Error: ' + action.payload)
                 console.log(action.payload)
             })
             .addCase(removeItem.fulfilled, (state, action) => {
@@ -231,6 +233,7 @@ const cartSlice = createSlice({
             .addCase(decrementItem.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+                toast.error('Error: ' + action.payload)
                 console.log("Error: ", action.payload)
             })
             .addCase(decrementItem.fulfilled, (state, action) => {
@@ -247,16 +250,17 @@ const cartSlice = createSlice({
 
             // ? Empty Cart
 
-            .addCase(emptyCart.pending, (state,action)=>{
+            .addCase(emptyCart.pending, (state, action) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(emptyCart.rejected, (state,action)=>{
+            .addCase(emptyCart.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
                 console.log(action.payload)
+                toast.error('Error: ' + action.payload)
             })
-            .addCase(emptyCart.fulfilled, (state)=>{
+            .addCase(emptyCart.fulfilled, (state) => {
                 state.loading = false;
                 state.error = null;
                 state.cart = [];
