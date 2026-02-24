@@ -68,7 +68,7 @@ async function main() {
             data: {
                 name: faker.commerce.department(),
                 description: faker.commerce.productDescription(),
-                imageUrl: faker.image.urlLoremFlickr({ category: "business" })
+                imageUrl: faker.image.urlPicsumPhotos({width: 1000, height: 500})
             }
         })
 
@@ -83,7 +83,7 @@ async function main() {
                 name: faker.commerce.productName(),
                 description: faker.commerce.productDescription(),
                 price: parseFloat(faker.commerce.price({ min: 10, max: 200 })).toFixed(2),
-                imageUrl: faker.image.urlLoremFlickr({ category: "business" }),
+                imageUrl: faker.image.urlPicsumPhotos({width: 1000, height: 500}),
                 categoryId: categories[Math.floor(Math.random() * categories.length)].id,
                 stock: faker.number.int({ min: 3, max: 200 }),
                 sellerId: stores[Math.floor(Math.random() * stores.length)].id
