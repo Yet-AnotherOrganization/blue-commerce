@@ -50,18 +50,22 @@ const MainPage = async ({
     <main className="w-[100vw]">
 
 
-      <div className="flex bg-white justify-center overflow-x-scroll md:overflow-hidden font-semibold text-[0.7rem] lg:text-[1.5rem] text-gray-500 h-[7.5vh] items-center border-b border-t">
+      <div className="flex bg-white justify-center overflow-x-scroll md:overflow-hidden font-semibold text-[0.7rem] lg:text-[1rem] text-gray-500 h-[7.5vh] items-center border-b border-t">
         {hotbarElements.map((element, i) => {
-          return <div key={element.label} className={`${i !== 0 ? 'border-l-4' : ''} border-gray-300 p-2  group  `}>
-            <a className="group-hover:text-red-300 transition-all" href={element.value}>{element.label}</a>
-          </div>
+          return (
+            <div key={element.label} className={`${i !== 0 ? 'border-l-4' : ''} border-gray-300 p-2 px-6  group  `}>
+              <a className="group-hover:text-red-300 transition-all" href={element.value}>
+                {element.label}
+              </a>
+            </div>
+          )
         })}
       </div>
 
       {/* CAROUSEL */}
-      <div className="flex flex-col w-[100vw] text-[1.5rem] md:text-[2rem] font-semibold gap-4 justify-center items-center my-0 md:my-5">
-        <span className="text-white">Special Offers For Today</span>
-        <Slider items={randomProducts} style={'w-[100vw] md:w-[75vw] h-full py-1'} />
+      <div className="flex w-[100vw] text-[1.5rem] md:text-[2rem] px-20 font-semibold gap-4 justify-center my-0 md:my-5 pt-10">
+        <Slider items={randomProducts} style={'flex-[3] h-full py-1'} />
+        <Slider items={randomProducts} style={'flex-[2] h-full py-1'} />
       </div>
 
 

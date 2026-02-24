@@ -19,15 +19,13 @@ const CarouselComponent = ({ product }: { product: ProductWithCategory }): React
 
   return (
     <div className="p-4 bg-[#ffffff] flex flex-col justify-center items-center rounded-xl  border h-[40vh] shadow-md">
-      <div className="relative bg-yellow-200  aspect-square lg:aspect-video h-[90%]">
+      <div className="relative bg-yellow-200  aspect-square lg:aspect-video h-[90%] w-full">
         <a href={`/product/${product.id}`} className="">
           <img src={imageUrl} className="w-full h-full object-fill" alt="carousel photo" />
           <ArrowAnimation />
         </a>
 
       </div>
-
-      <p className="text-center mt-2">{name}</p>
     </div>
   );
 };

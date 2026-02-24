@@ -7,7 +7,7 @@ import { ProductParams } from "../../constants/constants";
 import { Product } from "../../generated/prisma";
 import { ProductWithCategory } from "../../types/product";
 
-const Slider = ({ items, style }: { items: ProductWithCategory[], style: string }) => {
+const Slider = ({ items, style}: { items: ProductWithCategory[], style: string }) => {
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.

@@ -111,4 +111,16 @@ export const hotbarElements = [
         value: 'fastdelivery',
         label: 'Same-day Delivery'
     },
+    {
+        value: 'supermarket',
+        label: 'Supermarket'
+    },
+    {
+        value: 'gamingpcs',
+        label: 'Gaming PCs'
+    },
+        {
+        value: 'petshop',
+        label: 'Pet Shop'
+    },
 ]
