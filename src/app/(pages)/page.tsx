@@ -1,7 +1,7 @@
 import ProductCard from "../../components/ProductCard";
 import "../../components/css/index.css";
 import { getProducts } from "../../utils/utils";
-import { hotbarElements, ProductParams, ReviewParams } from "../../constants/constants";
+import { hotbarElements, ProductParams, ReviewParams, ribbons } from "../../constants/constants";
 import React from "react";
 import SelectComponent from "../../components/SelectComponent";
 import SortComponent from "../../components/SortComponent";
@@ -60,6 +60,20 @@ const MainPage = async ({
             </div>
           )
         })}
+      </div>
+
+      <div className="categories flex justify-center gap-4 px-20 pt-10">
+        {
+          ribbons.map((ribbon) => (
+            <div className="flex flex-col">
+              <a href="" className="overflow-hidden border border-gray-300 rounded-md h-[10vh]">
+                <img src={ribbon.url} alt="" className={`scale-[${ribbon.zoom}] w-full h-full`} />
+              </a>
+              <p className="text-center">{ribbon.title}</p>
+
+            </div>
+          ))
+        }
       </div>
 
       {/* CAROUSEL */}
