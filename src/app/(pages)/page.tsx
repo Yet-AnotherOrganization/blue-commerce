@@ -62,11 +62,16 @@ const MainPage = async ({
         })}
       </div>
 
-      <div className="categories flex justify-center gap-4 px-20 pt-10">
+      <div
+        className="categories flex overflow-scroll justify-center gap-4 px-20 pt-10"
+        style={{
+          scrollbarWidth: 'none'
+        }}
+      >
         {
           ribbons.map((ribbon) => (
             <div className="flex flex-col">
-              <a href="" className="overflow-hidden border border-gray-300 rounded-md h-[10vh]">
+              <a href="" className="overflow-hidden border border-gray-300 rounded-md h-[10vh] aspect-square">
                 <img src={ribbon.url} alt="" className={`scale-[${ribbon.zoom}] w-full h-full`} />
               </a>
               <p className="text-center">{ribbon.title}</p>
