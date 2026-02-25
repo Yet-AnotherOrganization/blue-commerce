@@ -40,7 +40,9 @@ const MainPage = async ({
   JOIN "Category" c ON p."categoryId" = c.id 
   WHERE p.stock > 0 
   ORDER BY RANDOM() 
-  LIMIT ${Number(count)} `
+  LIMIT ${Number(count)}`
+
+  const reversedProducts = randomProducts.reverse();
 
   console.log("random prods: ", randomProducts)
 
@@ -82,9 +84,9 @@ const MainPage = async ({
       </div>
 
       {/* CAROUSEL */}
-      <div className="flex w-[100vw] text-[1.5rem] md:text-[2rem] px-20 font-semibold gap-4 justify-center my-0 md:my-5 pt-10">
-        <Slider items={randomProducts} style={'flex-[3] h-full py-1'} />
-        <Slider items={randomProducts} style={'flex-[2] h-full py-1'} />
+      <div className="flex w-[100vw] h-[30vh] text-[1.5rem] md:text-[2rem] md:px-20 font-semibold gap-4 justify-center my-0 md:my-5 border-t">
+        <Slider items={randomProducts} style={'flex-[3] w-full h-full py-1'} />
+        <Slider items={reversedProducts} style={'lg:flex-[2] hidden w-full h-full py-1'} />
       </div>
 
 
