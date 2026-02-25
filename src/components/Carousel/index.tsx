@@ -28,10 +28,10 @@ const Slider = ({ items, style}: { items: ProductWithCategory[], style: string }
     }
   };
 
-  const random = Math.floor(Math.random() * items.length)
+  // const random = Math.floor(Math.random() * items.length)
 
   return (
-    <Carousel className={style} responsive={responsive} slidesToSlide={1} renderButtonGroupOutside={true} infinite={true} autoPlay={true} autoPlaySpeed={2500}>
+    <Carousel className={`${style} h-full`} responsive={responsive} slidesToSlide={1} arrows={false} infinite={true} autoPlay={true} autoPlaySpeed={2500}>
       {items.slice(0, 10).map((item, i) => { return <CarouselComponent key={i} product={item} /> })}
     </Carousel>
   )
