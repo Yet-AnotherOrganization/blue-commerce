@@ -18,8 +18,8 @@ const CarouselComponent = ({ product }: { product: ProductWithCategory }): React
   } = product;
 
   return (
-        <a href={`/product/${product.id}`} className='block h-full'>
-          <img src={imageUrl} className="rounded-md w-full h-full object-cover" alt="carousel photo" />
+        <a href={`/product/${product.id}`} className='block'>
+          <img src={imageUrl} className="rounded-xl w-full object-cover" alt="carousel photo" />
           {/* <ArrowAnimation /> */}
         </a>
   );

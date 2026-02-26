@@ -32,7 +32,7 @@ const Slider = ({ items, style }: { items: ProductWithCategory[], style?: string
 
   return (
     <Carousel
-      className={`h-full`}
+      className={``}
       responsive={responsive}
       slidesToSlide={1}
       arrows={false}

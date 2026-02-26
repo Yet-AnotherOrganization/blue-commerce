@@ -52,10 +52,10 @@ const MainPage = async ({
     <main className="w-[100vw]">
 
 
-      <div className="flex bg-white justify-center overflow-x-scroll md:overflow-hidden font-semibold text-[0.7rem] lg:text-[1rem] text-gray-500 py-1 items-center border-b border-t">
+      <div className="flex bg-white justify-center overflow-x-scroll md:overflow-hidden font-semibold text-[0.8rem] lg:text-[0.75rem] text-gray-500 py-1 items-center border-b border-t">
         {hotbarElements.map((element, i) => {
           return (
-            <div key={element.label} className={`${i !== 0 ? 'border-l-4' : ''} border-gray-300 p-2 px-6  group  `}>
+            <div key={element.label} className={`${i !== 0 ? 'border-l-4' : ''} border-gray-300 p-2 px-6  group `}>
               <a className="group-hover:text-red-300 transition-all" href={element.value}>
                 {element.label}
               </a>
@@ -65,18 +65,18 @@ const MainPage = async ({
       </div>
 
       <div
-        className="categories flex overflow-scroll justify-center gap-4 px-20 pt-4"
+        className="categories flex overflow-scroll justify-center gap-8 px-20 pt-2"
         style={{
           scrollbarWidth: 'none'
         }}
       >
         {
           ribbons.map((ribbon) => (
-            <div className="flex flex-col">
-              <a href="" className="overflow-hidden border border-gray-300 rounded-md h-[10vh] aspect-square">
+            <div className="flex flex-col items-center">
+              <a href="" className="overflow-hidden border border-gray-300 rounded-md h-[7vh] w-[7vh] aspect-square">
                 <img src={ribbon.url} alt="" className={`scale-[${ribbon.zoom}] w-full h-full`} />
               </a>
-              <p className="text-center">{ribbon.title}</p>
+              <p className="text-center text-[10px]">{ribbon.title}</p>
 
             </div>
           ))
@@ -84,11 +84,11 @@ const MainPage = async ({
       </div>
 
       {/* CAROUSEL */}
-      <div className="flex w-[100vw] h-[40vh] text-[1.5rem] md:text-[2rem] md:px-20 font-semibold gap-4 justify-center my-0 md:my-5 border-t py-10">
-        <div className="w-[50%] min-w-0">
+      <div className="flex w-[100vw] text-[1.5rem] md:text-[2rem] md:px-20 font-semibold gap-4 justify-center my-5 ">
+        <div className="flex-1 min-w-0">
           <Slider items={randomProducts} />
         </div>
-        <div className="w-[50%] lg:block min-w-0 hidden">
+        <div className="flex-1 lg:block min-w-0 hidden">
           <Slider items={reversedProducts} />
         </div>
       </div>
@@ -99,7 +99,7 @@ const MainPage = async ({
 
       <div className="flex justify-center">
         <div className="flex flex-col md:flex-row justify-between w-full border-t-2">
-          <h1 className="text-white text-[1.5rem] md:text-[2rem] md:mx-[10vw] w-full my-8 text-center font-semibold">
+          <h1 className="text-white text-[1.5rem] md:text-[2rem] md:mx-[10vw] w-full my-4 text-center font-semibold">
             Popular Products
           </h1>
           <div className="flex flex-col md:flex-row gap-4 justify-end items-center w-full md:mx-[10vw]">
@@ -113,7 +113,7 @@ const MainPage = async ({
 
       {/* Popular Products Section */}
       <div className="flex justify-center">
-        <div className="grid-container mx-[3vw] mb-10 md:px-6 px-6 w-[90vw] mt-5">
+        <div className="grid-container mx-[3vw] mb-10 md:px-6 px-6 w-[90vw] mt-2">
           {Array.isArray(products) ? (products.map((product: Product, i: number): React.ReactNode => (<ProductCard key={product.id} product={product} />))) : (<div>Error loading products.</div>)}
         </div>
       </div>
