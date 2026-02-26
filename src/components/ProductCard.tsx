@@ -39,7 +39,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         setIsDivHovered(false);
       }}
     >
-      <div className="flex-col items-center justify-between hover:translate-y-[-5px] hover:shadow-gray-200 transition-all bg-gradient-to-b from-blue-100 to-white shadow-md shadow-gray-100 rounded-xl border-gray-500 flex">
+      <div className="flex-col justify-between hover:translate-y-[-5px] hover:shadow-gray-200 transition-all bg-gradient-to-b from-blue-100 to-white shadow-md shadow-gray-100 rounded-xl border-gray-500 flex">
         <a className="text-center" href={`/product/${product.id}`}>
           <div className="flex justify-center items-center">
             <img
@@ -57,16 +57,16 @@ const ProductCard = ({ product }: { product: Product }) => {
             />
           </div>
 
-          <div className="flex items-center justify-center my-2">
+          <div className="flex my-2">
             {product ? (
-              <p className="font-semibold text-center p-1 overflow-auto">
+              <p className=" ml-2 font-normal text-[12px] p-1 overflow-auto">
                 {product.name}
               </p>
             ) : (
               <span>Loading Product...</span>
             )}
           </div>
-          <div className="flex justify-center items-center text-yellow-500">
+          <div className="flex items-center text-yellow-500">
             {/* {[...Array(5)].map((_, index) => {
               return index < (product.stars?.stars || 3) ? (
                 <FaStar key={index} />
@@ -76,11 +76,6 @@ const ProductCard = ({ product }: { product: Product }) => {
             })} */}
 
             {/* <span className="text-black px-1">{product.stars?.count || 0}</span> */}
-          </div>
-          <div className="text-center w-full">
-            <h1 className="md:text-[1rem] text-[1rem] font-medium">
-              ${product?.price.toString()}
-            </h1>
           </div>
         </a>
         <div className="flex flex-col justify-center items-center gap-2">

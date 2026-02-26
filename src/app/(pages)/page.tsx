@@ -99,9 +99,9 @@ const MainPage = async ({
 
       <div className="flex justify-center">
         <div className="flex flex-col md:flex-row justify-between w-full border-t-2">
-          <h1 className="text-white text-[1.5rem] md:text-[2rem] md:mx-[10vw] w-full my-4 text-center font-semibold">
+          {/* <h1 className="text-white text-[1.5rem] md:text-[2rem] md:mx-[10vw] w-full my-4 text-center font-semibold">
             Popular Products
-          </h1>
+          </h1> */}
           {/* <div className="flex flex-col md:flex-row gap-4 justify-end items-center w-full md:mx-[10vw]">
             <SortComponent />
             <SelectComponent />
@@ -113,7 +113,7 @@ const MainPage = async ({
 
       {/* Popular Products Section */}
       <div className="flex justify-center">
-        <div className="grid-container mx-[3vw] mb-10 md:px-6 px-6 w-[90vw] mt-2">
+        <div className="grid-container mx-[3vw] mb-10 md:px-6 px-6 w-[90vw] mt-8">
           {Array.isArray(products) ? (products.map((product: Product, i: number): React.ReactNode => (<ProductCard key={product.id} product={product} />))) : (<div>Error loading products.</div>)}
         </div>
       </div>
