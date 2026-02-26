@@ -115,9 +115,9 @@ const Header = () => {
 
 
   return (
-    <header className='h-[12vh]'>
+    <header className='h-[10vh]'>
 
-      <div ref={headerRef} style={{ 'zIndex': '10000' }} className='fixed top-0 w-[100vw] h-[12vh] bg-[#1e3a8a] text-white flex justify-between items-center border-b-8 border-blue-100 p-4 px-2 md:px-8 lg:px-16'>
+      <div ref={headerRef} style={{ 'zIndex': '10000' }} className='fixed top-0 w-[100vw] h-[10vh] bg-[#1e3a8a] text-white flex justify-between items-center border-b-8 border-blue-100 p-4 px-2 md:px-8 lg:px-16'>
 
         <div className='flex items-center justify-center gap-4 h-full lg:flex'>
           <a href="/" className='flex gap-2'>

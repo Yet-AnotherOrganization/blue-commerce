@@ -52,7 +52,7 @@ const MainPage = async ({
     <main className="w-[100vw]">
 
 
-      <div className="flex bg-white justify-center overflow-x-scroll md:overflow-hidden font-semibold text-[0.7rem] lg:text-[1rem] text-gray-500 h-[7.5vh] items-center border-b border-t">
+      <div className="flex bg-white justify-center overflow-x-scroll md:overflow-hidden font-semibold text-[0.7rem] lg:text-[1rem] text-gray-500 py-1 items-center border-b border-t">
         {hotbarElements.map((element, i) => {
           return (
             <div key={element.label} className={`${i !== 0 ? 'border-l-4' : ''} border-gray-300 p-2 px-6  group  `}>
@@ -65,7 +65,7 @@ const MainPage = async ({
       </div>
 
       <div
-        className="categories flex overflow-scroll justify-center gap-4 px-20 pt-10"
+        className="categories flex overflow-scroll justify-center gap-4 px-20 pt-4"
         style={{
           scrollbarWidth: 'none'
         }}
