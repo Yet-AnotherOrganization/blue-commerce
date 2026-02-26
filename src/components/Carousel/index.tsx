@@ -7,7 +7,7 @@ import { ProductParams } from "../../constants/constants";
 import { Product } from "../../generated/prisma";
 import { ProductWithCategory } from "../../types/product";
 
-const Slider = ({ items, style}: { items: ProductWithCategory[], style: string }) => {
+const Slider = ({ items, style }: { items: ProductWithCategory[], style?: string }) => {
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -31,7 +31,14 @@ const Slider = ({ items, style}: { items: ProductWithCategory[], style: string }
   // const random = Math.floor(Math.random() * items.length)
 
   return (
-    <Carousel className={`${style} h-full`} responsive={responsive} slidesToSlide={1} arrows={false} infinite={true} autoPlay={true} autoPlaySpeed={2500}>
+    <Carousel
+      className={`h-full`}
+      responsive={responsive}
+      slidesToSlide={1}
+      arrows={false}
+      infinite={true}
+      autoPlay={true}
+      autoPlaySpeed={2500}>
       {items.slice(0, 10).map((item, i) => { return <CarouselComponent key={i} product={item} /> })}
     </Carousel>
   )

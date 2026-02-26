@@ -84,9 +84,13 @@ const MainPage = async ({
       </div>
 
       {/* CAROUSEL */}
-      <div className="flex w-[100vw] h-[30vh] text-[1.5rem] md:text-[2rem] md:px-20 font-semibold gap-4 justify-center my-0 md:my-5 border-t">
-        <Slider items={randomProducts} style={'flex-[3] w-full h-full py-1'} />
-        <Slider items={reversedProducts} style={'lg:flex-[2] hidden w-full h-full py-1'} />
+      <div className="flex w-[100vw] h-[40vh] text-[1.5rem] md:text-[2rem] md:px-20 font-semibold gap-4 justify-center my-0 md:my-5 border-t py-10">
+        <div className="w-[50%] min-w-0">
+          <Slider items={randomProducts} />
+        </div>
+        <div className="w-[50%] lg:block min-w-0 hidden">
+          <Slider items={reversedProducts} />
+        </div>
       </div>
 
 
