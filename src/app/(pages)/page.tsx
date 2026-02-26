@@ -102,10 +102,10 @@ const MainPage = async ({
           <h1 className="text-white text-[1.5rem] md:text-[2rem] md:mx-[10vw] w-full my-4 text-center font-semibold">
             Popular Products
           </h1>
-          <div className="flex flex-col md:flex-row gap-4 justify-end items-center w-full md:mx-[10vw]">
+          {/* <div className="flex flex-col md:flex-row gap-4 justify-end items-center w-full md:mx-[10vw]">
             <SortComponent />
             <SelectComponent />
-          </div>
+          </div> */}
         </div>
       </div>
 
