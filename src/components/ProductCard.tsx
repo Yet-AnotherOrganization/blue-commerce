@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import "./css/index.css";
-import { FaRegStar, FaStar } from "react-icons/fa";
+import { FaCartPlus, FaRegStar, FaStar } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { Product } from "../generated/prisma";
 import { addToCart } from "../redux/slices/cartSlice";
@@ -39,24 +39,25 @@ const ProductCard = ({ product }: { product: Product }) => {
         setIsDivHovered(false);
       }}
     >
-      <div className="flex-col justify-between hover:translate-y-[-5px] hover:shadow-gray-200 transition-all bg-gradient-to-b from-blue-100 to-white shadow-md shadow-gray-100 rounded-xl border-gray-500 flex">
+      <div className="flex-col justify-between hover:translate-y-[-1px] hover:shadow-gray-200 transition-all border border-gray-150 shadow-md shadow-gray-100 rounded-xl flex">
         <a className="text-center" href={`/product/${product.id}`}>
           <div className="flex justify-center items-center">
             <img
-              onMouseEnter={() => {
-                setIsHovered(true);
-              }}
-              onMouseLeave={() => {
-                setIsHovered(false);
-              }}
+              // onMouseEnter={() => {
+              //   setIsHovered(true);
+              // }}
+              // onMouseLeave={() => {
+              //   setIsHovered(false);
+              // }}
               src={product?.imageUrl}
               style={{ zIndex: `${isHovered ? "3" : "1"}` }}
               alt=""
-              className={`${isHovered ? "scale-[200%]" : "scale-100"
-                }  transition-all w-full h-full relative rounded-t-xl  object-scale-up border-2 border-gray-300 shadow-sm aspect-square`}
+              className={`${isHovered ? "scale-[150%]" : "scale-100"
+                }  transition-all w-full h-full relative rounded-t-xl  object-scale-up border-x-2 border-t-2 border-neutral-50 aspect-square p-1`}
             />
           </div>
 
+          {/* NAME */}
           <div className="flex my-2">
             {product ? (
               <p className=" ml-2 font-normal text-[12px] p-1 overflow-auto">
@@ -66,6 +67,7 @@ const ProductCard = ({ product }: { product: Product }) => {
               <span>Loading Product...</span>
             )}
           </div>
+          {/* STARS */}
           <div className="flex items-center text-yellow-500">
             {/* {[...Array(5)].map((_, index) => {
               return index < (product.stars?.stars || 3) ? (
@@ -78,6 +80,8 @@ const ProductCard = ({ product }: { product: Product }) => {
             {/* <span className="text-black px-1">{product.stars?.count || 0}</span> */}
           </div>
         </a>
+
+        {/* PRICE AND BUTTONS */}
         <div className="flex flex-col justify-center items-center gap-2">
           <motion.div
             animate={{ scale: isDivHovered ? 1.07 : 1 }}
@@ -94,39 +98,45 @@ const ProductCard = ({ product }: { product: Product }) => {
               <span>1Y Warranty</span>
             </div> */}
           </motion.div>
-          <motion.button
-            animate={{
-              y: isDivHovered ? -5 : 0,
-              opacity: isDivHovered ? 100 : width < 1024 ? 100 : 0,
-            }}
-            transition={{ duration: 0.3 }}
-            className="bg-[#7bd0ec] 
-             text-white block
-            justify-self-center md:p-1 md:px-2 md:m-2 m-1 p-1 rounded-xl hover:brightness-125 
-            relative
-            border-black text-[0.7rem] md:text-[0.5rem]"
-            onClick={() => {
-              dispatch(addToCart({ productId: product.id, quantity: 1 }))
-            }}
-          >
-            <motion.span
-              animate={{ y: isClicked ? 30 : 0, opacity: isClicked ? 0 : 100 }}
-              transition={{ duration: 0.3 }}
-              className=""
-            >
-              ADD TO CART
-            </motion.span>
 
-            <motion.div
-              className="absolute left-1/2 top-1/2 transform translate-y-[-50%] translate-x-[-50%] w-full h-full">
-              {isClient ? <motion.span
-                className="absolute top-0 left-0 bottom-0 right-0 h-full w-full"
-                animate={{ y: isClicked ? 10 : -30, opacity: isClicked ? 100 : 0 }}
+          <div className="flex items-center justify-between h-8 w-[95%] bg-gray-100 rounded-b-lg px-2 mb-1">
+
+            <span className="md:text-[1rem] text-[1rem] font-medium">
+              ${product?.price.toString()}
+            </span>
+            <motion.button
+              animate={{
+                // y: isDivHovered ? -5 : 0,
+                opacity: isDivHovered ? 100 : width < 1024 ? 100 : 0,
+              }}
+              transition={{ duration: 0.5 }}
+              className="bg-[#7bd0ec] 
+             text-white block md:p-1 md:px-2 md:m-2 m-1 p-1 rounded-xl hover:brightness-125 
+            relative transition
+            border-black text-[0.7rem] md:text-[0.5rem]"
+              onClick={() => {
+                dispatch(addToCart({ productId: product.id, quantity: 1 }))
+              }}
+            >
+              <motion.span
+                animate={{ y: isClicked ? 30 : 0, opacity: isClicked ? 0 : 100 }}
                 transition={{ duration: 0.3 }}
-              >ITEM ADDED
-              </motion.span> : ''}
-            </motion.div>
-          </motion.button>
+                className="text-xs"
+              >
+                <FaCartPlus />
+              </motion.span>
+
+              <motion.div
+                className="absolute left-1/2 top-1/2 transform translate-y-[-50%] translate-x-[-50%] w-full h-full">
+                {isClient ? <motion.span
+                  className="absolute top-0 left-0 bottom-0 right-0 h-full w-full"
+                  animate={{ y: isClicked ? 10 : -30, opacity: isClicked ? 100 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >ITEM ADDED
+                </motion.span> : ''}
+              </motion.div>
+            </motion.button>
+          </div>
         </div>
       </div>
     </div>
