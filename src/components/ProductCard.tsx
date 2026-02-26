@@ -78,7 +78,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             {/* <span className="text-black px-1">{product.stars?.count || 0}</span> */}
           </div>
           <div className="text-center w-full">
-            <h1 className="md:text-[2rem] text-[1rem] font-semibold">
+            <h1 className="md:text-[1rem] text-[1rem] font-medium">
               ${product?.price.toString()}
             </h1>
           </div>
@@ -107,9 +107,9 @@ const ProductCard = ({ product }: { product: Product }) => {
             transition={{ duration: 0.3 }}
             className="bg-[#7bd0ec] 
              text-white block
-            justify-self-center md:p-2 md:m-2 m-1 p-1 rounded-xl hover:brightness-125 
+            justify-self-center md:p-1 md:px-2 md:m-2 m-1 p-1 rounded-xl hover:brightness-125 
             relative
-            border-black text-[0.7rem] md:text-[1rem]"
+            border-black text-[0.7rem] md:text-[0.5rem]"
             onClick={() => {
               dispatch(addToCart({ productId: product.id, quantity: 1 }))
             }}

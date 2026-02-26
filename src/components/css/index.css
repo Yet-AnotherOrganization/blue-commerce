@@ -17,10 +17,12 @@ body {
 
 
 
+
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  row-gap: 20px;
+  column-gap: 30px;
   /* Adjust the gap between columns as needed */
 }
 
