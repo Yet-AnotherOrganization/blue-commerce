@@ -1,3 +1,5 @@
+import { Category, Product } from "../generated/prisma";
+
 export type ProductType = {
     id: string,
     name: string,
@@ -10,6 +12,10 @@ export type ProductType = {
     stock: number,
     sellerId: string
 }
+
+export type ProductWithCategory = Product & {
+    category: Pick<Category, "name">;
+};
 
 export type CartItemWithProduct = {
     id: string,

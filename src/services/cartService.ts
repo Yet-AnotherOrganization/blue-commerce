@@ -3,6 +3,8 @@ import { prisma } from "../lib/prisma";
 import { AddItemDto, RemoveItemDto } from "../lib/zod";
 import { findCartByUserId, res } from "../utils/serverUtils";
 import { getUser } from "../utils/serverUtils";
+import { Cart } from "../generated/prisma";
+import APIError from "../types/api";
 
 export const addToCart = async (input: AddItemDto, user: User) => {
     const { productId } = input;
@@ -32,10 +34,10 @@ export const addToCart = async (input: AddItemDto, user: User) => {
     // ^ TRANSACTION BEGIN
     const result = await prisma.$transaction(async (tx) => {
 
-        if (!product) throw new Error('Product is not found on the database.')
+        if (!product) throw new APIError('Product is not found on the database.', 404, 'PRODUCT_NOT_FOUND')
 
 
-        if (product.stock == 0) throw new Error('The requested product is no longer on sale.');
+        if (product.stock == 0) throw new APIError('The requested product is no longer on sale.', 409, 'PRODUCT_OUT_OF_STOCK');
 
         const existingItem = await tx.cartItem.findUnique({
             where: {
@@ -48,7 +50,7 @@ export const addToCart = async (input: AddItemDto, user: User) => {
 
         let newQuantity = existingItem ? existingItem.quantity : 0 + quantity;
 
-        if (newQuantity > product.stock) throw new Error("The number of products you requested does not exist in stocks, current stock: " + product.stock);
+        if (newQuantity > product.stock) throw new APIError('Insufficient stock for the requested quantity. ', 409, 'PRODUCT_INSUFFICIENT_STOCK');
 
 
         await tx.cartItem.upsert({
@@ -105,41 +107,45 @@ export const addToCart = async (input: AddItemDto, user: User) => {
 
 }
 
-export const removeFromCart = async (cartItemId: RemoveItemDto) => {
+export const changeItemQuantity = async (cartItemId: string, quantity: number) => {
 
     const cartItemToBeModified = await prisma.cartItem.findUnique({
+        where: {
+            id: cartItemId
+        },
+        include: {
+            product: true
+        }
+    })
+
+    if (!cartItemToBeModified) throw new APIError('This product is not inside the specified cart.', 404, 'NOT_IN_CART')
+
+
+    if (cartItemToBeModified.quantity + quantity > cartItemToBeModified.product.stock) throw new APIError('Not enough items in stock', 401, 'SESSION_EXPIRED', { stock: cartItemToBeModified.product.stock })
+
+
+    const modifiedItem = await prisma.cartItem.update({
+        where: {
+            id: cartItemId
+        },
+        data: {
+            quantity: cartItemToBeModified.quantity + quantity
+        },
+    })
+
+    return { ...modifiedItem }
+
+}
+
+export const removeItemFromCart = async (cartItemId: string) => {
+    console.log(cartItemId)
+    await prisma.cartItem.delete({
         where: {
             id: cartItemId
         }
     })
 
-    if (!cartItemToBeModified) throw new Error('This product is not inside this cart.')
-
-    // HANDLE MULTIPLE
-    if (cartItemToBeModified.quantity > 1) {
-
-        const modifiedItem = await prisma.cartItem.update({
-            where: {
-                id: cartItemId
-            },
-            data: {
-                quantity: {
-                    decrement: 1
-                }
-            },
-        })
-
-        return { ...modifiedItem, action: "DECREMENTED" }
-    }
-    else {
-        await prisma.cartItem.delete({
-            where: {
-                id: cartItemId
-            }
-        })
-
-        return { action: "DELETED" }
-    }
+    return { result: 'DELETED' }
 }
 
 // export const getCart = async (userId: string) => {

@@ -1,74 +1,47 @@
 
-// ADD TO / REMOVE FROM CART
+import { getUser, res, withErrorHandler } from "../../../utils/serverUtils";
+import { AddItemSchema } from "../../../lib/zod";
+import { addToCart, emptyCart, getCartFromUserId } from "../../../services/cartService";
+import APIError from "../../../types/api";
 
-import { NextApiRequest } from "next";
-import { findCartByUserId, getUser, res } from "../../../utils/serverUtils";
-import { prisma } from "../../../lib/prisma";
-import { AddItemDto, AddItemSchema, RemoveItemSchema } from "../../../lib/zod";
-import { addToCart, removeFromCart } from "../../../services/cartService";
 
-export async function POST(req: Request) {
-    try {
 
-        const rawBody = await req.json();
+// ADD TO CART
 
-        const validation = AddItemSchema.safeParse(rawBody);
+export async function postHandler(req: Request) {
 
-        if (!validation.success) {
-            return res(400, 'An invalid object was sent', validation.error)
-        }
 
-        const body = validation.data
+    const rawBody = await req.json();
 
-        const user = await getUser();
+    const validation = AddItemSchema.safeParse(rawBody);
 
-        const result = await addToCart(body, user);
+    if (!validation.success) throw new APIError("Body is missing 'quantity' field.", 400, 'NO_QUANTITY', validation.error)
 
-        return res(201, 'Product has been successfully added to the cart.', result)
+    const body = validation.data
 
-    }
-    catch (err: unknown) {
-        console.error(err);
+    const user = await getUser();
 
-        return res(
-            err instanceof Error ? 400 : 500,
-            err instanceof Error ? err.message : "Internal server error"
-        );
-    }
+    const result = await addToCart(body, user);
+
+    return res(201, 'Product has been successfully added to the cart.', result)
+
+
 
 }
 
+export async function deleteHandler(req: Request) {
+    const user = await getUser();
 
-export async function DELETE(req: Request) {
-    try {
+    const cart = await getCartFromUserId(user.id)
 
-        const rawBody = await req.json();
+    if (!cart) throw new APIError('No cart related to this user exists.', 404, 'CART_NOT_FOUND')
 
-        let validation = RemoveItemSchema.safeParse(rawBody);
+    if (user.id != cart.userId) throw new APIError("You don't have access to this resource.", 403, 'CART_FORBIDDEN')
 
-        if (!validation.success) {
-            return res(400, 'An invalid object was sent', validation.error)
-        }
+    await emptyCart(user.id);
 
-        const body = validation.data
-
-        // validate
-        const user = await getUser();
-
-        getCart
-
-        const result = await removeFromCart(body);
-
-        return res(201, 'Product has been successfully added to the cart.', result)
-
-    }
-    catch (err: unknown) {
-        console.error(err);
-
-        return res(
-            err instanceof Error ? 400 : 500,
-            err instanceof Error ? err.message : "Internal server error"
-        );
-    }
-
+    return res(204, 'Deleted');
 }
+
+export const POST = withErrorHandler(postHandler)
+export const DELETE = withErrorHandler(deleteHandler);

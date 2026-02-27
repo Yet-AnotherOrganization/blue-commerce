@@ -4,6 +4,7 @@ import { prisma } from '../../../../lib/prisma';
 import { User } from "../../../../generated/prisma";
 import bcrypt from 'bcryptjs';
 import { JWT } from 'next-auth/jwt';
+import APIError from '../../../../types/api';
 
 export type SimpleUser = Pick<User, "id" | "name" | "email" | "role" | "avatar">;
 
@@ -64,7 +65,7 @@ export const authOptions: AuthOptions = {
                     where: { id: token.sub }
                 })
 
-                if(!existingUser) throw new Error('This account was deleted.')
+                if(!existingUser) throw new APIError('This account does not exist or was deleted.', 404, 'ACCOUNT_NOT_FOUND')
 
                 if (session.user) {
                     session.user.id = token.id;

@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "next-auth";
 import { CartItem, Product } from "../../generated/prisma";
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { getSession, useSession } from "next-auth/react";
 import { CartItemWithProduct } from "../../types/product";
 import { GetCartResponse } from "../../types/api";
+import { toast } from "sonner";
 
 // const userSlice = createSlice({
 //     name: "user",
@@ -39,12 +40,10 @@ export const addToCart = createAsyncThunk(
         try {
             const response = await axios.post('/api/cart', { ...payload, method: 'ADD' });
 
-            console.log("add to cart THUNK RES: ", response)
-
             return response.data.data.items
         }
         catch (err) {
-            if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data)
+            if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data.message)
 
             if (err instanceof Error)
                 return rejectWithValue(err.message)
@@ -85,39 +84,72 @@ export const fetchCartAsync = createAsyncThunk(
 export const emptyCart = createAsyncThunk(
     'cart/emptyCart',
     async (_, { rejectWithValue }) => {
+        try {
 
+            // TODO
+            return await axios.delete('/api/cart')
+
+        }
+        catch (err: unknown) {
+
+            if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data.message)
+
+            if (err instanceof Error)
+                return rejectWithValue(err.message)
+
+            else rejectWithValue('Unknown error during removeItem request.')
+        }
 
 
     })
 
-interface RemoveOrDecrementFromCartPayload {
-    productId: string;
-}
+export const removeItem = createAsyncThunk('cart/removeItem',
+    async (payload: string, { rejectWithValue }) => {
 
-export const removeOrDecrement = createAsyncThunk('cart/removeOrDecrement', async (payload: RemoveOrDecrementFromCartPayload, { rejectWithValue }) => {
+        try {
+            console.log("The item wanted to delete:", payload)
 
-    try {
-        console.log("The item wanted to delete:", payload)
-
-        const res = await axios.post('/api/cart', { ...payload, method: 'DEC' });
+            const res = await axios.delete(`/api/cart/items/${payload}`);
 
 
-        return res.data
+            return;
 
-    }
-    catch (err: unknown) {
-        console.error('ERROR(Remove or Decrement):');
-        console.dir(err)
+        }
+        catch (err: unknown) {
 
-        if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data)
+            if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data.message)
 
-        if (err instanceof Error)
-            return rejectWithValue(err.message)
+            if (err instanceof Error)
+                return rejectWithValue(err.message)
 
-        else rejectWithValue('Unknown error during addToCart request.')
-    }
+            else rejectWithValue('Unknown error during removeItem request.')
+        }
 
-})
+    })
+
+export const decrementItem = createAsyncThunk('cart/decrementItem',
+    async (payload: string, { rejectWithValue }) => {
+
+        try {
+            console.log("The item wanted to delete:", payload)
+
+            const res = await axios.patch(`/api/cart/items/${payload}`, { quantity: -1 });
+
+
+            console.log('changeItemRes: ', res.data)
+            return res.data.data;
+
+        }
+        catch (err: unknown) {
+
+            if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data.message)
+
+            if (err instanceof Error)
+                return rejectWithValue(err.message)
+
+            else rejectWithValue('Unknown error during decrementItem request.')
+        }
+    })
 
 
 const cartSlice = createSlice({
@@ -138,6 +170,7 @@ const cartSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload
                 console.log(action.payload)
+                toast.error('Error: ' + action.payload)
             })
             // * FULFILLED
             .addCase(addToCart.fulfilled, (state, action: PayloadAction<CartItemWithProduct[]>) => {
@@ -158,6 +191,7 @@ const cartSlice = createSlice({
             // ! REJECTED
             .addCase(fetchCartAsync.rejected, (state, action) => {
                 state.loading = false;
+                toast.error('Error: ' + action.payload)
                 state.error = action.payload
             })
 
@@ -168,31 +202,68 @@ const cartSlice = createSlice({
                 state.cart = action.payload;
             })
 
-            // --------------------------------------------------------------------
-
-            // ? EMPTY CART
-
-            .addCase(emptyCart.pending, (state) => {
-                state.loading = true
-            })
-
             // ---------------------------------------------------------------------
 
-            // ? Remove OR Decrement
+            // ? Remove
 
-            .addCase(removeOrDecrement.pending, (state) => {
+            .addCase(removeItem.pending, (state) => {
                 state.loading = true;
             })
-            .addCase(removeOrDecrement.rejected, (state, action) => {
+            .addCase(removeItem.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload
+                toast.error('Error: ' + action.payload)
+                console.log(action.payload)
             })
-            .addCase(removeOrDecrement.fulfilled, (state, action: PayloadAction<CartItemWithProduct[]>) => {
+            .addCase(removeItem.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
 
-                console.log("res we got and sent to reducer:", action.payload)
+                const removedItemId = action.meta.arg
 
+                state.cart = state.cart.filter((item) => item.id !== removedItemId)
+
+            })
+
+            // ? Decrement
+
+            .addCase(decrementItem.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(decrementItem.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+                toast.error('Error: ' + action.payload)
+                console.log("Error: ", action.payload)
+            })
+            .addCase(decrementItem.fulfilled, (state, action) => {
+                state.loading = false;
+                state.cart = state.cart.map((item) => {
+
+                    console.log("currentItem: ", item)
+
+                    console.log("\n\n searchedItem: ", action.payload)
+
+                    return item.id == action.payload?.id ? { ...item, quantity: action.payload.quantity } : item
+                })
+            })
+
+            // ? Empty Cart
+
+            .addCase(emptyCart.pending, (state, action) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(emptyCart.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+                console.log(action.payload)
+                toast.error('Error: ' + action.payload)
+            })
+            .addCase(emptyCart.fulfilled, (state) => {
+                state.loading = false;
+                state.error = null;
+                state.cart = [];
             })
     }
 })

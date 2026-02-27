@@ -2,35 +2,26 @@
 import React from "react";
 import { ProductParams } from "../../constants/constants";
 import ArrowAnimation from "./ArrowAnimation";
+import { Product } from "../../generated/prisma";
+import { ProductWithCategory } from "../../types/product";
 
-const CarouselComponent = ({ product }: { product: ProductParams }) => {
+const CarouselComponent = ({ product }: { product: ProductWithCategory }): React.ReactNode => {
   const {
     price,
     category,
-    datePublished,
-    desc,
+    createdAt,
+    description,
     id,
     name,
-    photoURL,
-    quantity,
-    reviews,
-    seller,
-    stars,
-    version,
+    imageUrl,
+    stock,
   } = product;
 
   return (
-    <div className="p-1 bg-[#ffffff] flex flex-col justify-center items-center rounded-xl py-5 border h-auto shadow-md">
-        <div className="md:w-[20vw] md:h-[35vh] w-[80vw] h-[25vh] relative">
-          <a href={`/product/${product.id}`}>
-            <img src={photoURL} className="rounded-xl w-full h-full" alt="carousel photo" />
-            <ArrowAnimation />
-          </a>
-          
-        </div>
-        
-        <p className="text-center">{name}</p>
-    </div>
+        <a href={`/product/${product.id}`} className='block'>
+          <img src={imageUrl} className="rounded-xl w-full object-cover" alt="carousel photo" />
+          {/* <ArrowAnimation /> */}
+        </a>
   );
 };
 

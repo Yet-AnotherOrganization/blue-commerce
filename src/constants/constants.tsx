@@ -111,4 +111,56 @@ export const hotbarElements = [
         value: 'fastdelivery',
         label: 'Same-day Delivery'
     },
+    {
+        value: 'supermarket',
+        label: 'Supermarket'
+    },
+    {
+        value: 'gamingpcs',
+        label: 'Gaming PCs'
+    },
+    {
+        value: 'petshop',
+        label: 'Pet Shop'
+    },
+]
+
+
+export const ribbons = [
+    {
+        url: '/assets/categories/cosmetics.png',
+        zoom: "1.5",
+        title: "Cosmetics"
+    },
+    {
+        url: '/assets/categories/fastfood.png',
+        zoom: "1",
+        title: "Food"
+    },
+    {
+        url: '/assets/categories/laptop.png',
+        zoom: "1.5",
+        title: "Laptops"
+    },
+    {
+        url: '/assets/categories/oven.png',
+        zoom: "1",
+        title: "Kitchenware"
+    },
+    {
+        url: '/assets/categories/television.png',
+        zoom: "1.5",
+        title: "Televisions"
+    },
+    {
+        url: '/assets/categories/gold.png',
+        zoom: "1.5",
+        title: "Gold"
+    },
+    {
+        url: '/assets/categories/phone.png',
+        zoom: "1.5",
+        title: "Phones"
+    },
+
 ]
