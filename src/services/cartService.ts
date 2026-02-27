@@ -142,11 +142,11 @@ export const removeFromCart = async (cartItemId: RemoveItemDto) => {
     }
 }
 
-export const getCart = async (userId: string) => {
-    try{
+// export const getCart = async (userId: string) => {
+//     try{
         
-    }
-    catch(err){
-        console.log(err)
-    }
-}
+//     }
+//     catch(err){
+//         console.log(err)
+//     }
+// }
