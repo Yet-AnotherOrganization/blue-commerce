@@ -1,9 +1,6 @@
-import { NextResponse } from "next/server";
 import { prisma } from "../../../../lib/prisma";
 import { getUser, res, withErrorHandler } from "../../../../utils/serverUtils";
-import { NextApiRequest } from "next";
 import APIError from "../../../../types/api";
-import { emptyCart, getCartFromUserId } from "../../../../services/cartService";
 
 type HandlerParams = {
     params: { id: string }
