@@ -84,7 +84,7 @@ const MainPage = async ({
       </div>
 
       {/* CAROUSEL */}
-      <div className="flex w-[100vw] text-[1.5rem] md:text-[2rem] md:px-20 font-semibold gap-4 justify-center my-5 ">
+      <div className="flex w-[100vw] text-[1.5rem] md:text-[2rem] md:px-20 font-semibold gap-4 justify-center my-5 px-5">
         <div className="flex-1 min-w-0">
           <Slider items={randomProducts} />
         </div>
