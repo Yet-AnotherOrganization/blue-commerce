@@ -22,6 +22,7 @@ model User {
   role      Role          @default(USER)
   store     Store?
   cart      Cart?
+  favorites Favorite[]
 }
 
 model Cart {
@@ -108,6 +109,7 @@ model Product {
   sellerId    String
   seller      Store       @relation(fields: [sellerId], references: [id])
   carts       CartItem[]
+  favoritedBy Favorite[]
 }
 
 model Category {
@@ -128,6 +130,16 @@ model Review {
   product   Product @relation(fields: [productId], references: [id])
 
   @@unique([ownerId, productId]) // 1 kullanıcı 1 ürüne yalnız 1 Review atabilir.
+}
+
+model Favorite {
+  id        String  @id @default(cuid())
+  ownerId   String
+  productId String
+  owner     User    @relation(fields: [ownerId], references: [id])
+  item      Product @relation(fields: [productId], references: [id])
+
+  @@unique([ownerId, productId])
 }
 
 // Sipariş durumlarını standartlaştırmak için Enum
