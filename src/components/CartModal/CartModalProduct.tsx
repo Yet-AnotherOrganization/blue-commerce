@@ -1,10 +1,7 @@
 import React, { useEffect } from 'react'
-import { ProductParams } from '../../constants/constants'
 import { FaTrashAlt } from 'react-icons/fa'
-import { reloadCart, removeFromCart } from '../../utils/utils'
 import { useDispatch } from 'react-redux'
-import { CartItemWithProduct, ProductType } from '../../utils/types'
-import { Product } from '../../generated/prisma'
+import { ProductType } from '../../types/product'
 
 
 type Props = {
