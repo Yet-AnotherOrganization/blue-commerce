@@ -39,5 +39,21 @@ const postHandler = async (req: Request) => {
 
 }
 
+const getHandler = async (req: Request) => {
+
+    const user = await getUser();
+
+    if (!user) throw new APIError('No session found, please log in again.', 401, 'ERR_UNAUTHORIZED')
+
+    const favorites = await prisma.favorite.findMany({
+        where: {
+            ownerId: user.id
+        }
+    })
+
+    return NextResponse.json({ success: true, message: 'All favorites were fetched.', data: favorites })
+
+}
 
 export const POST = withErrorHandler(postHandler)
+export const GET = withErrorHandler(getHandler)

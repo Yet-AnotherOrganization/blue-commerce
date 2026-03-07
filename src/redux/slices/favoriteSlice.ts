@@ -27,7 +27,7 @@ const addToFavoritesLogic = async (productId: string, { rejectWithValue }: any) 
     return res.data.data
 }
 
-const fetchFavoritesLogic = async (_: any, { rejectWithValue }: any) => {
+const fetchFavoritesLogic = async (_: void, { rejectWithValue }: any) => {
     const res = await axios.get('/api/favorite');
 
     return res.data.data
@@ -35,7 +35,7 @@ const fetchFavoritesLogic = async (_: any, { rejectWithValue }: any) => {
 
 export const addToFavorites = thunkWrapper<string>('favorites/addToFavorites', addToFavoritesLogic)
 
-export const fetchFavorites = thunkWrapper<any>('favorites/fetchFavorites', fetchFavoritesLogic)
+export const fetchFavorites = thunkWrapper<void>('favorites/fetchFavorites', fetchFavoritesLogic)
 
 
 const favoritesAdapter = createEntityAdapter<FavoriteRecord, string>({
@@ -63,6 +63,24 @@ const favoriteSlice = createSlice({
             console.log("eklenen veri: ", action.payload)
             state.error = null;
             favoritesAdapter.addOne(state, action.payload)
+        })
+
+        // FETCH FAVS
+
+        builder.addCase(fetchFavorites.pending, (state) => {
+            state.error = null;
+            state.loading = true;
+        })
+        builder.addCase(fetchFavorites.rejected, (state, action) => {
+
+            state.loading = false;
+            toast.error('Error: ' + action.payload)
+            state.error = action.payload
+        })
+        builder.addCase(fetchFavorites.fulfilled, (state, action) => {
+            state.loading = false;
+            state.error = null;
+            favoritesAdapter.setAll(state, action.payload)
         })
     }
 })

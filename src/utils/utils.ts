@@ -142,12 +142,13 @@ const catchThunk = (fn: any) => {
   }
 }
 
-export const thunkWrapper = <T>(typePrefix: string, payloadCreator: any) => {
-  return createAsyncThunk<any,T>(typePrefix, async (...args) => {
-    const [arg, thunkAPI] = args;
+export const thunkWrapper = <T = void>(
+  typePrefix: string,
+  payloadCreator: (arg: T, thunkAPI: any) => Promise<any>) => {
+  return createAsyncThunk<any, T>(typePrefix, async (arg, thunkAPI) => {
 
     try {
-      return await payloadCreator(...args);
+      return await payloadCreator(arg, thunkAPI);
     }
     catch (err) {
       if (axios.isAxiosError(err)) return thunkAPI.rejectWithValue(err.response?.data.message)

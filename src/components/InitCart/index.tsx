@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { fetchCartAsync } from "../../redux/slices/cartSlice";
 import { useAppDispatch } from "../../redux/hooks";
+import { fetchFavorites } from "../../redux/slices/favoriteSlice";
 
 export default function InitCart() {
     const { data: session } = useSession();
@@ -14,8 +15,7 @@ export default function InitCart() {
         (async () => {
             if (session?.user) {
                 const res = await dispatch(fetchCartAsync());
-
-                console.log(res)
+                const res2 = await dispatch(fetchFavorites());
             }
         })()
     }, [session, dispatch]);
