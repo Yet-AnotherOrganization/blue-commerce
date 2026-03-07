@@ -7,7 +7,7 @@ const postHandler = async (req:Request,) => {
 
     const body = await req.json();
 
-    console.log(body)
+    
 
     return NextResponse.json({success:true, message: 'Item successfully added to favorites', data: 'PLACEHOLDER'})
 
