@@ -8,6 +8,7 @@ import { Product } from "../generated/prisma";
 import { addToCart } from "../redux/slices/cartSlice";
 import { useAppDispatch } from "../redux/hooks";
 import { IoHeartOutline } from "react-icons/io5";
+import axios from "axios";
 
 const ProductCard = ({ product }: { product: Product }) => {
   const dispatch = useAppDispatch();
@@ -41,8 +42,11 @@ const ProductCard = ({ product }: { product: Product }) => {
       }}
     >
       <div className="flex-col justify-between hover:translate-y-[-1px] hover:shadow-gray-200 transition-all border border-gray-150 shadow-md shadow-gray-100 rounded-xl flex group">
-        <button className="opacity-0 group-hover:opacity-100 absolute top-3 right-3 z-20 bg-white rounded-full p-1 hover:scale-110 transition hover:text-red-600">
-          <IoHeartOutline/>
+        <button className="opacity-0 group-hover:opacity-100 absolute top-3 right-3 z-20 bg-white rounded-full p-1 hover:scale-110 transition hover:text-red-600"
+          onClick={async () => {
+          }}
+        >
+          <IoHeartOutline />
         </button>
         <a className="text-center" href={`/product/${product.id}`}>
           <div className="flex justify-center items-center relative">
