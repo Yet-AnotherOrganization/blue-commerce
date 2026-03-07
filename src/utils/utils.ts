@@ -147,7 +147,7 @@ export const thunkWrapper = <T>(typePrefix: string, payloadCreator: any) => {
     const [arg, thunkAPI] = args;
 
     try {
-      return await payloadCreator(arg);
+      return await payloadCreator(...args);
     }
     catch (err) {
       if (axios.isAxiosError(err)) return thunkAPI.rejectWithValue(err.response?.data.message)
