@@ -1,15 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "./css/index.css";
 import { FaCartPlus, FaHeart, FaRegStar, FaStar } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { Product } from "../generated/prisma";
 import { addToCart } from "../redux/slices/cartSlice";
 import { useAppDispatch } from "../redux/hooks";
-import { IoHeartOutline } from "react-icons/io5";
+import { IoHeart, IoHeartOutline } from "react-icons/io5";
 import axios from "axios";
-import { addToFavorites } from "../redux/slices/favoriteSlice";
+import { addToFavorites, selectFavoriteById } from "../redux/slices/favoriteSlice";
 
 const ProductCard = ({ product }: { product: Product }) => {
   const dispatch = useAppDispatch();
@@ -19,6 +19,7 @@ const ProductCard = ({ product }: { product: Product }) => {
   const [isClient, setIsClient] = useState<boolean>(false);
   const [isDivHovered, setIsDivHovered] = useState<boolean>(false);
   const [width, setWidth] = useState<number>(0)
+  const isFavorite = useSelector((state) => !!selectFavoriteById(state, product.id))
 
   useEffect(() => {
     // const userExists = JSON.parse(localStorage.getItem("user"));
@@ -48,7 +49,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             dispatch(addToFavorites(product?.id))
           }}
         >
-          <IoHeartOutline />
+          {isFavorite ? <IoHeart color="red" /> : <IoHeartOutline />}
         </button>
         <a className="text-center" href={`/product/${product.id}`}>
           <div className="flex justify-center items-center relative">
