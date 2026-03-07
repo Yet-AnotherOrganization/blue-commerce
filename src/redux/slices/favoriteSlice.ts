@@ -24,7 +24,7 @@ const addToFavoritesLogic = async (productId: string, { rejectWithValue }: any) 
 
 }
 
-const addToFavorites = thunkWrapper('favorites/addToFavorites', addToFavoritesLogic)
+export const addToFavorites = thunkWrapper<string>('favorites/addToFavorites', addToFavoritesLogic)
 
 
 const favoriteSlice = createSlice({
