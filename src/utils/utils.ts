@@ -4,19 +4,21 @@ import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.share
 import { ReadonlyURLSearchParams } from 'next/navigation'
 import { Option } from "../constants/constants";
 import { Cart } from "../generated/prisma";
+import axios from "axios";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
 
 
 export const getProducts = cache(async () => {
 })
 
-export const getSpecificProduct = async (id: string):Promise<void>=> {
+export const getSpecificProduct = async (id: string): Promise<void> => {
 };
 
 export const getAllProductsOfUser = async (id: string): Promise<void> => {
 }
 
-export const uploadDocument = async (user:any, data:any) => {
+export const uploadDocument = async (user: any, data: any) => {
 
 }
 
@@ -55,17 +57,17 @@ export const removeFromCart = async (uid: string, productId: string): Promise<vo
 }
 
 export const getUser = async (id: string): Promise<void> => {
-  
+
 }
 
-export const uploadMedia = async (file:any): Promise<void> => {
+export const uploadMedia = async (file: any): Promise<void> => {
 };
 
 export const reloadCart = async () => {
 
 }
 
-export const checkUser = async (user: any):Promise<void> => {
+export const checkUser = async (user: any): Promise<void> => {
 }
 
 
@@ -128,3 +130,32 @@ export const getReviews = async (id: string): Promise<void> => {
 
 //   router.replace(`${pathname}${query}`, { scroll: false });
 // };
+
+
+const catchThunk = (fn: any) => {
+  return (...args: any) => {
+    try {
+      fn(...args)
+    }
+    catch (err: unknown) {
+    }
+  }
+}
+
+export const thunkWrapper = (typePrefix: string, payloadCreator: any) => {
+  return createAsyncThunk(typePrefix, async (...args) => {
+    const [arg, thunkAPI] = args;
+
+    try {
+      return await payloadCreator(...args);
+    }
+    catch (err) {
+      if (axios.isAxiosError(err)) return thunkAPI.rejectWithValue(err.response?.data.message)
+
+      if (err instanceof Error)
+        return thunkAPI.rejectWithValue(err.message)
+
+      else thunkAPI.rejectWithValue('Unknown error during decrementItem request.')
+    }
+  })
+}
