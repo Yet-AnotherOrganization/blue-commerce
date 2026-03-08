@@ -1,9 +1,4 @@
 import { cache } from "react";
-import { ProductParams, ReviewParams, User } from "../constants/constants";
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
-import { ReadonlyURLSearchParams } from 'next/navigation'
-import { Option } from "../constants/constants";
-import { Cart } from "../generated/prisma";
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
