@@ -33,13 +33,22 @@ const fetchFavoritesLogic = async (_: void, { rejectWithValue }: any) => {
     return res.data.data
 }
 
+const removeFromFavoritesLogic = async (productId: string, { rejectWithValue }: any) => {
+
+    const res = await axios.delete(`/api/favorite/${productId}`)
+
+    return productId
+}
+
 export const addToFavorites = thunkWrapper<string>('favorites/addToFavorites', addToFavoritesLogic)
 
 export const fetchFavorites = thunkWrapper<void>('favorites/fetchFavorites', fetchFavoritesLogic)
 
+export const removeFromFavorites = thunkWrapper<string>('favorites/removeFromFavorites', removeFromFavoritesLogic)
+
 
 const favoritesAdapter = createEntityAdapter<FavoriteRecord, string>({
-    selectId: (favorite: any) => favorite.productId
+    selectId: (favorite: any) => { try { return favorite.productId } catch (err) { console.log(err) } }
 });
 
 const favoriteSlice = createSlice({
@@ -81,6 +90,25 @@ const favoriteSlice = createSlice({
             state.loading = false;
             state.error = null;
             favoritesAdapter.setAll(state, action.payload)
+        })
+
+        // REMOVE FROM FAVS
+
+        builder.addCase(removeFromFavorites.pending, (state) => {
+            state.error = null;
+            state.loading = true;
+        })
+        builder.addCase(removeFromFavorites.rejected, (state, action) => {
+
+            state.loading = false;
+            toast.error('Error: ' + action.payload)
+            state.error = action.payload
+        })
+        builder.addCase(removeFromFavorites.fulfilled, (state, action) => {
+            state.loading = false;
+            state.error = null;
+            toast.success('Item removed from wishlist.')
+            favoritesAdapter.removeOne(state, action.payload)
         })
     }
 })
