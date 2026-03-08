@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getUser, withErrorHandler } from "../../../utils/serverUtils"
+import { getUser, res, withErrorHandler } from "../../../utils/serverUtils"
 import APIError from "../../../types/api";
 import { prisma } from "../../../lib/prisma";
 
@@ -35,7 +35,7 @@ const postHandler = async (req: Request) => {
         }
     })
 
-    return NextResponse.json({ success: true, message: 'Item successfully added to favorites', data: favoriteItem })
+    return res(201, 'Item was successfully added to favorites.', favoriteItem)
 
 }
 
