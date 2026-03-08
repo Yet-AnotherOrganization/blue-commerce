@@ -115,52 +115,62 @@ const Header = () => {
 
 
   return (
-    <header className='h-[10vh]'>
+    <header className='text-md'>
 
-      <div ref={headerRef} style={{ 'zIndex': '10000' }} className='fixed top-0 w-[100vw] h-[10vh] bg-[#1e3a8a] text-white flex justify-between items-center border-b-8 border-blue-100 p-4 px-2 md:px-8 lg:px-16'>
+      <div ref={headerRef} style={{ 'zIndex': '10000' }} className=' w-[100vw] bg-[#1e3a8a] text-white flex flex-col border-b-8 border-blue-100 p-4 px-2 md:px-8 lg:px-16 gap-2'>
 
-        <div className='flex items-center justify-center gap-4 h-full lg:flex'>
-          <a href="/" className='flex gap-2'>
-            {/* <img loading='lazy' src="" alt="" className='object-cover w-[4rem] h-auto lg:w-[5rem] rounded-[50%] border-4 border-black-800' /> */}
-            <h1 className='hidden lg:flex items-center gap-4 font-bold md:text-[22px] lg:text-[30px]'>
-              BluE-Commerce</h1>
-            <h1 className='lg:hidden flex text-[22px] px-10 font-bold'>BluE</h1>
-          </a>
+        <div className='flex justify-end gap-4 text-neutral-200 text-[10px] md:text-xs'>
+          <a href="#">My Orders</a>
+          <a href="#">Amazing Opportunities</a>
+          <a href="#">Customer Services</a>
+          <a href="#">Become a Seller</a>
+          <a href="#">My Orders</a>
         </div>
 
+        <div className='flex justify-between  items-center w-full'>
+          <div className='flex items-center justify-center gap-4 h-full lg:flex'>
+            <a href="/" className='flex gap-2'>
+              {/* <img loading='lazy' src="" alt="" className='object-cover w-[4rem] h-auto lg:w-[5rem] rounded-[50%] border-4 border-black-800' /> */}
+              <h1 className='hidden lg:flex items-center gap-4 font-bold md:text-[15px] lg:text-[20px]'>
+                BluE-Commerce</h1>
+              <h1 className='lg:hidden flex text-[22px] px-10 font-bold'>BluE</h1>
+            </a>
+          </div>
 
-        <div className='w-[30%] relative'>
-          <form id='searchbar' onSubmit={(e) => { }}>
-            <input ref={formRef} onInput={(e) => { onSearch(e) }} type="text" className='w-full  rounded-xl border-2 border-gray-500 text-black p-1 lg:p-4' placeholder='Search for products...' />
-            <button className='absolute transform top-[50%] right-4 translate-y-[-50%] text-[30px] text-gray-500'><FaSearch className='hidden lg:block' /></button>
-          </form>
-        </div>
 
-        {/* <a href="/cart"> */}
-        <div>
-          <button ref={cartText} onClick={() => {
-            dispatch(toggleModal())
-          }}
-            className='text-blue-400 cart-text flex items-center border-2 hover:border-neutral-800 cursor-pointer border-transparent hover:shadow-lg transition-all relative bg-white rounded-xl font-semibold p-2 justify-center'>
-            <div className='relative'>
-              <span className='text-white text-sm lg:text-[20px] font-semibold absolute top-[40%] left-[60%] transform -translate-x-1/2 -translate-y-1/2'>{cart.length}</span>
-              <FaShoppingCart className='cart-text text-2xl lg:text-[40px]' />
-            </div>
+          <div className='w-[30%] relative'>
+            <form id='searchbar' onSubmit={(e) => { }}>
+              <input ref={formRef} onInput={(e) => { onSearch(e) }} type="text" className='w-full  rounded-xl border-2 border-gray-500 text-black p-1 lg:p-4' placeholder='Search for products...' />
+              <button className='absolute transform top-[50%] right-4 translate-y-[-50%] text-[30px] text-gray-500'><FaSearch className='hidden lg:block' /></button>
+            </form>
+          </div>
 
-            <span className='hidden lg:block'>MY CART</span>
-          </button>
-          <CartModal />
-        </div>
+          {/* <a href="/cart"> */}
+          <div className='relative z-10'>
+            <button ref={cartText} onClick={() => {
+              dispatch(toggleModal())
+            }}
+              className='text-blue-400 cart-text flex items-center border-2 hover:border-neutral-800 cursor-pointer border-transparent hover:shadow-lg transition-all relative bg-white rounded-xl font-semibold p-2 justify-center'>
+              <div className='relative'>
+                <span className='text-white text-sm lg:text-[15px] font-semibold absolute top-[40%] left-[60%] transform -translate-x-1/2 -translate-y-1/2'>{cart.length}</span>
+                <FaShoppingCart className='cart-text text-2xl lg:text-[30px]' />
+              </div>
 
-        {/* </a> */}
+              <span className='hidden lg:block'>MY CART</span>
+            </button>
+            <CartModal />
+          </div>
 
-        <div className='flex gap-[20px] justify-between items-center'>
-          <a href={
-            '/login'
-            // auth.currentUser ? `/profile/${user?.uid}` : '/login'
-          }>
-            <div className='flex items-center justify-start gap-4 text-2xl lg:text-[40px]'><FaUser /><span className='text-[20px] hidden lg:block'>{user?.name}</span></div></a>
-          <button className='text-2xl lg:text-[40px]' onClick={() => { setSidebar(true) }}><IoIosMenu /></button>
+          {/* </a> */}
+
+          <div className='flex gap-[20px] justify-between items-center'>
+            <a href={
+              '/login'
+              // auth.currentUser ? `/profile/${user?.uid}` : '/login'
+            }>
+              <div className='flex items-center justify-start gap-4 text-2xl lg:text-[40px]'><FaUser /><span className='text-[20px] hidden lg:block'>{user?.name}</span></div></a>
+            <button className='text-2xl lg:text-[40px]' onClick={() => { setSidebar(true) }}><IoIosMenu /></button>
+          </div>
         </div>
 
       </div>

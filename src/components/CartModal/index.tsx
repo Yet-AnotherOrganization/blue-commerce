@@ -37,11 +37,11 @@ const CartModal = (props: Props) => {
         cartModalOpen &&
         <>
             <div>
-                <div className='bg-white text-black border flex-col justify-between overflow-hidden rounded-xl h-[40vh] w-[30vw] sm:w-[40vw] absolute bottom-[-42vh] z-[200000] hidden md:flex'
+                <div className='bg-white text-black border flex-col justify-between overflow-hidden rounded-xl h-[40vh] w-[30vw] sm:w-[40vw] absolute bottom-[-42vh] right-0 z-[200000] hidden md:flex'
                 >
                     <div className='flex justify-between items-center text-xl font-semibold px-4 py-2 border-b'><div />
                         <span>CART</span>
-                        <button className='bg-red-700 rounded-full cursor-pointer relative w-8 h-8' onClick={() => dispatch({ type: 'CLOSE_CART_MODAL' })}>
+                        <button className='bg-red-700 rounded-full cursor-pointer relative w-8 h-8' onClick={() => dispatch(closeModal())}>
 
                             <span
                                 className='text-white'
