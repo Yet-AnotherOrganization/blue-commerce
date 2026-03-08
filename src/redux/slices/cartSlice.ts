@@ -40,7 +40,7 @@ export const addToCart = createAsyncThunk(
         try {
             const response = await axios.post('/api/cart', { ...payload, method: 'ADD' });
 
-            return response.data.data.items
+            return response.data.data.data.items
         }
         catch (err) {
             if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data.message)
@@ -176,6 +176,8 @@ const cartSlice = createSlice({
             .addCase(addToCart.fulfilled, (state, action: PayloadAction<CartItemWithProduct[]>) => {
                 state.loading = false;
                 state.error = null;
+                toast.success('Item was added to your cart.')
+                console.log("cart payloadı: ", action.payload)
                 state.cart = action.payload;
             })
 
@@ -218,9 +220,7 @@ const cartSlice = createSlice({
             .addCase(removeItem.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
-
                 const removedItemId = action.meta.arg
-
                 state.cart = state.cart.filter((item) => item.id !== removedItemId)
 
             })
