@@ -124,8 +124,8 @@ const Header = () => {
             {/* <img loading='lazy' src="" alt="" className='object-cover w-[4rem] h-auto lg:w-[5rem] rounded-[50%] border-4 border-black-800' /> */}
             <h1 className='hidden lg:flex items-center gap-4 font-bold md:text-[22px] lg:text-[30px]'>
               BluE-Commerce</h1>
-              <h1 className='lg:hidden flex text-[22px] px-10 font-bold'>BluE</h1>
-              </a>
+            <h1 className='lg:hidden flex text-[22px] px-10 font-bold'>BluE</h1>
+          </a>
         </div>
 
 
@@ -137,21 +137,21 @@ const Header = () => {
         </div>
 
         {/* <a href="/cart"> */}
-        <button ref={cartText} onClick={() => {
-          dispatch(toggleModal())
-        }}
-          className='text-blue-400 cart-text flex items-center border-2 hover:border-neutral-800 cursor-pointer border-transparent hover:shadow-lg transition-all relative bg-white rounded-xl font-semibold p-2 justify-center'>
-          <div className='relative'>
-            <span className='text-white text-sm lg:text-[20px] font-semibold absolute top-[40%] left-[60%] transform -translate-x-1/2 -translate-y-1/2'>{cart.length}</span>
-            <FaShoppingCart className='cart-text text-2xl lg:text-[40px]' />
-          </div>
+        <div>
+          <button ref={cartText} onClick={() => {
+            dispatch(toggleModal())
+          }}
+            className='text-blue-400 cart-text flex items-center border-2 hover:border-neutral-800 cursor-pointer border-transparent hover:shadow-lg transition-all relative bg-white rounded-xl font-semibold p-2 justify-center'>
+            <div className='relative'>
+              <span className='text-white text-sm lg:text-[20px] font-semibold absolute top-[40%] left-[60%] transform -translate-x-1/2 -translate-y-1/2'>{cart.length}</span>
+              <FaShoppingCart className='cart-text text-2xl lg:text-[40px]' />
+            </div>
 
-          <span className='hidden lg:block'>MY CART</span>
-
-
+            <span className='hidden lg:block'>MY CART</span>
+          </button>
           <CartModal />
+        </div>
 
-        </button>
         {/* </a> */}
 
         <div className='flex gap-[20px] justify-between items-center'>
