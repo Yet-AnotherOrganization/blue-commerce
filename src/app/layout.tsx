@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactElement 
             <Toaster />
             <InitCart />
             <Header />
-            <main className='w-[100vw] min-h-[78vh] border-t-1'>
+            <main className='w-[100vw] min-h-[100vh] border-t-1'>
               {children}
             </main>
             <Footer />
