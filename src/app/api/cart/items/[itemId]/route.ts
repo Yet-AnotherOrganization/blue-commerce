@@ -1,6 +1,6 @@
-import { changeItemQuantity, getCartFromUserId, removeItemFromCart } from "../../../../../services/cartService";
+import { changeItemQuantity, removeItemFromCart } from "../../../../../services/cartService";
 import APIError from "../../../../../types/api";
-import { getUser, res, withErrorHandler } from "../../../../../utils/serverUtils";
+import { findCartByUserId, getUser, res, withErrorHandler } from "../../../../../utils/serverUtils";
 
 type CartItemParams = {
     params: {
@@ -22,7 +22,7 @@ async function patchHandler(req: Request, { params }: CartItemParams) {
     // validate
     const user = await getUser();
 
-    const cart = await getCartFromUserId(user.id)
+    const cart = await findCartByUserId(user.id)
 
     if (cart && (user.id !== cart.userId)) throw new APIError('This cart does not belong to your account.', 403, 'CART_UNAUTHORIZED')
 
@@ -47,7 +47,7 @@ async function deleteHandler(req: Request, { params }: CartItemParams) {
     // validate if the user exists
     const user = await getUser();
 
-    const cart = await getCartFromUserId(user.id)
+    const cart = await findCartByUserId(user.id)
 
     if (cart && (user.id !== cart.userId)) throw new APIError('This cart does not belong to you', 403, 'NOT_OF_USER')
 
