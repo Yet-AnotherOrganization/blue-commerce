@@ -7,22 +7,22 @@ type HandlerParams = {
     params: { id: string }
 }
 
-const deleteHandler = async (req: Request, { params }:HandlerParams) => {
+const deleteHandler = async (req: Request, { params }: HandlerParams) => {
 
     const user = await getUser();
 
     const itemToDelete = await prisma.favorite.delete({
-        where:{
-            ownerId_productId:{
+        where: {
+            ownerId_productId: {
                 ownerId: user.id,
                 productId: params.id
             }
         }
     })
 
-    if(!itemToDelete) throw new APIError('This product is not in your favorites', 404, 'ERR_FAVORITE_NOT_FOUND')
+    if (!itemToDelete) throw new APIError('This product is not in your favorites', 404, 'ERR_FAVORITE_NOT_FOUND')
 
-    return res(204, 'Removed from favorites.')
+    return res(204, 'Removed from favorites.', itemToDelete.productId)
 }
 
 export const DELETE = withErrorHandler(deleteHandler)
