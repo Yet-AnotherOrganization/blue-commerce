@@ -161,7 +161,6 @@ const Header = () => {
             <CartModal />
           </div>
 
-          {/* </a> */}
 
           <div className='flex gap-[20px] justify-between items-center'>
             <a href={
