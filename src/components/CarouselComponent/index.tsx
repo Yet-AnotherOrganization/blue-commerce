@@ -17,9 +17,11 @@ const CarouselComponent = ({ product }: { product: ProductWithCategory }): React
     stock,
   } = product;
 
+  const photos = ['aircleaner.jpg','coffee.jpg','vacuum.jpg']
+
   return (
         <a href={`/product/${product.id}`} className='block'>
-          <img src={imageUrl} className="rounded-xl w-full object-cover" alt="carousel photo" />
+          <img src={`/assets/banners/${photos[Math.floor(photos.length * Math.random())]}`} className="rounded-xl w-full object-cover" alt="carousel photo" />
           {/* <ArrowAnimation /> */}
         </a>
   );
