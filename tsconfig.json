@@ -5,6 +5,11 @@
       "dom.iterable",
       "esnext"
     ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
     "allowImportingTsExtensions": true,
     "allowJs": true,
     "skipLibCheck": true,
