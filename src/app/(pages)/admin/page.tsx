@@ -6,10 +6,7 @@ type Props = {}
 
 const AdminPage = (props: Props) => {
   return (
-    <div className='flex relative'>
-        <AdminSidebar />
         <div className='flex-[4] flex justify-center'>another div</div>
-    </div>
   )
 }
 
