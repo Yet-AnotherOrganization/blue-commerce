@@ -13,8 +13,6 @@ const ProductsTable = (props: Props) => {
 
     useEffect(()=>{
 
-        await axios.get('')
-
     },[page])
 
     return (
