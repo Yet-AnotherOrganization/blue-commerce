@@ -71,15 +71,10 @@ export const getUser = async (): Promise<User> => {
 
 export const findCartByUserId = async (uid: string): Promise<Cart> => {
 
-    const cart = await prisma.cart.findUnique({
-        where: {
-            userId: uid
-        }
-    });
-
-    if (!cart) throw new APIError('The cart you specified was not found', 404, 'CART_NOT_FOUND')
-
-    return cart;
-
+    return await prisma.cart.upsert({
+        where: { userId: uid },
+        update: {},
+        create: { userId: uid }
+    })
 
 }
