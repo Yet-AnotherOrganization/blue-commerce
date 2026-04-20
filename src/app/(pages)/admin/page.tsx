@@ -1,7 +1,8 @@
 import AdminSidebar from '@/components/Admin/AdminSidebar'
 import ProductsTable from '@/components/Admin/ProductsTable'
 import TableControls from '@/components/Admin/ProductsTable/TableControls'
-import TableSelector from '@/components/Admin/TableSelector/TableSelector'
+import UsersTable from '@/components/Admin/UsersTable'
+import { Product, User } from '@/generated/prisma'
 import { prisma } from '@/lib/prisma'
 import React from 'react'
 
@@ -27,21 +28,38 @@ const AdminPage = async ({ searchParams }: Props) => {
     const order = searchParams.order;
 
 
-    let data;
+    let data: Product[] | User[];
     let totalAmount;
+
+    const getProductsTable = async (query: string, limit: number, page: number) => {
+        const data = await prisma.product.findMany({
+            where: {
+                name: { contains: query, mode: "insensitive" },
+                // status: "ACTIVE"
+            },
+            take: limit,
+            skip: (page - 1) * 10,
+            orderBy: sort ? { [sort]: order || 'asc' } : undefined
+        })
+        totalAmount = await prisma.product.count() || 0;
+
+        return data
+    }
+
+    const getUsersTable = async (query: string, limit: number, page: number) => {
+        const data = await prisma.user.findMany({
+            where: {
+                name: { contains: query, mode: "insensitive" },
+            },
+            take: limit,
+            skip: (page - 1) * 10
+        })
+        totalAmount = await prisma.product.count();
+
+        return data;
+    }
+
     switch (activeTable) {
-        case 'product':
-            data = await prisma.product.findMany({
-                where: {
-                    name: { contains: query, mode: "insensitive" },
-                    // status: "ACTIVE"
-                },
-                take: limit,
-                skip: (page - 1) * 10,
-                orderBy: sort ? { [sort]: order || 'asc'} : undefined
-            })
-            totalAmount = await prisma.product.count();
-            break;
         case 'user':
             data = await prisma.user.findMany({
                 where: {
@@ -53,14 +71,7 @@ const AdminPage = async ({ searchParams }: Props) => {
             totalAmount = await prisma.user.count();
             break;
         default:
-            data = await prisma.product.findMany({
-                where: {
-                    name: { contains: query, mode: "insensitive" },
-                },
-                take: limit,
-                skip: (page - 1) * 10
-            })
-            totalAmount = await prisma.product.count();
+
             break;
     }
 
@@ -69,10 +80,15 @@ const AdminPage = async ({ searchParams }: Props) => {
     return (
         <>
             <div className='flex-[4] flex flex-col h-full mx-[10vw]'>
-                <TableSelector data={data} />
+                {
+                    activeTable == 'product' && <ProductsTable data={(await getProductsTable(query, limit, page))} />
+                }
+                {
+                    activeTable == 'user' && <UsersTable data={(await getUsersTable(query, limit, page))} />
+                }
             </div>
-            
-            <TableControls totalAmount={totalAmount} />
+
+            <TableControls totalAmount={totalAmount || 0} />
         </>
     )
 }

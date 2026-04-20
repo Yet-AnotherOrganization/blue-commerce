@@ -1,20 +1,17 @@
 'use client'
-import { activateProduct, deleteProduct } from '@/app/actions/productActions';
-import { Product, User } from '@/generated/prisma';
-import { prisma } from '@/lib/prisma';
-import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import { FaArrowDown, FaArrowUp, FaCircle, FaTrash } from 'react-icons/fa';
-import { TiTick } from "react-icons/ti";
-import TableProductRow from './TableProductRow';
+import { User } from '@/generated/prisma';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react'
+import { FaArrowDown, FaArrowUp } from 'react-icons/fa';
+import TableUserRow from './TableUserRow';
+
 type Props = {
-    // fix any
-    data: Product[];
+    data: User[]
 }
 
-const ProductsTable = ({ data }: Props) => {
+const UsersTable = ({ data }: Props) => {
 
+    const [page, setPage] = useState(1);
     const [sort, setSort] = useState<{ key: string, order: string }>({ key: '', order: 'asc' })
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -102,7 +99,7 @@ const ProductsTable = ({ data }: Props) => {
                     {
                         data.map((item) => {
                             return (
-                                <TableProductRow item={item} />
+                                <TableUserRow item={item} />
                             )
                         })
                     }
@@ -112,4 +109,4 @@ const ProductsTable = ({ data }: Props) => {
     )
 }
 
-export default ProductsTable
+export default UsersTable
