@@ -20,10 +20,10 @@ const ProductsTable = ({data}: Props) => {
     },[page])
 
     return (
-        <table className='border border-black flex-1 h-full'>
+        <table className='border border-black flex-1 overflow-scroll'>
             <thead className='border'>
-                <tr className=''>
-                    <td className='px-4'>#</td>
+                <tr className='font-bold bg-blue-100 sticky top-0'>
+                    <td className='px-4 py-8'>#</td>
                     <td>Name</td>
                     <td>Price</td>
                     <td>Stock</td>
