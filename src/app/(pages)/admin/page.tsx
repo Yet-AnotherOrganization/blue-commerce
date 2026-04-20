@@ -30,6 +30,7 @@ const AdminPage = async ({ searchParams }: Props) => {
             data = await prisma.product.findMany({
                 where: {
                     name: { contains: query, mode: "insensitive" },
+                    // status: "ACTIVE"
                 },
                 take: limit,
                 skip: (page - 1) * 10

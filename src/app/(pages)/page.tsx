@@ -1,15 +1,6 @@
 import ProductCard from "../../components/ProductCard";
-import "../../components/css/index.css";
-import { getProducts } from "../../utils/utils";
-import { hotbarElements, ProductParams, ReviewParams, ribbons } from "../../constants/constants";
+import { hotbarElements, ribbons } from "../../constants/constants";
 import React from "react";
-import SelectComponent from "../../components/SelectComponent";
-import SortComponent from "../../components/SortComponent";
-import FeaturedProduct from "../../components/FeaturedProduct";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Carousel from 'react-multi-carousel';
-import 'react-multi-carousel/lib/styles.css';
 import Slider from "../../components/Carousel";
 import { prisma } from "../../lib/prisma";
 import { Product } from "../../generated/prisma";
@@ -23,7 +14,8 @@ const MainPage = async ({
 
   const products: Product[] = await prisma.product.findMany({
     where: {
-      stock: { gt: 0 }
+      stock: { gt: 0 },
+      status: "ACTIVE"
     },
     include: {
       category: true
@@ -38,7 +30,7 @@ const MainPage = async ({
   const randomProducts = await prisma.$queryRaw<ProductWithCategory[]>`
   SELECT p.*, c.name AS catName FROM "Product" p 
   JOIN "Category" c ON p."categoryId" = c.id 
-  WHERE p.stock > 0 
+  WHERE p.stock > 0 AND p.status = 'ACTIVE'::"ProductStatus"
   ORDER BY RANDOM() 
   LIMIT ${Number(count)}`
 
