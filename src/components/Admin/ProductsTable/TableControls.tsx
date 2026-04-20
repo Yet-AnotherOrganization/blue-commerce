@@ -1,7 +1,7 @@
 'use client'
 import { changePage } from '@/utils/clientOnlyUtils'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 
 type Props = {
@@ -16,6 +16,13 @@ const TableControls = ({ totalAmount }: Props) => {
   const searchParams = useSearchParams();
   const page = searchParams.get('page')
   const limit = searchParams.get('limit')
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set('limit', "10")
+    params.set('page', "1")
+    router.replace(`${pathname}?${params.toString()}`)
+  }, [])
 
   return (
     <Suspense>
