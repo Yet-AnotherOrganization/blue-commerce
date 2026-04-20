@@ -87,7 +87,8 @@ async function main() {
                 imageUrl: faker.image.urlPicsumPhotos({width: 1000, height: 500}),
                 categoryId: categories[Math.floor(Math.random() * categories.length)].id,
                 stock: faker.number.int({ min: 3, max: 200 }),
-                sellerId: stores[Math.floor(Math.random() * stores.length)].id
+                sellerId: stores[Math.floor(Math.random() * stores.length)].id,
+                status: "ACTIVE"
             },
             include: {
                 category: true
