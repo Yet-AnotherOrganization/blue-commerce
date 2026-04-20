@@ -35,6 +35,13 @@ const Sidebar = ({ setSidebar, sidebar }: SidebarProps) => {
                         >{link.logo}{link.name}
                         </Link>
                     </li>))}
+                {
+                    user?.role == 'ADMIN' && <Link href={'/admin'}
+                        onClick={() => setSidebar(false)}
+                        className='flex justify-start items-center uppercase border-b-[3px] border-blue-900 hover:border-b-[5px] text-[23px] hover:border-white hover:text-shadow-white transition-all font-semibold'>
+                        ADMIN PANEL
+                    </Link>
+                }
                 {user && <li>
                     <a href='/'>
                         <button onClick={async () => { await signOut(); setSidebar(false) }} className='flex justify-start items-center uppercase border-b-[3px] border-blue-900 hover:border-b-[5px] text-[23px] hover:border-white hover:text-shadow-white transition-all font-semibold'>LOG OUT</button>
