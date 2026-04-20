@@ -48,7 +48,7 @@ export const addToCart = async (input: AddItemDto, user: User) => {
             }
         })
 
-        let newQuantity = existingItem ? existingItem.quantity : 0 + quantity;
+        let newQuantity = (existingItem?.quantity ?? 0) + quantity;
 
         if (newQuantity > product.stock) throw new APIError('Insufficient stock for the requested quantity. ', 409, 'PRODUCT_INSUFFICIENT_STOCK');
 
