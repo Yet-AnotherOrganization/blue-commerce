@@ -9,7 +9,8 @@ type Props = {
     searchParams: {
         q?: string,
         page?: string,
-        table?: 'product' | 'cart' | 'user' | 'favorite' | 'review'
+        table: 'product' | 'cart' | 'user' | 'favorite' | 'review',
+        limit: number
     }
 }
 
@@ -19,21 +20,54 @@ const AdminPage = async ({ searchParams }: Props) => {
     const page = Number(searchParams.page) || 1;
     const query = searchParams.q || '';
     const activeTable = searchParams.table || "product"
+    const limit = Number(searchParams.limit) || 10
 
 
-    const data = await prisma.product.findMany({
-        where: {
-            name: { contains: query, mode: "insensitive" },
-        },
-        take: 10,
-        skip: (page - 1) * 10
-    })
+    let data;
+    let totalAmount;
+    switch (activeTable) {
+        case 'product':
+            data = await prisma.product.findMany({
+                where: {
+                    name: { contains: query, mode: "insensitive" },
+                },
+                take: limit,
+                skip: (page - 1) * 10
+            })
+            totalAmount = await prisma.product.count();
+            break;
+        case 'user':
+            data = await prisma.user.findMany({
+                where: {
+                    name: { contains: query, mode: "insensitive" },
+                },
+                take: limit,
+                skip: (page - 1) * 10
+            })
+            totalAmount = await prisma.user.count();
+            break;
+        default:
+            data = await prisma.product.findMany({
+                where: {
+                    name: { contains: query, mode: "insensitive" },
+                },
+                take: limit,
+                skip: (page - 1) * 10
+            })
+            totalAmount = await prisma.product.count();
+            break;
+    }
+
+    console.log("\n\n\n total: ", totalAmount)
 
     return (
-        <div className='flex-[4] flex flex-col h-full justify-center mx-[10vw]'>
-            <TableSelector data={data}/>
-            <TableControls />
-        </div>
+        <>
+            <div className='flex-[4] flex flex-col h-full mx-[10vw] overflow-scroll'>
+                <TableSelector data={data} />
+            </div>
+            
+            <TableControls totalAmount={totalAmount} />
+        </>
     )
 }
 
