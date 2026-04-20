@@ -12,7 +12,6 @@ export const metadata = {
 };
 export default function RootLayout({ children }: { children: React.ReactElement }) {
 
-  console.log("Entry file executed!");
   return (
     <html lang="en">
       <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
@@ -23,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactElement 
             <Toaster />
             <InitCart />
             <Header />
-            <main className='w-[100vw] min-h-[100vh] border-t-1'>
+            <main className='w-[100vw] min-h-[90vh] border-t-1'>
               {children}
             </main>
             <Footer />
