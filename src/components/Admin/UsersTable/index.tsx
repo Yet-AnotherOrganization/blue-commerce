@@ -47,8 +47,8 @@ const UsersTable = ({ data }: Props) => {
     }
 
     return (
-        <div className='overflow-y-scroll mt-[2vh]'>
-            <table className='border border-black  w-full'>
+        <div className='overflow-y-scroll mt-[2vh] min-h-[70vh]'>
+            <table className='border border-black w-full'>
                 <thead className='border'>
                     <tr className='font-bold bg-blue-100 sticky top-0'>
                         <td className='px-4 py-8'>
