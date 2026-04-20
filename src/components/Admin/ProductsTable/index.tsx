@@ -1,11 +1,15 @@
 'use client'
+import { Product, User } from '@/generated/prisma';
 import { prisma } from '@/lib/prisma';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 
-type Props = {}
+type Props = {
+    // fix any
+    data: Product[];
+}
 
-const ProductsTable = (props: Props) => {
+const ProductsTable = ({data}: Props) => {
 
     const [page,setPage] = useState(1);
     const limit = 20;
@@ -16,15 +20,30 @@ const ProductsTable = (props: Props) => {
     },[page])
 
     return (
-        <table className='border border-black'>
+        <table className='border border-black flex-1 h-full'>
             <thead className='border'>
-                <tr>
-                    <td>#</td>
+                <tr className=''>
+                    <td className='px-4'>#</td>
                     <td>Name</td>
+                    <td>Price</td>
                     <td>Stock</td>
                 </tr>
             </thead>
-            <tbody>
+            <tbody className='border'>
+                {
+                    data.map((item) => {
+                        return(
+                            <tr className='border-y'>
+                                <td className='px-4'>
+                                    <img src={item.imageUrl} className='w-12 h-12' alt="" />
+                                </td>
+                                <td>{item.name}</td>
+                                <td>{Number(item.price)}</td>
+                                <td>{item.stock}</td>
+                            </tr>
+                        )
+                    })
+                }
             </tbody>
         </table>
     )
