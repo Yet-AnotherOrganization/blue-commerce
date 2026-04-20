@@ -5,90 +5,43 @@ import UsersTable from '@/components/Admin/UsersTable'
 import { Product, User } from '@/generated/prisma'
 import { prisma } from '@/lib/prisma'
 import React from 'react'
+import { FaArrowLeft, FaBox, FaDatabase, FaShoppingCart, FaUser } from 'react-icons/fa'
 
 type Props = {
-    searchParams: {
-        q?: string,
-        page?: string,
-        table: 'product' | 'cart' | 'user' | 'favorite' | 'review',
-        limit: number,
-        sort: string,
-        order: 'asc' | 'desc' | ''
-    }
+
 }
 
-const AdminPage = async ({ searchParams }: Props) => {
+const AdminPage = async (props: Props) => {
 
 
-    const page = Number(searchParams.page) || 1;
-    const query = searchParams.q || '';
-    const activeTable = searchParams.table || "product"
-    const limit = Number(searchParams.limit) || 10
-    const sort = searchParams.sort;
-    const order = searchParams.order;
 
 
-    let data: Product[] | User[];
-    let totalAmount;
 
-    const getProductsTable = async (query: string, limit: number, page: number) => {
-        const data = await prisma.product.findMany({
-            where: {
-                name: { contains: query, mode: "insensitive" },
-                // status: "ACTIVE"
-            },
-            take: limit,
-            skip: (page - 1) * 10,
-            orderBy: sort ? { [sort]: order || 'asc' } : undefined
-        })
-        totalAmount = await prisma.product.count() || 0;
 
-        return data
-    }
 
-    const getUsersTable = async (query: string, limit: number, page: number) => {
-        const data = await prisma.user.findMany({
-            where: {
-                name: { contains: query, mode: "insensitive" },
-            },
-            take: limit,
-            skip: (page - 1) * 10
-        })
-        totalAmount = await prisma.product.count();
 
-        return data;
-    }
-
-    switch (activeTable) {
-        case 'user':
-            data = await prisma.user.findMany({
-                where: {
-                    name: { contains: query, mode: "insensitive" },
-                },
-                take: limit,
-                skip: (page - 1) * 10
-            })
-            totalAmount = await prisma.user.count();
-            break;
-        default:
-
-            break;
-    }
-
-    console.log("\n\n\n total: ", totalAmount)
 
     return (
         <>
-            <div className='flex-[4] flex flex-col h-full mx-[10vw]'>
-                {
-                    activeTable == 'product' && <ProductsTable data={(await getProductsTable(query, limit, page))} />
-                }
-                {
-                    activeTable == 'user' && <UsersTable data={(await getUsersTable(query, limit, page))} />
-                }
+            <h1 className='text-4xl flex justify-center pt-20 font-semibold'><FaDatabase color='blue' /></h1>
+            <h1 className='text-2xl m-auto text-center pt-5 font-semibold'>Welcome to Blue-Commerce Admin Panel</h1>
+            <div className='flex justify-center gap-16 mx-[20vw] mt-[10vh]'>
+                <a href="/admin/product" className='flex flex-1 flex-col items-center justify-center border p-8 shadow-md hover:bg-black hover:text-white transition-all group'>
+                    <FaBox className='text-4xl' />
+                    <h1 className='text-xl mt-4'>Products</h1>
+                    <span className='text-md text-center mt-4 text-gray-700 hover:text-white group-hover:text-white'>Control and analyze products on the database</span>
+                </a>
+                <a href="/admin/user" className='flex flex-1 flex-col items-center justify-center border p-8 shadow-md hover:bg-black hover:text-white transition-all group'>
+                    <FaUser className='text-4xl'/>
+                    <h1 className='text-xl mt-4'>Users</h1>
+                    <span className='text-md text-center mt-4 text-gray-700 hover:text-white group-hover:text-white'>Administrate users and stores existing on the database</span>
+                </a>
+                <a href="" className='flex flex-1 flex-col items-center justify-center border p-8 shadow-md hover:bg-black hover:text-white transition-all group'>
+                    <FaShoppingCart className='text-4xl' />
+                    <h1 className='text-xl mt-4'>Carts</h1>
+                    <span className='text-md text-center mt-4 text-gray-700 group-hover:text-white'>Manage carts & items in carts on the database</span>
+                </a>
             </div>
-
-            <TableControls totalAmount={totalAmount || 0} />
         </>
     )
 }
