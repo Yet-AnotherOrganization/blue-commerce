@@ -10,7 +10,9 @@ type Props = {
         q?: string,
         page?: string,
         table: 'product' | 'cart' | 'user' | 'favorite' | 'review',
-        limit: number
+        limit: number,
+        sort: string,
+        order: 'asc' | 'desc' | ''
     }
 }
 
@@ -21,6 +23,8 @@ const AdminPage = async ({ searchParams }: Props) => {
     const query = searchParams.q || '';
     const activeTable = searchParams.table || "product"
     const limit = Number(searchParams.limit) || 10
+    const sort = searchParams.sort;
+    const order = searchParams.order;
 
 
     let data;
@@ -33,7 +37,8 @@ const AdminPage = async ({ searchParams }: Props) => {
                     // status: "ACTIVE"
                 },
                 take: limit,
-                skip: (page - 1) * 10
+                skip: (page - 1) * 10,
+                orderBy: sort ? { [sort]: order || 'asc'} : undefined
             })
             totalAmount = await prisma.product.count();
             break;
@@ -63,7 +68,7 @@ const AdminPage = async ({ searchParams }: Props) => {
 
     return (
         <>
-            <div className='flex-[4] flex flex-col h-full mx-[10vw] overflow-scroll'>
+            <div className='flex-[4] flex flex-col h-full mx-[10vw]'>
                 <TableSelector data={data} />
             </div>
             
