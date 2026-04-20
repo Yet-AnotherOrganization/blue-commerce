@@ -8,9 +8,9 @@ type Props = {
 
 const AdminLayout = ({ children }: Props) => {
   return (
-    <div className='flex-col relative h-[85vh]'>
+    <div className='flex-col relative h-[80vh]'>
       <AdminSidebar />
-      <div className='flex-1 h-full'>
+      <div className='flex-1 h-full mt-[2vh]'>
           {children}
       </div>
     </div>
