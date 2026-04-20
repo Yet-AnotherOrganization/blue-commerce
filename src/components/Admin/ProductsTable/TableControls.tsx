@@ -1,20 +1,27 @@
 'use client'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 type Props = {}
 
 const TableControls = (props: Props) => {
 
-    const pathname = usePathname();
-    const router = useRouter();
+  const pathname = usePathname();
+  const router = useRouter();
 
-    const sParams = useSearchParams();
-    
+  const searchParams:string = useSearchParams().toString();
+  const params = new URLSearchParams(searchParams)
+
+  console.log(params)
+
   return (
-    <div className='mx-auto'>
-        {pathname}
-    </div>
+    <Suspense>
+      <div className='mx-auto flex gap-4 text-2xl '>
+        <button>{'<-'}</button>
+        <span></span>
+        <button>{'->'}</button>
+      </div>
+    </Suspense>
   )
 }
 
