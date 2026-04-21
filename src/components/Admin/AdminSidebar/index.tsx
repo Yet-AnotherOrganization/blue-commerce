@@ -12,7 +12,7 @@ const AdminSidebar = () => {
 
 
     return (
-        <div className={`flex flex-col text-xl w-[150px] gap-4 pl-4 py-8 h-screen bg-neutral-100 z-20 fixed transition-all ${sidebarOpen ? 'left-0' : '-left-[150px]'} `}>
+        <div className={`flex flex-col text-xl w-[150px] gap-4 pl-4 py-8 h-[90vh] bg-neutral-100 z-20 absolute transition-all ${sidebarOpen ? 'left-0' : '-left-[150px]'} `}>
             <Link className='inline-flex items-center gap-1' href='/admin/product' onClick={() => setSidebarOpen(false)}><span><FaShoppingBag /></span> Products</Link>
             <Link className='inline-flex items-center gap-1' href='/admin/user' onClick={() => setSidebarOpen(false)}><span><FaUser /></span>Users</Link>
             <Link href='/admin/store' onClick={() => setSidebarOpen(false)}>Stores</Link>
