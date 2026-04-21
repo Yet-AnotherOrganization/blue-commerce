@@ -18,7 +18,6 @@ const InputWithSearch = ({ placeholder, searchPlaceholder, items, onChange }: Pr
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Item>();
     const containerRef = useRef<HTMLDivElement>(null);
-    const [searchResults, setSearchResults] = useState<Item[]>();
     const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
@@ -53,11 +52,11 @@ const InputWithSearch = ({ placeholder, searchPlaceholder, items, onChange }: Pr
 
     return (
         <div className='relative inline-block' ref={containerRef}>
-            <input className='block w-full border rounded-md px-2 py-1' type="text" value={selectedItem?.label} placeholder={placeholder || 'Enter placeholder text'} onClick={() => setModalOpen(true)} />
-            <div className={`absolute flex flex-col p-2 left-0 right-0 border rounded-md shadow-lg bg-white ${modalOpen ? 'block' : 'hidden'}`} >
+            <input className='block w-full border border-gray-400 rounded-md px-2 py-1' type="text" readOnly value={selectedItem?.label} placeholder={placeholder || 'Enter placeholder text'} onClick={() => setModalOpen(true)}/>
+            <div className={`absolute flex flex-col p-2 left-0 right-0 border rounded-md shadow-lg bg-white ${modalOpen ? 'block' : 'hidden'} z-[100]`} >
                 <div className='inline-flex items-center justify-center border-2 bg-white px-1'>
                     <input
-                        className='outline-none'
+                        className='outline-none rounded-xl'
                         type="search"
                         placeholder={searchPlaceholder || 'Search items'}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.currentTarget.value)}
@@ -65,8 +64,8 @@ const InputWithSearch = ({ placeholder, searchPlaceholder, items, onChange }: Pr
                     <FaSearch />
                 </div>
                 <ul className='flex flex-col'>
-                    {filteredResults?.map((item, key) =>
-                        <li onClick={(e) => { handleSelect(e.currentTarget.dataset.value || ''); setModalOpen(false) }} className='inline-flex cursor-pointer hover:bg-gray-200 transition-all items-center justify-between overflow-ellipsis' key={key} data-value={item.value}>
+                    {filteredResults?.map((item) =>
+                        <li onClick={(e) => { handleSelect(e.currentTarget.dataset.value || ''); setModalOpen(false); setSearchQuery('') }} className='inline-flex cursor-pointer hover:bg-gray-200 transition-all items-center justify-between overflow-ellipsis border-b border-gray-100' key={item.value} data-value={item.value}>
                             {item.label}
                             {item.value === selectedItem?.value && <TiTick />}
                         </li>)}
