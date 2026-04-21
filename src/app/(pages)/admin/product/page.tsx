@@ -2,6 +2,7 @@ import ProductsTable from '@/components/Admin/ProductsTable'
 import TableControls from '@/components/Admin/ProductsTable/TableControls'
 import { Product } from '@/generated/prisma'
 import { prisma } from '@/lib/prisma'
+import Link from 'next/link'
 import React from 'react'
 
 type Props = {
@@ -46,6 +47,10 @@ const ProductsPage = async ({ searchParams }: Props) => {
             <div className='flex-[4] flex flex-col h-full mx-[10vw]'>
                 <ProductsTable data={(await getProductsTable(query, limit, page))} />
                 <TableControls totalAmount={totalAmount || 0} />
+                <div className='flex justify-center items-center'>
+                    <Link href='/admin/product/create' className='bg-blue-400 px-4 py-2 rounded-md shadow-md text-white hover:scale-105 transition-all'>
+                    Create New Product</Link>
+                </div>
             </div>
 
         </>
