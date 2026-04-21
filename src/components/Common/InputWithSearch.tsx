@@ -10,7 +10,7 @@ type Props = {
     placeholder?: string,
     searchPlaceholder?: string,
     items: Item[],
-    onChange: any
+    onChange: (value:string) => void
 }
 
 const InputWithSearch = ({ placeholder, searchPlaceholder, items, onChange }: Props) => {
