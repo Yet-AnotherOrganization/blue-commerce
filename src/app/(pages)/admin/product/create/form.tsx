@@ -3,7 +3,7 @@ import InputWithSearch from '@/components/Common/InputWithSearch'
 import { Button } from '@/components/ui/button'
 import { SearchableSelect } from '@/components/ui/searchable-select'
 import { Category, Product, Store } from '@/generated/prisma'
-import React, { useEffect, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 
 type Props = {
     categories: Category[],
@@ -17,6 +17,7 @@ const CreateProductForm = ({ categories, stores }: Props) => {
     const [productData, setProductData] = useState<Product>()
     const [selectedStore, setSelectedStore] = useState<Store>()
     const [selectedCategory, setSelectedCategory] = useState<Category>()
+    const [image, setImage] = useState<string | null>(null)
 
     const handleStoreChange = (value: string) => {
         setSelectedStore(stores.find((store) => store.id === value))
@@ -25,22 +26,33 @@ const CreateProductForm = ({ categories, stores }: Props) => {
         setSelectedCategory(categories.find((cat) => cat.id === value))
     }
 
+    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.currentTarget.files?.[0]
+
+        if (file) {
+            const url = URL.createObjectURL(file);
+            setImage(url);
+
+            return () => URL.revokeObjectURL(url);
+        }
+    }
+
     return (
-        <form action="" className='border px-16 py-8 rounded-xl shadow-md'>
+        <form action="" className='border px-16 py-8 rounded-xl shadow-md '>
             <h1 className='text-center text-2xl font-bold mb-16'>Create a New Product</h1>
-            <div className='flex'>
-                <div className='flex-[3] flex gap-8 lg:flex-row flex-col'>
-                    <div className='flex-1 flex flex-col gap-4'>
+            <div className='flex gap-8 items-start flex-col lg:flex-row'>
+                <div className='flex-[4] flex gap-8  max-lg:w-full flex-col '>
+                    <div className='flex-1 flex flex-col gap-4 '>
                         <div className='input-wrapper inline-flex flex-col'>
                             <label htmlFor="name" className='text-lg'>Name</label>
-                            <input type="text" id='name' className='border border-gray-400 rounded-md px-2 py-1' />
+                            <input type="text" id='name' className='border border-gray-400 rounded-md px-2 py-1 mt-2' />
                         </div>
                         <div className='input-wrapper inline-flex flex-col'>
                             <label htmlFor="price" className='text-lg'>Price</label>
                             <input type="number" id='price' min='0' className='border border-gray-400 rounded-md px-2 py-1' />
                         </div>
                         <div className='input-wrapper inline-flex flex-col'>
-                            <label htmlFor="category" className='text-lg'>Category</label>
+                            <label htmlFor="category" className='text-lg mb-2'>Category</label>
                             <InputWithSearch
                                 placeholder='Select a category'
                                 searchPlaceholder={'Search categories'}
@@ -58,12 +70,18 @@ const CreateProductForm = ({ categories, stores }: Props) => {
                             />
                         </div>
                     </div>
-                    <div className='flex-1 bg-red-400 h-full'>
-                        
+                    {/* description part */}
+                    <div className='flex-1 flex flex-col'>
+                        <label htmlFor="description" className='text-lg'>Description</label>
+                        <textarea name="description" id='description' className='border mt-2 border-gray-400 rounded-md px-2 py-1 min-h-[200px] resize-none'></textarea>
                     </div>
                 </div>
-                <div className='flex-[1] bg-green-400'>
-                    World
+                <div className='flex-[2] max-lg:w-full flex flex-col'>
+                    <label htmlFor="image" className='text-lg'>Image</label>
+                    <input name='image' id='image' type="file" placeholder='Select Image' className='hidden' onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleImageChange(e)} />
+                    <label htmlFor="image" className='mt-2 shadow-md rounded-md border'>
+                        <img src={image || '/assets/select-image.jpg'} alt="" className='aspect-square rounded-md w-full' />
+                    </label>
                 </div>
             </div>
         </form>
