@@ -20,6 +20,8 @@ const InputWithSearch = ({ placeholder, searchPlaceholder, items, onChange }: Pr
     const containerRef = useRef<HTMLDivElement>(null);
     const [searchQuery, setSearchQuery] = useState('');
 
+    const innerInputRef = useRef<HTMLInputElement>(null);
+
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -31,6 +33,12 @@ const InputWithSearch = ({ placeholder, searchPlaceholder, items, onChange }: Pr
 
         return () => document.removeEventListener('click', handleClickOutside);
     }, [])
+
+    useEffect(() => {
+    if (modalOpen) {
+        innerInputRef.current?.focus();
+    }
+}, [modalOpen]);
 
     const handleSelect = (value: string) => {
         onChange(value); // Push data to parent
@@ -54,9 +62,10 @@ const InputWithSearch = ({ placeholder, searchPlaceholder, items, onChange }: Pr
         <div className='relative inline-block' ref={containerRef}>
             <input className='block w-full border border-gray-400 rounded-md px-2 py-1' type="text" readOnly value={selectedItem?.label} placeholder={placeholder || 'Enter placeholder text'} onClick={() => setModalOpen(true)}/>
             <div className={`absolute flex flex-col p-2 left-0 right-0 border rounded-md shadow-lg bg-white ${modalOpen ? 'block' : 'hidden'} z-[100]`} >
-                <div className='inline-flex items-center justify-center border-2 bg-white px-1'>
+                <div className='inline-flex mb-2 border-b-2 items-center justify-center bg-white px-1'>
                     <input
-                        className='outline-none rounded-xl'
+                        ref={innerInputRef}
+                        className='outline-none rounded-xl w-full'
                         type="search"
                         placeholder={searchPlaceholder || 'Search items'}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.currentTarget.value)}

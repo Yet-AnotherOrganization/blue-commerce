@@ -14,7 +14,7 @@ const CreateProductPage = async (props: Props) => {
 
     return (
 
-        <div className='sm:mx-[5vw] md:mx-[10vw] lg:mx-[20vw] py-[5vh]'>
+        <div className='mx-[5vw] md:mx-[7vw] lg:mx-[10vw] xl:mx-[15vw] py-[5vh]'>
             <CreateProductForm categories={categories} stores={stores} />
         </div>
     )
