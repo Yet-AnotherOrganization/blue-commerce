@@ -4,6 +4,7 @@ import InputWithSearch from '@/components/Common/InputWithSearch'
 import { Button } from '@/components/ui/button'
 import { SearchableSelect } from '@/components/ui/searchable-select'
 import { Category, Product, Store } from '@/generated/prisma'
+import { handleProductCreateFormSubmit } from '@/utils/clientOnlyUtils'
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -39,41 +40,12 @@ const CreateProductForm = ({ categories, stores }: Props) => {
         }
     }
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 
-        e.preventDefault()
-
-        const formData = new FormData(e.currentTarget as HTMLFormElement);
-
-        const product = Object.fromEntries(formData.entries())
-        console.log(product)
-
-        const file = formData.get('image') as File;
-
-        if (file.size > 1024 * 1024 * 4) { toast.error('File size exceeds 4MB limit.'); return; }
-
-        const allowedTypes = ['image/jpg', 'image/jpeg', 'image/png']
-
-        if (!allowedTypes.includes(file.type)) { toast.error('File type is invalid.'); return; }
-
-        try {
-            const response = await createProduct(formData);
-            console.log("res: ", response)
-            if (!response.success) throw new Error(response.message)
-            toast.success('Product draft created successfully. Activate in products page.')
-        }
-        catch (err) {
-            if(err instanceof Error) toast.error(err.message)
-            else toast.error('Upload failed.')
-            console.error("Upload failed: ", err)
-        }
-
-    }
 
     return (
-        <form onSubmit={handleSubmit} className='border px-16 py-8 rounded-xl shadow-md '>
+        <form onSubmit={handleProductCreateFormSubmit} className='border px-16 py-8 rounded-xl shadow-md '>
             <h1 className='text-center text-2xl font-bold mb-16'>Create a New Product</h1>
-            <div className='flex gap-8 items-start flex-col lg:flex-row'>
+            <div className='flex gap-8 items-start lg:flex-row flex-col-reverse'>
                 <div className='flex-[4] flex gap-8  max-lg:w-full flex-col '>
                     <div className='flex-1 flex flex-col gap-4 '>
                         <div className='input-wrapper inline-flex flex-col'>
@@ -114,15 +86,19 @@ const CreateProductForm = ({ categories, stores }: Props) => {
                         <label htmlFor="description" className='text-lg'>Description</label>
                         <textarea name="description" id='description' className='border mt-2 border-gray-400 rounded-md px-2 py-1 min-h-[200px] resize-none'></textarea>
                     </div>
+
+                    <div className='flex items-center my-4 lg:hidden'>
+                        <button className='bg-blue-400 rounded-lg shadow-md p-4 text-white transition-all  text-xl w-full'>Finalize</button>
+                    </div>
                 </div>
                 <div className='flex-[2] max-lg:w-full flex flex-col'>
-                    <label htmlFor="image" className='text-lg'>Image</label>
+                    <label htmlFor="image" className='text-lg max-lg:hidden'>Image</label>
                     <input name='image' id='image' type="file" placeholder='Select Image' className='hidden' onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleImageChange(e)} />
                     <label htmlFor="image" className='mt-2 shadow-md rounded-md border'>
                         <img src={image || '/assets/select-image.jpg'} alt="" className='aspect-square rounded-md w-full' />
                     </label>
 
-                    <div className='flex justify-center items-center my-4'>
+                    <div className='flex justify-center items-center my-4 max-lg:hidden'>
                         <button className='bg-blue-400 rounded-lg shadow-md p-4 text-white transition-all hover:scale-105 text-xl'>Finalize</button>
                     </div>
                 </div>
