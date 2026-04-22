@@ -3,7 +3,8 @@ import InputWithSearch from '@/components/Common/InputWithSearch'
 import { Button } from '@/components/ui/button'
 import { SearchableSelect } from '@/components/ui/searchable-select'
 import { Category, Product, Store } from '@/generated/prisma'
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
 type Props = {
     categories: Category[],
@@ -37,8 +38,27 @@ const CreateProductForm = ({ categories, stores }: Props) => {
         }
     }
 
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+
+        e.preventDefault()
+
+        const formData = new FormData(e.target as HTMLFormElement);
+
+        const product = Object.fromEntries(formData.entries())
+
+        const file = product.image as File;
+
+        if (file.size > 1024 * 1024 * 4) {toast.error('File size exceeds the limit of 4MB.'); return;}
+
+        const allowedTypes = ['image/jpg','image/jpeg','image/png']
+        
+        if(!allowedTypes.includes(file.type)) {toast.error('File type is invalid.'); return;}
+    
+        
+    }
+
     return (
-        <form action="" className='border px-16 py-8 rounded-xl shadow-md '>
+        <form onSubmit={handleSubmit} className='border px-16 py-8 rounded-xl shadow-md '>
             <h1 className='text-center text-2xl font-bold mb-16'>Create a New Product</h1>
             <div className='flex gap-8 items-start flex-col lg:flex-row'>
                 <div className='flex-[4] flex gap-8  max-lg:w-full flex-col '>
@@ -57,7 +77,7 @@ const CreateProductForm = ({ categories, stores }: Props) => {
                                 placeholder='Select a category'
                                 searchPlaceholder={'Search categories'}
                                 items={categories.map((item) => ({ label: item.name, value: item.id }))}
-                                onChange={(value: string) => handleStoreChange(value)}
+                                onChange={(value: string) => handleCategoryChange(value)}
                             />
                         </div>
                         <div className='input-wrapper inline-flex flex-col z-50'>
@@ -82,6 +102,10 @@ const CreateProductForm = ({ categories, stores }: Props) => {
                     <label htmlFor="image" className='mt-2 shadow-md rounded-md border'>
                         <img src={image || '/assets/select-image.jpg'} alt="" className='aspect-square rounded-md w-full' />
                     </label>
+
+                    <div className='flex justify-center items-center my-4'>
+                        <button className='bg-blue-400 rounded-lg shadow-md p-4 text-white transition-all hover:scale-105 text-xl'>Finalize</button>
+                    </div>
                 </div>
             </div>
         </form>
