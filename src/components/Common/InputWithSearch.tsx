@@ -7,13 +7,14 @@ import { TiTick } from 'react-icons/ti';
 type Item = { value: string, label: string }
 
 type Props = {
+    id: string,
     placeholder?: string,
     searchPlaceholder?: string,
     items: Item[],
     onChange: (value:string) => void
 }
 
-const InputWithSearch = ({ placeholder, searchPlaceholder, items, onChange }: Props) => {
+const InputWithSearch = ({ id, placeholder, searchPlaceholder, items, onChange }: Props) => {
 
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Item>();
@@ -61,6 +62,7 @@ const InputWithSearch = ({ placeholder, searchPlaceholder, items, onChange }: Pr
     return (
         <div className='relative inline-block' ref={containerRef}>
             <input className='block w-full border border-gray-400 rounded-md px-2 py-1' type="text" readOnly value={selectedItem?.label} placeholder={placeholder || 'Enter placeholder text'} onClick={() => setModalOpen(true)}/>
+            <input id={id} name={id} readOnly className='hidden' value={selectedItem?.value} />
             <div className={`absolute flex flex-col p-2 left-0 right-0 border rounded-md shadow-lg bg-white ${modalOpen ? 'block' : 'hidden'} z-[100]`} >
                 <div className='inline-flex mb-2 border-b-2 items-center justify-center bg-white px-1'>
                     <input
