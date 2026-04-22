@@ -50,14 +50,14 @@ const ProductsTable = ({ data }: Props) => {
     }
 
     return (
-        <div className='overflow-y-scroll mt-[2vh]'>
-            <table className='border border-black  w-full table-fixed overflow-y-scroll'>
+        <div className='overflow-y-scroll mt-[2vh] h-[565px]'>
+            <table className='border border-black w-full table-fixed overflow-y-scroll'>
                 <thead className='border'>
                     <tr className='font-bold bg-blue-100 sticky top-0'>
                         <td className='px-4 py-8'>
 
                         </td>
-                        <td className='' onClick={() => reqSort('name')}>
+                        <td className='w-[30%]' onClick={() => reqSort('name')}>
                             <div className='inline-flex justify-center items-center gap-1'>
                                 Name
                                 <span className='w-4'>
@@ -91,7 +91,7 @@ const ProductsTable = ({ data }: Props) => {
                                 </span>
                             </div>
                         </td>
-                        <td>
+                        <td className='w-[10%]'>
                             <div className='inline-flex justify-center items-center gap-1'>
                                 Actions
                             </div>
