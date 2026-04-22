@@ -29,7 +29,7 @@ const CartItem = ({ item, disabled }: Props) => {
                 <button className='text-[3rem] text-red-600'
                     disabled={disabled}
                     onClick={async () => {
-                        if (item.quantity == 1) await dispatch(removeItem(item.id))
+                        if (item.quantity <= 1) await dispatch(removeItem(item.id))
                         else await dispatch(decrementItem(item.id))
                     }}><FaTrash /></button>
             </div>

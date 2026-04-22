@@ -19,7 +19,7 @@ const CartDiv = () => {
         <div className='flex h-full'>
             <div className='h-full lg:w-[75%] min-h-[40vh] w-full p-1 lg:p-4 flex flex-col justify-center items-center bg-white rounded-xl m-4'>
                 {cart && cart.length > 0 ? cart?.map((item, i) => (
-                    <CartItem item={item} disabled={loading} />
+                    <CartItem item={item} disabled={loading} key={item.id}/>
                 )) :
                     <div className='text-[1rem] lg:text-[2rem] gap-8 flex flex-col justify-center items-center text-blue-400 text-center'>
                         <span className='text-[12vw]'>
