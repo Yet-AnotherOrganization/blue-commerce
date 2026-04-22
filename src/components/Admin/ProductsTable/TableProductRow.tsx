@@ -8,9 +8,12 @@ type Props = {
     item: Product,
 }
 
-const TableProductRow = ({ item}: Props) => {
+const TableProductRow = ({ item }: Props) => {
 
-    
+
+    const color = item.status === "ACTIVE" ? "green" : item.status === "DRAFT" ? "orange" : "red"
+
+    console.log("color:", color)
     return (
         <tr className='border-y'>
             <td className='px-4'>
@@ -18,10 +21,21 @@ const TableProductRow = ({ item}: Props) => {
             </td>
             <td>{item.name}</td>
             <td>
-                <FaCircle color={item.status == "ACTIVE" ? "lightgreen" : item.status == "DRAFT" ? 'orange' : "red"} />
+                <div className='inline-flex items-center justify-center gap-1'>
+                    <FaCircle color={item.status == "ACTIVE" ? "lightgreen" : item.status == "DRAFT" ? 'orange' : "red"} />
+                    <span className={`text-${color}-500`}>{item.status}</span>
+                </div>
             </td>
-            <td>{Number(item.price)}</td>
-            <td>{item.stock}</td>
+            <td className=''>
+                <div className='text-right w-[20%] '>
+                    {Number(item.price).toFixed(2)}
+                </div>
+            </td>
+            <td className=''>
+                <div className={`text-right w-[20%] ${item.stock === 0 && 'text-red-600 font-semibold'} `}>
+                    {item.stock === 0 ? 'OUT' : item.stock}
+                </div>
+            </td>
             <td>
                 {
                     item.status == "ACTIVE" ?

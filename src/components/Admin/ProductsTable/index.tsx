@@ -102,7 +102,7 @@ const ProductsTable = ({ data }: Props) => {
                     {
                         data.map((item) => {
                             return (
-                                <TableProductRow item={item} />
+                                <TableProductRow item={item} key={item.id}/>
                             )
                         })
                     }
