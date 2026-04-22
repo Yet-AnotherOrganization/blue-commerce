@@ -1,4 +1,5 @@
 'use client'
+import { createProduct } from '@/app/actions/productActions'
 import InputWithSearch from '@/components/Common/InputWithSearch'
 import { Button } from '@/components/ui/button'
 import { SearchableSelect } from '@/components/ui/searchable-select'
@@ -38,23 +39,35 @@ const CreateProductForm = ({ categories, stores }: Props) => {
         }
     }
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 
         e.preventDefault()
 
-        const formData = new FormData(e.target as HTMLFormElement);
+        const formData = new FormData(e.currentTarget as HTMLFormElement);
 
         const product = Object.fromEntries(formData.entries())
+        console.log(product)
 
-        const file = product.image as File;
+        const file = formData.get('image') as File;
 
-        if (file.size > 1024 * 1024 * 4) {toast.error('File size exceeds the limit of 4MB.'); return;}
+        if (file.size > 1024 * 1024 * 4) { toast.error('File size exceeds 4MB limit.'); return; }
 
-        const allowedTypes = ['image/jpg','image/jpeg','image/png']
-        
-        if(!allowedTypes.includes(file.type)) {toast.error('File type is invalid.'); return;}
-    
-        
+        const allowedTypes = ['image/jpg', 'image/jpeg', 'image/png']
+
+        if (!allowedTypes.includes(file.type)) { toast.error('File type is invalid.'); return; }
+
+        try {
+            const response = await createProduct(formData);
+            console.log("res: ", response)
+            if (!response.success) throw new Error(response.message)
+            toast.success('Product draft created successfully. Activate in products page.')
+        }
+        catch (err) {
+            if(err instanceof Error) toast.error(err.message)
+            else toast.error('Upload failed.')
+            console.error("Upload failed: ", err)
+        }
+
     }
 
     return (
@@ -65,15 +78,20 @@ const CreateProductForm = ({ categories, stores }: Props) => {
                     <div className='flex-1 flex flex-col gap-4 '>
                         <div className='input-wrapper inline-flex flex-col'>
                             <label htmlFor="name" className='text-lg'>Name</label>
-                            <input type="text" id='name' className='border border-gray-400 rounded-md px-2 py-1 mt-2' />
+                            <input type="text" name='name' id='name' className='border border-gray-400 rounded-md px-2 py-1 mt-2' />
                         </div>
                         <div className='input-wrapper inline-flex flex-col'>
                             <label htmlFor="price" className='text-lg'>Price</label>
-                            <input type="number" id='price' min='0' className='border border-gray-400 rounded-md px-2 py-1' />
+                            <input type="number" name='price' id='price' min='0' className='border border-gray-400 rounded-md px-2 py-1' />
+                        </div>
+                        <div className='input-wrapper inline-flex flex-col'>
+                            <label htmlFor="stock" className='text-lg'>Stock</label>
+                            <input type="number" name='stock' id='stock' min='0' className='border border-gray-400 rounded-md px-2 py-1' />
                         </div>
                         <div className='input-wrapper inline-flex flex-col'>
                             <label htmlFor="category" className='text-lg mb-2'>Category</label>
                             <InputWithSearch
+                                id='category'
                                 placeholder='Select a category'
                                 searchPlaceholder={'Search categories'}
                                 items={categories.map((item) => ({ label: item.name, value: item.id }))}
@@ -81,8 +99,9 @@ const CreateProductForm = ({ categories, stores }: Props) => {
                             />
                         </div>
                         <div className='input-wrapper inline-flex flex-col z-50'>
-                            <label htmlFor="store" className='text-lg'>Store</label>
+                            <label htmlFor="seller" className='text-lg'>Store</label>
                             <InputWithSearch
+                                id='seller'
                                 placeholder='Select a store'
                                 searchPlaceholder={'Search stores'}
                                 items={stores.map((item) => ({ label: item.storeName, value: item.id }))}
