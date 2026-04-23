@@ -10,7 +10,8 @@ datasource db {
 model User {
   id        String        @id @default(cuid())
   email     String        @unique
-  name      String?
+  name      String
+  nameSlug  String?       @unique
   password  String
   phone     String?
   createdAt DateTime      @default(now())
@@ -49,6 +50,7 @@ model CartItem {
 model Store {
   id        String    @id @default(cuid())
   storeName String
+  nameSlug  String?    @unique
   ownerId   String    @unique
   avatar    String?
   products  Product[]
@@ -79,6 +81,7 @@ model Product {
   id          String      @id @default(cuid())
   status      ProductStatus @default(DRAFT)
   name        String
+  nameSlug    String?  @unique
   description String
   price       Decimal
   imageUrl    String
@@ -98,6 +101,7 @@ model Product {
 model Category {
   id          String    @id @default(uuid())
   name        String
+  nameSlug    String?    @unique
   description String
   imageUrl    String?
   products    Product[]
