@@ -52,7 +52,8 @@ model Store {
   ownerId   String    @unique
   avatar    String?
   products  Product[]
-  owner     User      @relation(fields: [ownerId], references: [id])
+  owner     User?      @relation(fields: [ownerId], references: [id])
+  status    StoreStatus @default(DISABLED)
 }
 
 model Order {
@@ -143,5 +144,11 @@ enum Role {
 enum ProductStatus {
   ACTIVE
   DRAFT
+  ARCHIVED
+}
+
+enum StoreStatus {
+  ACTIVE
+  DISABLED
   ARCHIVED
 }
