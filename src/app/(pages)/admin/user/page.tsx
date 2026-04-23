@@ -3,7 +3,7 @@ import TableControls from '@/components/Admin/ProductsTable/TableControls'
 import UsersTable from '@/components/Admin/UsersTable'
 import { Product, User } from '@/generated/prisma'
 import { prisma } from '@/lib/prisma'
-import React from 'react'
+import React, { ChangeEvent } from 'react'
 
 type Props = {
     searchParams: {
@@ -35,15 +35,18 @@ const UsersPage = async ({ searchParams }: Props) => {
             take: limit,
             skip: (page - 1) * 10
         })
-        totalAmount = await prisma.product.count();
+        totalAmount = await prisma.user.count();
 
         return data;
     }
+
+
 
     return (
         <>
 
             <div className='flex-[4] flex flex-col h-full mx-[10vw]'>
+                
                 <UsersTable data={(await getUsersTable(query, limit, page))} />
                 <TableControls totalAmount={totalAmount || 0} />
             </div>
