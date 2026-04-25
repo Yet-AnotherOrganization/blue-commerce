@@ -1,39 +1,43 @@
 'use client'
+import { debounce } from '@/utils/clientOnlyUtils'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
 
-type Props = {}
+type Props = {
+    placeholder?: string
+}
 
-const SearchInput = (props: Props) => {
+const SearchInput = ({ placeholder = 'value' }: Props) => {
 
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const [input, setInput] = useState<string>('');
 
-    useEffect(() => { 
+    const debouncedSearch = useCallback(
+        debounce((value: string) => {
+            const params = new URLSearchParams(searchParams.toString());
 
-        const params = new URLSearchParams(searchParams.toString());
-        params.set('q', input);
+            if (value) params.set('q', value)
+            else params.delete('q');
 
-        router.replace(`${pathname}?${params}`);
+            router.replace(`${pathname}?${params}`);
+        }, 300),
 
-    }, [input])
+        [pathname, router, searchParams])
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const searchValue = e.currentTarget.value
-        .replaceAll(' ', '')
-        .replaceAll('-', '')
-        .toLowerCase();
+            .replaceAll(' ', '')
+            .replaceAll('-', '')
+            .toLowerCase();
 
-        console.log("amogus")
-
-        setInput(searchValue);
+        debouncedSearch(searchValue);
     }
 
     return (
         <div className='bg-'>
-            <input placeholder='Enter user name' onChange={handleInputChange} />
+            <input placeholder={`Enter ${placeholder}...`} onChange={handleInputChange} />
         </div>
     )
 }
