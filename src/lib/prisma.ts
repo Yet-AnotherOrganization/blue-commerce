@@ -47,7 +47,7 @@ const prisma = new PrismaClient({ adapter }).$extends({
             // intercept create operation for slugging manually
             async create({ args, query }) {
                 if (args.data.storeName) {
-                    args.data.nameSlug = args.data.storeName.toLowerCase().replace(/\s+/g, '')
+                    args.data.nameSlug = args.data.storeName.toLowerCase().replace(/\s+/g, '').replaceAll('.', '')
                 }
 
                 return query(args);
@@ -56,7 +56,7 @@ const prisma = new PrismaClient({ adapter }).$extends({
             // intercept update/upsert ops
             async update({ args, query }) {
                 if (args.data.storeName && typeof args.data.storeName === 'string') {
-                    args.data.nameSlug = args.data.storeName.toLocaleLowerCase().replace(/\s+/g, '')
+                    args.data.nameSlug = args.data.storeName.toLocaleLowerCase().replace(/\s+/g, '').replaceAll('.', '')
                 }
                 return query(args);
             }
