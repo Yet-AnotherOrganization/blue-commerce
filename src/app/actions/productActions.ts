@@ -106,56 +106,29 @@ export async function createProduct(formData: FormData) {
             finalError = err.message
         }
 
-        // if (err instanceof PrismaClientKnownRequestError) {
-        //     if (err.code === 'P2002') {
-
-        //         console.log("METAMOGUS:", err)
-
-        //         const target = (err.meta?.target as string[])?.join(', ') || "fields";
-
-        //         return {
-        //             success: false,
-        //             message: `Conflict: A product with this ${target} already exists.`,
-        //             error: "Unique constraint failed."
-        //         }
-        //     }
-
-        //     if (err.code === 'P2003') {
-        //         return {
-        //             success: false,
-        //             message: "Foreign key constraint failed. Invalid category or seller ID.",
-        //             error: "Relation error."
-        //         };
-        //     }
-
-        //     return {
-        //         success: false,
-        //         message: "A database error occurred.",
-        //         error: err.message
-        //     };
-        // }
-
         if (err instanceof PrismaClientKnownRequestError) {
             if (err.code === 'P2002') {
-                // 1. Try standard Prisma meta
-                let target = err.meta?.target as string[] | undefined;
-
-                // 2. Fallback for Driver Adapters (Postgres/adapter-pg often puts it in 'target')
-                if (!target && err.meta?.driverAdapterError) {
-                    const adapterError = err.meta.driverAdapterError as any;
-                    // Postgres unique violations usually return the constraint name or columns
-                    target = adapterError.meta?.target || [adapterError.meta?.constraint];
-                }
-
-                // 3. Last resort: Parse the message string if meta is empty
-                const fieldName = target ? target.join(', ') : "unknown field";
 
                 return {
                     success: false,
-                    message: `A product with this ${fieldName} already exists.`,
-                    errors: { [target?.[0] || 'form']: "Must be unique" }
+                    message: `A product with this name already exists.`,
+                    error: "Unique constraint failed."
+                }
+            }
+
+            if (err.code === 'P2003') {
+                return {
+                    success: false,
+                    message: "Foreign key constraint failed. Invalid category or seller ID.",
+                    error: "Relation error."
                 };
             }
+
+            return {
+                success: false,
+                message: "A database error occurred.",
+                error: err.message
+            };
         }
 
         if (err instanceof PrismaClientValidationError) {
