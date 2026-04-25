@@ -1,6 +1,5 @@
 
 import { ReadonlyURLSearchParams } from "next/navigation";
-import { ProductParams } from "../constants/constants";
 import { CartItemWithProduct } from "../types/product";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { createProduct } from "@/app/actions/productActions";
@@ -47,7 +46,7 @@ export const changePage = (searchParams: ReadonlyURLSearchParams, p: number, rou
 
 }
 
-export const handleProductCreateFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
+export const handleProductCreateFormSubmit = async (e: FormEvent<HTMLFormElement>, router?: AppRouterInstance) => {
 
     e.preventDefault()
 
@@ -69,11 +68,14 @@ export const handleProductCreateFormSubmit = async (e: FormEvent<HTMLFormElement
         console.log("res: ", response)
         if (!response.success) throw new Error(response.message)
         toast.success('Product draft created successfully. Activate in products page.')
+        if(router) router.push('/admin/product')
+        return response;
+
     }
     catch (err) {
-        if (err instanceof Error) toast.error(err.message)
+        if (err instanceof Error) toast.error(`${err.name}: ${err.message}`)
         else toast.error('Upload failed.')
-        console.error("Upload failed: ", err)
+        console.error("Upload failed", err)
     }
 
 }

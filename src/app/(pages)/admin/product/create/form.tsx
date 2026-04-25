@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { SearchableSelect } from '@/components/ui/searchable-select'
 import { Category, Product, Store } from '@/generated/prisma'
 import { handleProductCreateFormSubmit } from '@/utils/clientOnlyUtils'
+import { useRouter } from 'next/navigation'
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -21,6 +22,7 @@ const CreateProductForm = ({ categories, stores }: Props) => {
     const [selectedStore, setSelectedStore] = useState<Store>()
     const [selectedCategory, setSelectedCategory] = useState<Category>()
     const [image, setImage] = useState<string | null>(null)
+    const router = useRouter();
 
     const handleStoreChange = (value: string) => {
         setSelectedStore(stores.find((store) => store.id === value))
@@ -28,7 +30,6 @@ const CreateProductForm = ({ categories, stores }: Props) => {
     const handleCategoryChange = (value: string) => {
         setSelectedCategory(categories.find((cat) => cat.id === value))
     }
-
     const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.currentTarget.files?.[0]
 
@@ -43,7 +44,7 @@ const CreateProductForm = ({ categories, stores }: Props) => {
 
 
     return (
-        <form onSubmit={handleProductCreateFormSubmit} className='border px-16 py-8 rounded-xl shadow-md '>
+        <form onSubmit={async (e) => await handleProductCreateFormSubmit(e,router)} className='border px-16 py-8 rounded-xl shadow-md '>
             <h1 className='text-center text-2xl font-bold mb-16'>Create a New Product</h1>
             <div className='flex gap-8 items-start lg:flex-row flex-col-reverse'>
                 <div className='flex-[4] flex gap-8  max-lg:w-full flex-col '>
