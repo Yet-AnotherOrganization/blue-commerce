@@ -1,6 +1,7 @@
 import ProductsTable from '@/components/Admin/ProductsTable'
 import TableControls from '@/components/Admin/ProductsTable/TableControls'
 import UsersTable from '@/components/Admin/UsersTable'
+import SearchInput from '@/components/Admin/UsersTable/SearchInput'
 import { Product, User } from '@/generated/prisma'
 import { prisma } from '@/lib/prisma'
 import React, { ChangeEvent } from 'react'
@@ -20,10 +21,7 @@ const UsersPage = async ({ searchParams }: Props) => {
     const page = Number(searchParams.page) || 1;
     const query = searchParams.q || '';
     const limit = Number(searchParams.limit) || 10
-    const sort = searchParams.sort;
-    const order = searchParams.order;
 
-    let data: User[]
     let totalAmount;
 
 
@@ -46,7 +44,7 @@ const UsersPage = async ({ searchParams }: Props) => {
         <>
 
             <div className='flex-[4] flex flex-col h-full mx-[10vw]'>
-                
+                <SearchInput />
                 <UsersTable data={(await getUsersTable(query, limit, page))} />
                 <TableControls totalAmount={totalAmount || 0} />
             </div>
