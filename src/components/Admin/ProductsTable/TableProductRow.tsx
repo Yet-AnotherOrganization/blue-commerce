@@ -12,8 +12,6 @@ const TableProductRow = ({ item }: Props) => {
 
 
     const color = item.status === "ACTIVE" ? "green" : item.status === "DRAFT" ? "orange" : "red"
-
-    console.log("color:", color)
     return (
         <tr className='border-y'>
             <td className='px-4'>
