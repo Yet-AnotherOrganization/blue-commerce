@@ -76,7 +76,10 @@ export const fetchCartAsync = createAsyncThunk(
         }
         catch (err: any) {
             console.error(err);
-            return rejectWithValue(err)
+            if (err instanceof AxiosError) {
+                return rejectWithValue(err.message)
+            }
+            return rejectWithValue(err instanceof Error ? err.message : err)
         }
     }
 )
