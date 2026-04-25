@@ -1,5 +1,6 @@
 'use server'
 
+import { PrismaClientKnownRequestError, PrismaClientValidationError } from "@/generated/prisma/runtime/client";
 import cloudinary from "@/lib/cloudinary";
 import { prisma } from "@/lib/prisma";
 import { ProductSchema } from "@/lib/zod";
@@ -36,6 +37,7 @@ export async function activateProduct(id: string) {
 }
 
 export async function createProduct(formData: FormData) {
+    let createdProduct;
     try {
 
         const rawData = Object.fromEntries(formData.entries());
@@ -78,7 +80,7 @@ export async function createProduct(formData: FormData) {
 
         if (!uploadResult) return { success: false, message: 'Failure during image upload.' };
 
-        const createdProduct = await prisma.product.create({
+        createdProduct = await prisma.product.create({
             data: {
                 name: data.name,
                 description: data.description,
@@ -91,15 +93,83 @@ export async function createProduct(formData: FormData) {
         })
 
         revalidatePath('/admin/product');
+        return {
+            success: true,
+            message: "The product successfully been created.",
+        }
     }
     catch (err) {
-        console.log("ERROR: ", err);
+
+        let finalError;
+
+        if (err instanceof Error) {
+            finalError = err.message
+        }
+
+        // if (err instanceof PrismaClientKnownRequestError) {
+        //     if (err.code === 'P2002') {
+
+        //         console.log("METAMOGUS:", err)
+
+        //         const target = (err.meta?.target as string[])?.join(', ') || "fields";
+
+        //         return {
+        //             success: false,
+        //             message: `Conflict: A product with this ${target} already exists.`,
+        //             error: "Unique constraint failed."
+        //         }
+        //     }
+
+        //     if (err.code === 'P2003') {
+        //         return {
+        //             success: false,
+        //             message: "Foreign key constraint failed. Invalid category or seller ID.",
+        //             error: "Relation error."
+        //         };
+        //     }
+
+        //     return {
+        //         success: false,
+        //         message: "A database error occurred.",
+        //         error: err.message
+        //     };
+        // }
+
+        if (err instanceof PrismaClientKnownRequestError) {
+            if (err.code === 'P2002') {
+                // 1. Try standard Prisma meta
+                let target = err.meta?.target as string[] | undefined;
+
+                // 2. Fallback for Driver Adapters (Postgres/adapter-pg often puts it in 'target')
+                if (!target && err.meta?.driverAdapterError) {
+                    const adapterError = err.meta.driverAdapterError as any;
+                    // Postgres unique violations usually return the constraint name or columns
+                    target = adapterError.meta?.target || [adapterError.meta?.constraint];
+                }
+
+                // 3. Last resort: Parse the message string if meta is empty
+                const fieldName = target ? target.join(', ') : "unknown field";
+
+                return {
+                    success: false,
+                    message: `A product with this ${fieldName} already exists.`,
+                    errors: { [target?.[0] || 'form']: "Must be unique" }
+                };
+            }
+        }
+
+        if (err instanceof PrismaClientValidationError) {
+            return {
+                success: false,
+                message: "Database validation failed. Ensure all required fields are provided.",
+                error: "Validation error."
+            };
+        }
+
         return {
             success: false,
             message: "Error during product upload.",
-            error: err
+            error: finalError
         }
     }
-
-    redirect('/admin/product')
 }
