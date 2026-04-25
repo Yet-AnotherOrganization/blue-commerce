@@ -44,7 +44,7 @@ const UsersPage = async ({ searchParams }: Props) => {
         <>
 
             <div className='flex-[4] flex flex-col h-full mx-[10vw]'>
-                <SearchInput />
+                <SearchInput placeholder='user name'/>
                 <UsersTable data={(await getUsersTable(query, limit, page))} />
                 <TableControls totalAmount={totalAmount || 0} />
             </div>

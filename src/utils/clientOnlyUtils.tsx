@@ -68,7 +68,7 @@ export const handleProductCreateFormSubmit = async (e: FormEvent<HTMLFormElement
         console.log("res: ", response)
         if (!response.success) throw new Error(response.message)
         toast.success('Product draft created successfully. Activate in products page.')
-        if(router) router.push('/admin/product')
+        if (router) router.push('/admin/product')
         return response;
 
     }
@@ -78,4 +78,14 @@ export const handleProductCreateFormSubmit = async (e: FormEvent<HTMLFormElement
         console.error("Upload failed", err)
     }
 
+}
+
+export function debounce<T extends (...args: any[]) => any>(func: T, delay: number = 1000) {
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    return (...args: any) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            func(...args)
+        }, delay)
+    }
 }
