@@ -17,7 +17,7 @@ type Props = {
 const InputWithSearch = ({ id, placeholder, searchPlaceholder, items, onChange }: Props) => {
 
     const [modalOpen, setModalOpen] = useState(false);
-    const [selectedItem, setSelectedItem] = useState<Item>();
+    const [selectedItem, setSelectedItem] = useState<Item | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -44,8 +44,8 @@ const InputWithSearch = ({ id, placeholder, searchPlaceholder, items, onChange }
     const handleSelect = (value: string) => {
         onChange(value); // Push data to parent
         const foundItem = items.find((item) => item.value === value)
-        console.log("found", foundItem)
-        setSelectedItem(foundItem)
+        // console.log("found", foundItem)
+        if(foundItem) setSelectedItem(foundItem)
         setModalOpen(false);
     };
 
