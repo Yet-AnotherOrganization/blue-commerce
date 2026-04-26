@@ -17,7 +17,11 @@ const TableProductRow = ({ item }: Props) => {
             <td className='px-4'>
                 <img src={item.imageUrl} className='w-12 h-12' alt="" />
             </td>
-            <td>{item.name}</td>
+            <td>
+                <a href={`/admin/product/${item.id}`}>
+                    {item.name}
+                </a>
+            </td>
             <td>
                 <div className='inline-flex items-center justify-center gap-1'>
                     <FaCircle color={item.status == "ACTIVE" ? "lightgreen" : item.status == "DRAFT" ? 'orange' : "red"} />
