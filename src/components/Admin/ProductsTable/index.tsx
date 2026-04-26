@@ -8,9 +8,10 @@ import { FaArrowDown, FaArrowUp, FaCircle, FaTrash } from 'react-icons/fa';
 import { TiTick } from "react-icons/ti";
 import TableProductRow from './TableProductRow';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { SerializedProduct } from '@/types/product';
 type Props = {
     // fix any
-    data: Product[];
+    data: SerializedProduct[];
 }
 
 const ProductsTable = ({ data }: Props) => {
@@ -102,7 +103,7 @@ const ProductsTable = ({ data }: Props) => {
                     {
                         data.map((item) => {
                             return (
-                                <TableProductRow item={item} key={item.id}/>
+                                <TableProductRow item={item} key={item.id} />
                             )
                         })
                     }

@@ -1,11 +1,12 @@
 import { activateProduct, deleteProduct } from '@/app/actions/productActions'
 import { Product } from '@/generated/prisma'
+import { SerializedProduct } from '@/types/product'
 import React, { Dispatch } from 'react'
 import { FaCircle, FaTrash } from 'react-icons/fa'
 import { TiTick } from 'react-icons/ti'
 
 type Props = {
-    item: Product,
+    item: SerializedProduct,
 }
 
 const TableProductRow = ({ item }: Props) => {

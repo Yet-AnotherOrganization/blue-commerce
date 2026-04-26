@@ -25,9 +25,9 @@ const ProductsPage = async ({ searchParams }: Props) => {
     const order = searchParams.order;
     let totalAmount;
 
-    
+
     const getProductsTable = async (query: string, limit: number, page: number) => {
-        const data = await prisma.product.findMany({
+        let data = await prisma.product.findMany({
             where: {
                 nameSlug: { contains: query, mode: "insensitive" },
                 // status: "ACTIVE"
@@ -38,7 +38,10 @@ const ProductsPage = async ({ searchParams }: Props) => {
         })
         totalAmount = query ? data.length : await prisma.product.count();
         console.log("total amount: ", totalAmount)
-        return data
+
+        const serializedData = data.map((item) => { return ({ ...item, price: item.price.toNumber() }) })
+
+        return serializedData
     }
     return (
         <>
