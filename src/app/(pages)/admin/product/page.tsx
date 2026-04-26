@@ -46,7 +46,7 @@ const ProductsPage = async ({ searchParams }: Props) => {
         <>
 
             <div className='flex-[4] flex flex-col h-full mx-[10vw]'>
-                <SearchInput placeholder='product name'/>
+                <SearchInput placeholder='product name' />
                 <ProductsTable data={(await getProductsTable(query, limit, page))} />
                 <TableControls totalAmount={totalAmount || 0} />
                 <div className='flex justify-center items-center'>
