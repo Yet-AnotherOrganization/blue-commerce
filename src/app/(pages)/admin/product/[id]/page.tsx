@@ -30,10 +30,15 @@ const ProductDetailPage = async ({ params, searchParams }: Props) => {
 
     if (!product) return notFound();
 
+    const serializedProduct = {
+        ...product,
+        price: product.price.toNumber()
+    }
+
     if (searchParams.mode === 'EDIT') return (<EditProductDetails product={product} />)
 
     return (
-        <ViewProductDetails product={product} />
+        <ViewProductDetails product={serializedProduct} />
     )
 }
 

@@ -3,9 +3,10 @@ import Link from 'next/link'
 import React from 'react'
 import ControlBar from './ControlBar'
 import { FaCircle } from 'react-icons/fa'
+import { SerializedProduct } from '@/types/product'
 
 type Props = {
-    product: Product & {
+    product: SerializedProduct & {
         seller: Store,
         category: Category
     }

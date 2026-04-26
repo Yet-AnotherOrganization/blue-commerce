@@ -1,12 +1,13 @@
 'use client'
 import { Product } from '@/generated/prisma'
+import { SerializedProduct } from '@/types/product';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import { FaArchive, FaEdit } from 'react-icons/fa'
 import { GiConfirmed } from "react-icons/gi";
 
 type Props = {
-    product: Product
+    product: SerializedProduct
 }
 
 const ControlBar = ({ product }: Props) => {

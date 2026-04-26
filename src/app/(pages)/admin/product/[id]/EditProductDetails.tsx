@@ -3,9 +3,10 @@ import { Product } from '@/generated/prisma'
 import Link from 'next/link'
 import React, { useState } from 'react'
 import ControlBar from './ControlBar'
+import { SerializedProduct } from '@/types/product';
 
 type Props = {
-    product: Product
+    product: SerializedProduct
 }
 
 const EditProductDetails = ({ product }: Props) => {
