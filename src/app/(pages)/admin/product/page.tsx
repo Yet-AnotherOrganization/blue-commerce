@@ -23,11 +23,9 @@ const ProductsPage = async ({ searchParams }: Props) => {
     const limit = Number(searchParams.limit) || 10
     const sort = searchParams.sort;
     const order = searchParams.order;
-
-    let data: Product[]
     let totalAmount;
 
-
+    
     const getProductsTable = async (query: string, limit: number, page: number) => {
         const data = await prisma.product.findMany({
             where: {
@@ -38,8 +36,8 @@ const ProductsPage = async ({ searchParams }: Props) => {
             skip: (page - 1) * 10,
             orderBy: sort ? { [sort]: order || 'asc' } : undefined
         })
-        totalAmount = await prisma.product.count() || 0;
-
+        totalAmount = query ? data.length : await prisma.product.count();
+        console.log("total amount: ", totalAmount)
         return data
     }
     return (
