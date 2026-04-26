@@ -2,6 +2,7 @@
 import { debounce } from '@/utils/clientOnlyUtils'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
+import { FaSearch } from 'react-icons/fa'
 
 type Props = {
     placeholder?: string
@@ -21,6 +22,8 @@ const SearchInput = ({ placeholder = 'value' }: Props) => {
             if (value) params.set('q', value)
             else params.delete('q');
 
+            if (Number(searchParams.get('page')) > 1) params.set('page', "1")
+
             router.replace(`${pathname}?${params}`);
         }, 300),
 
@@ -36,8 +39,14 @@ const SearchInput = ({ placeholder = 'value' }: Props) => {
     }
 
     return (
-        <div className='bg-'>
-            <input placeholder={`Enter ${placeholder}...`} onChange={handleInputChange} />
+        <div className='pt-8'>
+            <div className='border inline-flex items-center gap-1 px-4 py-2 rounded-xl border-black'>
+                <FaSearch />
+                <input
+                    className=' pt-1 outline-none'
+                    placeholder={`Enter ${placeholder}...`}
+                    onChange={handleInputChange} />
+            </div>
         </div>
     )
 }
