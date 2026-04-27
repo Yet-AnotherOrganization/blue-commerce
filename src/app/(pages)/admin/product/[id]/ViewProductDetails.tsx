@@ -39,7 +39,7 @@ const ViewProductDetails = ({ product }: Props) => {
                         className='rounded-md shadow-lg aspect-square max-w-[300px] m-auto mb-0 max-lg:mb-10'
                     />
                 </div>
-                <div className='flex-[2] flex flex-col md:border-l-2 md:ml-4'>
+                <div className='flex-[2] flex flex-col lg:border-l-2 md:ml-4'>
 
                     <ControlBar product={product} />
 
@@ -77,11 +77,9 @@ const ViewProductDetails = ({ product }: Props) => {
                         <DetailRow fieldKey='Seller'>
                             {product.seller.storeName}
                         </DetailRow>
-
                     </div>
                 </div>
             </div>
-
         </div>
     )
 }

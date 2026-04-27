@@ -1,6 +1,6 @@
 'use client'
 import { createProduct } from '@/app/actions/productActions'
-import InputWithSearch from '@/components/Common/InputWithSearch'
+import SelectWithSearch from '@/components/Common/SelectWithSearch'
 import { Button } from '@/components/ui/button'
 import { SearchableSelect } from '@/components/ui/searchable-select'
 import { Category, Product, Store } from '@/generated/prisma'
@@ -63,7 +63,7 @@ const CreateProductForm = ({ categories, stores }: Props) => {
                         </div>
                         <div className='input-wrapper inline-flex flex-col'>
                             <label htmlFor="category" className='text-lg mb-2'>Category</label>
-                            <InputWithSearch
+                            <SelectWithSearch
                                 id='category'
                                 placeholder='Select a category'
                                 searchPlaceholder={'Search categories'}
@@ -73,7 +73,7 @@ const CreateProductForm = ({ categories, stores }: Props) => {
                         </div>
                         <div className='input-wrapper inline-flex flex-col z-50'>
                             <label htmlFor="seller" className='text-lg'>Store</label>
-                            <InputWithSearch
+                            <SelectWithSearch
                                 id='seller'
                                 placeholder='Select a store'
                                 searchPlaceholder={'Search stores'}
