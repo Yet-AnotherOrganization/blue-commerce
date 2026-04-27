@@ -82,10 +82,15 @@ export const handleProductCreateFormSubmit = async (e: FormEvent<HTMLFormElement
 
 export function debounce<T extends (...args: any[]) => any>(func: T, delay: number = 1000) {
     let timeoutId: ReturnType<typeof setTimeout> | undefined;
-    return (...args: any) => {
+
+    const debounced = (...args: any) => {
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
             func(...args)
         }, delay)
     }
+
+    debounced.cancel = () => clearTimeout(timeoutId);
+
+    return debounced;
 }

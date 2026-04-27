@@ -1,4 +1,5 @@
 'use client'
+import { debounce } from '@/utils/clientOnlyUtils';
 import { standardizeText } from '@/utils/utils';
 import React, { SetStateAction, useEffect, useMemo, useRef, useState } from 'react'
 import { FaSearch } from 'react-icons/fa';
@@ -11,18 +12,21 @@ type Props = {
     placeholder?: string,
     searchPlaceholder?: string,
     items: Item[],
-    onChange: (value:string) => void
+    onChange: (value: string) => void,
+    classes?: string
 }
 
-const InputWithSearch = ({ id, placeholder, searchPlaceholder, items, onChange }: Props) => {
+const SelectWithSearch = ({ id, placeholder, searchPlaceholder, items, onChange, classes }: Props) => {
 
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [filteredItems, setFilteredItems] = useState<Item[]>(items);
 
     const innerInputRef = useRef<HTMLInputElement>(null);
 
+    // * CLOSE MODAL WHEN CLICKED OUTSIDE
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -35,33 +39,58 @@ const InputWithSearch = ({ id, placeholder, searchPlaceholder, items, onChange }
         return () => document.removeEventListener('click', handleClickOutside);
     }, [])
 
+    // * AUTO-FOCUS ON INPUT WHEN MODAL OPENS
     useEffect(() => {
-    if (modalOpen) {
-        innerInputRef.current?.focus();
-    }
-}, [modalOpen]);
+        if (modalOpen) {
+            innerInputRef.current?.focus();
+        }
+    }, [modalOpen]);
+
 
     const handleSelect = (value: string) => {
         onChange(value); // Push data to parent
         const foundItem = items.find((item) => item.value === value)
         // console.log("found", foundItem)
-        if(foundItem) setSelectedItem(foundItem)
+        if (foundItem) setSelectedItem(foundItem)
         setModalOpen(false);
     };
 
-    const filteredResults = useMemo(() => {
+    const handleInputChange = (value: string) => {
+        setSearchQuery(value);
+        debouncedSearch(value);
+    }
 
-        if (!searchQuery.trim()) return items;
+    // * CREATE DEBOUNCE FUNC TO SAVE FROM API
+    const debouncedSearch = useMemo(() => debounce((value: string) => {
 
-        const cleanQuery = standardizeText(searchQuery);
+        if (!value.trim()) return setFilteredItems(items);
 
-        return items.filter((item) => standardizeText(item.label).includes(cleanQuery))
+        const cleanQuery = standardizeText(value);
 
-    }, [searchQuery, items])
+        console.log("debounced")
+
+        const results = items.filter((item) => standardizeText(item.label).includes(cleanQuery))
+
+        console.log("res: ", results)
+        return setFilteredItems(results);
+    }, 300), [items])
+
+
+    // * UNMOUNT DEBOUNCE ON CLEANUP
+    useEffect(() => {
+        return () => {
+            debouncedSearch.cancel();
+        }
+    }, [debouncedSearch])
+
+    // * UPDATE ITEMS ON SOURCE-CHANGE
+    useEffect(() => {
+        setFilteredItems(items)
+    }, [items])
 
     return (
-        <div className='relative inline-block' ref={containerRef}>
-            <input className='block w-full border border-gray-400 rounded-md px-2 py-1' type="text" readOnly value={selectedItem?.label} placeholder={placeholder || 'Enter placeholder text'} onClick={() => setModalOpen(true)}/>
+        <div className={`relative inline-block ${classes}`} ref={containerRef}>
+            <input className='block w-full border border-gray-400 rounded-md px-2 py-1' type="text" readOnly value={selectedItem?.label} placeholder={placeholder || 'Enter placeholder text'} onClick={() => setModalOpen(true)} />
             <input id={id} name={id} readOnly className='hidden' value={selectedItem?.value} />
             <div className={`absolute flex flex-col p-2 left-0 right-0 border rounded-md shadow-lg bg-white ${modalOpen ? 'block' : 'hidden'} z-[100]`} >
                 <div className='inline-flex mb-2 border-b-2 items-center justify-center bg-white px-1'>
@@ -70,20 +99,29 @@ const InputWithSearch = ({ id, placeholder, searchPlaceholder, items, onChange }
                         className='outline-none rounded-xl w-full'
                         type="search"
                         placeholder={searchPlaceholder || 'Search items'}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.currentTarget.value)}
+                        value={searchQuery}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e.currentTarget.value)}
                     />
                     <FaSearch />
                 </div>
                 <ul className='flex flex-col'>
-                    {filteredResults?.map((item) =>
+                    {
+                    filteredItems.length <= 0 ? 
+                    
+                    <span className='text-gray-300'>No items were found.</span>
+
+                    :
+                    
+                    filteredItems?.map((item) =>
                         <li onClick={(e) => { handleSelect(e.currentTarget.dataset.value || ''); setModalOpen(false); setSearchQuery('') }} className='inline-flex cursor-pointer hover:bg-gray-200 transition-all items-center justify-between overflow-ellipsis border-b border-gray-100' key={item.value} data-value={item.value}>
                             {item.label}
                             {item.value === selectedItem?.value && <TiTick />}
-                        </li>)}
+                        </li>)
+                    }
                 </ul>
             </div>
         </div>
     )
 }
 
-export default InputWithSearch
+export default SelectWithSearch
