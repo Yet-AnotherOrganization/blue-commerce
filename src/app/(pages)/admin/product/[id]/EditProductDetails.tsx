@@ -62,11 +62,11 @@ const EditProductDetails = ({ product, categories, stores }: Props) => {
                         <ProductDetailInput fieldKey='Name' value={name} fn={setName} placeholder='product name' />
                         <div className='flex items-center'>
                             <label htmlFor="" className='flex-1 font-semibold'>Category:</label>
-                            <SelectWithSearch classes='flex-1 block' id='category' items={categories.map((cat) => ({ label: cat.name, value: cat.id }))} onChange={setCategory} placeholder='Select new category...' />
+                            <SelectWithSearch classes='flex-1 block' id='category' items={categories.map((cat) => ({ label: cat.name, value: cat.id }))} onChange={setCategory} placeholder='Select new category...' defaultSelected={category} />
                         </div>
                         <div className='flex items-center'>
-                            <label htmlFor="" className='flex-1 font-semibold'>Category:</label>
-                            <SelectWithSearch classes='flex-1 block' id='category' items={stores.map((store) => ({ label: store.storeName, value: store.id }))} onChange={setStore} placeholder='Select seller store...' />
+                            <label htmlFor="" className='flex-1 font-semibold'>Store:</label>
+                            <SelectWithSearch classes='flex-1 block' id='category' items={stores.map((store) => ({ label: store.storeName, value: store.id }))} onChange={setStore} placeholder='Select seller store...' defaultSelected={store} />
                         </div>
                         {/* 
                         <DetailRow fieldKey='Slug'>

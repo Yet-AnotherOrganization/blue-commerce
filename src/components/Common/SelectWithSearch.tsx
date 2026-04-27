@@ -13,13 +13,14 @@ type Props = {
     searchPlaceholder?: string,
     items: Item[],
     onChange: (value: string) => void,
-    classes?: string
+    classes?: string,
+    defaultSelected?: string
 }
 
-const SelectWithSearch = ({ id, placeholder, searchPlaceholder, items, onChange, classes }: Props) => {
+const SelectWithSearch = ({ id, placeholder, searchPlaceholder, items, onChange, classes, defaultSelected }: Props) => {
 
     const [modalOpen, setModalOpen] = useState(false);
-    const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+    const [selectedItem, setSelectedItem] = useState<Item | null>(items.find((item)=>item.value === defaultSelected) || null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredItems, setFilteredItems] = useState<Item[]>(items);
