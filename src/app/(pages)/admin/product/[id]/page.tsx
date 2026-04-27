@@ -35,8 +35,17 @@ const ProductDetailPage = async ({ params, searchParams }: Props) => {
         price: product.price.toNumber()
     }
 
-    if (searchParams.mode === 'EDIT') return (<EditProductDetails product={serializedProduct} />)
-
+    if (searchParams.mode === 'EDIT') {
+        const categories = await prisma.category.findMany(); // only run if mode is EDIT
+        const stores = await prisma.store.findMany(); // only run if mode is EDIT
+        return (
+            <EditProductDetails
+                product={serializedProduct}
+                categories={categories}
+                stores={stores}
+            />
+        );
+    }
     return (
         <ViewProductDetails product={serializedProduct} />
     )
