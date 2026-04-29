@@ -53,6 +53,10 @@ const ViewProductDetails = ({ product }: Props) => {
                             {product.nameSlug || ''}
                         </DetailRow>
 
+                        <DetailRow fieldKey='ID'>
+                            {product.id || ''}
+                        </DetailRow>
+
                         <DetailRow fieldKey='Date Created'>
                             {product.createdAt.toLocaleDateString()} - {product.createdAt.toLocaleTimeString()}
                         </DetailRow>
@@ -75,6 +79,7 @@ const ViewProductDetails = ({ product }: Props) => {
                         </DetailRow>
 
                         <DetailRow fieldKey='Seller'>
+                            <img src={product.seller.avatar || ''} className='w-6 rounded-full mr-1 border-gray-400 border' alt="" />
                             {product.seller.storeName}
                         </DetailRow>
                     </div>
