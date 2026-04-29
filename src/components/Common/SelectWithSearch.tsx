@@ -20,7 +20,7 @@ type Props = {
 const SelectWithSearch = ({ id, placeholder, searchPlaceholder, items, onChange, classes, defaultSelected }: Props) => {
 
     const [modalOpen, setModalOpen] = useState(false);
-    const [selectedItem, setSelectedItem] = useState<Item | null>(items.find((item)=>item.value === defaultSelected) || null);
+    const [selectedItem, setSelectedItem] = useState<Item | null>(items.find((item) => item.value === defaultSelected) || null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredItems, setFilteredItems] = useState<Item[]>(items);
@@ -49,7 +49,7 @@ const SelectWithSearch = ({ id, placeholder, searchPlaceholder, items, onChange,
 
 
     const handleSelect = (value: string) => {
-        onChange(value); // Push data to parent
+        onChange(value); // push back data to parent
         const foundItem = items.find((item) => item.value === value)
         // console.log("found", foundItem)
         if (foundItem) setSelectedItem(foundItem)
@@ -107,17 +107,17 @@ const SelectWithSearch = ({ id, placeholder, searchPlaceholder, items, onChange,
                 </div>
                 <ul className='flex flex-col'>
                     {
-                    filteredItems.length <= 0 ? 
-                    
-                    <span className='text-gray-300'>No items were found.</span>
+                        filteredItems.length <= 0 ?
 
-                    :
-                    
-                    filteredItems?.map((item) =>
-                        <li onClick={(e) => { handleSelect(e.currentTarget.dataset.value || ''); setModalOpen(false); setSearchQuery('') }} className='inline-flex cursor-pointer hover:bg-gray-200 transition-all items-center justify-between overflow-ellipsis border-b border-gray-100' key={item.value} data-value={item.value}>
-                            {item.label}
-                            {item.value === selectedItem?.value && <TiTick />}
-                        </li>)
+                            <span className='text-gray-300'>No items were found.</span>
+
+                            :
+
+                            filteredItems?.map((item) =>
+                                <li onClick={(e) => { handleSelect(e.currentTarget.dataset.value || ''); setModalOpen(false); setSearchQuery('') }} className='inline-flex cursor-pointer hover:bg-gray-200 transition-all items-center justify-between overflow-ellipsis border-b border-gray-100' key={item.value} data-value={item.value}>
+                                    {item.label}
+                                    {item.value === selectedItem?.value && <TiTick />}
+                                </li>)
                     }
                 </ul>
             </div>
