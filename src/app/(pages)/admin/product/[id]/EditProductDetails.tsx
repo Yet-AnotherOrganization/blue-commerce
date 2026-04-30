@@ -23,8 +23,10 @@ const ProductDetailInput = ({ fieldKey, value, placeholder, fn }: ProductDetailI
     return (
         <div className='flex flex-col'>
             <div className='flex'>
-                <label className='block flex-1 font-semibold'>{fieldKey}:</label>
-                <input value={value} onChange={(e) => fn(e.currentTarget.value)} placeholder={`Enter ${placeholder}`} className='flex-1 inline-flex items-center gap-1' />
+                <label className='w-full font-semibold '>{fieldKey}:</label>
+                <div className='w-full'>
+                    <input value={value} onChange={(e) => fn(e.currentTarget.value)} placeholder={`Enter ${placeholder}`} className='border border-gray-400 rounded-md box-border py-1 w-full pl-2' />
+                </div>
             </div>
         </div>
     )
