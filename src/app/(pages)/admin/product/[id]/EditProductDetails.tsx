@@ -34,6 +34,7 @@ const ProductDetailInput = ({ fieldKey, value, placeholder, fn }: ProductDetailI
 const EditProductDetails = ({ product, categories, stores }: Props) => {
 
     const [name, setName] = useState(product.name);
+    const [stock, setStock] = useState(product.stock.toString());
     const [slug, setSlug] = useState(product.nameSlug);
     const [category, setCategory] = useState<string>(categories.find((cat) => cat.id === product.categoryId)?.id || '');
     const [store, setStore] = useState<string>(stores.find((store) => store.id === product.sellerId)?.id || '');
@@ -60,6 +61,7 @@ const EditProductDetails = ({ product, categories, stores }: Props) => {
                     <h1 className='text-center text-xl font-semibold'>Product Details</h1>
                     <div className='flex pt-4 pl-8 flex-col text-lg  gap-2'>
                         <ProductDetailInput fieldKey='Name' value={name} fn={setName} placeholder='product name' />
+                        <ProductDetailInput fieldKey='Stock' value={stock} fn={setStock} placeholder='stock' />
                         <div className='flex items-center'>
                             <label htmlFor="" className='flex-1 font-semibold'>Category:</label>
                             <SelectWithSearch classes='flex-1 block' id='category' items={categories.map((cat) => ({ label: cat.name, value: cat.id }))} onChange={setCategory} placeholder='Select new category...' defaultSelected={category} />
