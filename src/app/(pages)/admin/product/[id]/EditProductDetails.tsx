@@ -16,30 +16,46 @@ type ProductDetailInputProps = {
     fieldKey: string,
     placeholder: string,
     value: string,
-    fn: (val: string) => void,
+    fn?: (val: string) => void,
+    disabled?: boolean
 }
 
-const ProductDetailInput = ({ fieldKey, value, placeholder, fn }: ProductDetailInputProps) => {
+const ProductDetailInput = ({ fieldKey, value, placeholder, fn, disabled }: ProductDetailInputProps) => {
     return (
         <div className='flex flex-col'>
             <div className='flex'>
                 <label className='w-full font-semibold '>{fieldKey}:</label>
                 <div className='w-full'>
-                    <input value={value} onChange={(e) => fn(e.currentTarget.value)} placeholder={`Enter ${placeholder}`} className='border border-gray-400 rounded-md box-border py-1 w-full pl-2' />
+                    <input value={value} disabled={disabled || false} onChange={(e) => fn ? fn(e.currentTarget.value) : ''} placeholder={`Enter ${placeholder}`} className={`border border-gray-400 rounded-md box-border py-1 w-full pl-2 ${disabled && 'text-gray-400'}`} />
                 </div>
             </div>
         </div>
     )
 }
 
+const statusOptions = [
+    {
+        label: 'DRAFT',
+        value: 'DRAFT'
+    },
+    {
+        label: 'ACTIVE',
+        value: 'ACTIVE'
+    },
+    {
+        label: 'ARCHIVED',
+        value: 'ARCHIVED'
+    }
+]
+
 
 const EditProductDetails = ({ product, categories, stores }: Props) => {
 
     const [name, setName] = useState(product.name);
     const [stock, setStock] = useState(product.stock.toString());
-    const [slug, setSlug] = useState(product.nameSlug);
     const [category, setCategory] = useState<string>(categories.find((cat) => cat.id === product.categoryId)?.id || '');
     const [store, setStore] = useState<string>(stores.find((store) => store.id === product.sellerId)?.id || '');
+    const [status, setStatus] = useState<string>(product.status)
 
     return (
         <form onSubmit={(e) => e.preventDefault()} className='mx-[5vw] pt-[3vh] lg:mx-[15vw] flex flex-col'>
@@ -63,14 +79,22 @@ const EditProductDetails = ({ product, categories, stores }: Props) => {
                     <h1 className='text-center text-xl font-semibold'>Product Details</h1>
                     <div className='flex pt-4 pl-8 flex-col text-lg  gap-2'>
                         <ProductDetailInput fieldKey='Name' value={name} fn={setName} placeholder='product name' />
+                        <ProductDetailInput fieldKey='Slug' value={product.nameSlug || ''} placeholder='Slug' disabled />
+                        <ProductDetailInput fieldKey='ID' value={product.id || ''} placeholder='ID' disabled />
+                        <ProductDetailInput fieldKey='Date Created' value={`${product.createdAt.toLocaleDateString()} - ${product.createdAt.toLocaleTimeString()}` || ''} placeholder='Date Created' disabled />
+                        <ProductDetailInput fieldKey='Date Updated' value={`${product.updatedAt.toLocaleDateString()} - ${product.updatedAt.toLocaleTimeString()}` || ''} placeholder='Date Updated' disabled />
                         <ProductDetailInput fieldKey='Stock' value={stock} fn={setStock} placeholder='stock' />
+                        <div className='flex items-center'>
+                            <label htmlFor="" className='flex-1 font-semibold'>Status:</label>
+                            <SelectWithSearch classes='flex-1 block' id='status' items={statusOptions} onChange={setStatus} placeholder='Select item status...' defaultSelected={product.status || statusOptions[0].value} />
+                        </div>
                         <div className='flex items-center'>
                             <label htmlFor="" className='flex-1 font-semibold'>Category:</label>
                             <SelectWithSearch classes='flex-1 block' id='category' items={categories.map((cat) => ({ label: cat.name, value: cat.id }))} onChange={setCategory} placeholder='Select new category...' defaultSelected={category} />
                         </div>
                         <div className='flex items-center'>
                             <label htmlFor="" className='flex-1 font-semibold'>Store:</label>
-                            <SelectWithSearch classes='flex-1 block' id='category' items={stores.map((store) => ({ label: store.storeName, value: store.id }))} onChange={setStore} placeholder='Select seller store...' defaultSelected={store} />
+                            <SelectWithSearch classes='flex-1 block' id='store' items={stores.map((store) => ({ label: store.storeName, value: store.id }))} onChange={setStore} placeholder='Select seller store...' defaultSelected={store} />
                         </div>
                         {/* 
                         <DetailRow fieldKey='Slug'>
