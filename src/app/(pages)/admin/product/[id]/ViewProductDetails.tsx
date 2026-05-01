@@ -44,7 +44,7 @@ const ViewProductDetails = ({ product }: Props) => {
                     <ControlBar product={product} />
 
                     <h1 className='text-center text-xl font-semibold'>Product Details</h1>
-                    <div className='flex pt-4 pl-8 flex-col text-lg  gap-2'>
+                    <div className='flex pt-4 pl-8 flex-col text-lg  gap-[1.2rem]'>
                         <DetailRow fieldKey='Name'>
                             {product.name}
                         </DetailRow>
