@@ -86,7 +86,7 @@ const EditProductDetails = ({ product, categories, stores }: Props) => {
                         <ProductDetailInput fieldKey='Stock' value={stock} fn={setStock} placeholder='stock' />
                         <div className='flex items-center'>
                             <label htmlFor="" className='flex-1 font-semibold'>Status:</label>
-                            <SelectWithSearch classes='flex-1 block' id='status' items={statusOptions} onChange={setStatus} placeholder='Select item status...' defaultSelected={product.status || statusOptions[0].value} />
+                            <SelectWithSearch classes='flex-1 block' id='status' items={statusOptions} onChange={setStatus} placeholder='Select item status...' defaultSelected={status} />
                         </div>
                         <div className='flex items-center'>
                             <label htmlFor="" className='flex-1 font-semibold'>Category:</label>
