@@ -3,43 +3,86 @@
 import { PrismaClientKnownRequestError, PrismaClientValidationError } from "@/generated/prisma/runtime/client";
 import cloudinary from "@/lib/cloudinary";
 import { prisma } from "@/lib/prisma";
-import { ProductSchema } from "@/lib/zod";
+import { ProductSchema, UpdateProductSchema } from "@/lib/zod";
 import { UploadApiResponse } from "cloudinary";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+
+export type ActionResponse =
+    | { success: true; message: string; data?: any }
+    | { success: false; message: string; error?: string; errors?: Record<string, string[]> };
+
+export async function actionCatchAsync(fn: () => Promise<ActionResponse>): Promise<ActionResponse> {
+    try {
+        return await fn();
+    }
+    catch (err) {
+        let finalError;
+
+        if (err instanceof Error) {
+            finalError = err.message
+        }
+
+        if (err instanceof PrismaClientKnownRequestError) {
+            if (err.code === 'P2002') {
+
+                return {
+                    success: false,
+                    message: `A product with this name already exists.`,
+                    error: "Unique constraint failed."
+                }
+            }
+
+            if (err.code === 'P2003') {
+                return {
+                    success: false,
+                    message: "Foreign key constraint failed. Invalid category or seller ID.",
+                    error: "Relation error."
+                };
+            }
+
+            return {
+                success: false,
+                message: "A database error occurred.",
+                error: err.message
+            };
+        }
+
+        if (err instanceof PrismaClientValidationError) {
+            return {
+                success: false,
+                message: "Database validation failed. Ensure all required fields are provided.",
+                error: "Validation error."
+            };
+        }
+
+        console.log("Unidentifiable Error: ", err);
+
+        return {
+            success: false,
+            message: "An unidentifiable database error has occurred.",
+        };
+    }
+
+}
 
 export async function deleteProduct(id: string) {
-    try {
+    return actionCatchAsync(async () => {
         await prisma.product.update({ where: { id }, data: { status: "ARCHIVED" } })
         revalidatePath('/admin')
         return { success: true, message: "Successfully marked product as deleted." }
-    }
-    catch (err) {
-        console.log("error during deleting product: ", err);
-        return {
-            success: false, message: "Failed to delete product.", err
-        }
-    }
+    })
 }
 
 export async function activateProduct(id: string) {
-    try {
+    return actionCatchAsync(async () => {
         await prisma.product.update({ where: { id }, data: { status: "ACTIVE" } })
         revalidatePath('/admin')
         return { success: true, message: "Successfully marked product as active." }
-    }
-    catch (err) {
-        console.log("error during deleting product: ", err);
-        return {
-            success: false, message: "Failed to activate product.", err
-        }
-    }
+    })
 }
 
 export async function createProduct(formData: FormData) {
-    let createdProduct;
-    try {
-
+    return actionCatchAsync(async () => {
         const rawData = Object.fromEntries(formData.entries());
         const validatedFields = ProductSchema.safeParse(rawData);
 
@@ -80,7 +123,7 @@ export async function createProduct(formData: FormData) {
 
         if (!uploadResult) return { success: false, message: 'Failure during image upload.' };
 
-        createdProduct = await prisma.product.create({
+        await prisma.product.create({
             data: {
                 name: data.name,
                 description: data.description,
@@ -97,52 +140,59 @@ export async function createProduct(formData: FormData) {
             success: true,
             message: "The product successfully been created.",
         }
-    }
-    catch (err) {
+    })
+}
 
-        let finalError;
+export async function editProductAdmin(id: string, formData: FormData) {
+    return actionCatchAsync(async () => {
+        const rawData = Object.fromEntries(formData);
+        const validatedFields = UpdateProductSchema.safeParse(rawData);
+        const validData = validatedFields.data;
+        if (validData) {
+            const invalidFields = Object.entries(rawData).map((k) => {
+                const key = k[0] as keyof typeof validData;
+                const value = k[1];
 
-        if (err instanceof Error) {
-            finalError = err.message
+                const exists = !!validData[key]
+
+                return exists ? value : null;
+            }
+            );
+
+            console.log("invalids: ", invalidFields)
         }
+        console.log("raw:", validatedFields.data)
 
-        if (err instanceof PrismaClientKnownRequestError) {
-            if (err.code === 'P2002') {
-
-                return {
-                    success: false,
-                    message: `A product with this name already exists.`,
-                    error: "Unique constraint failed."
-                }
-            }
-
-            if (err.code === 'P2003') {
-                return {
-                    success: false,
-                    message: "Foreign key constraint failed. Invalid category or seller ID.",
-                    error: "Relation error."
-                };
-            }
-
+        if (!validatedFields.success) {
             return {
                 success: false,
-                message: "A database error occurred.",
-                error: err.message
-            };
+                message: "Invalid fields.",
+                errors: validatedFields.error.flatten().fieldErrors
+            }
         }
 
-        if (err instanceof PrismaClientValidationError) {
-            return {
-                success: false,
-                message: "Database validation failed. Ensure all required fields are provided.",
-                error: "Validation error."
-            };
-        }
+        const data = validatedFields.data;
 
+        const updated = await prisma.product.update({
+            where: {
+                id
+            },
+            data: {
+                categoryId: data.category,
+                status: data.status,
+                description: data.description,
+                sellerId: data.seller,
+                stock: data.stock,
+                name: data.name
+            }
+        })
+
+        // console.log(updated)
+
+        revalidatePath('/admin/product');
         return {
-            success: false,
-            message: "Error during product upload.",
-            error: finalError
+            success: true,
+            message: "The product has been successfully updated.",
         }
-    }
+    })
 }
