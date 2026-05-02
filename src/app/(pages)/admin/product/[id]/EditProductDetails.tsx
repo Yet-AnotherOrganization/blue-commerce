@@ -1,10 +1,12 @@
 'use client';
 import { Category, Product, Store } from '@/generated/prisma'
 import Link from 'next/link'
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, FormEvent, useState } from 'react'
 import ControlBar from './ControlBar'
 import { SerializedProduct } from '@/types/product';
 import SelectWithSearch from '@/components/Common/SelectWithSearch';
+import { editProductAdmin } from '@/app/actions/productActions';
+import { useRouter } from 'next/navigation';
 
 type Props = {
     product: SerializedProduct,
@@ -18,15 +20,16 @@ type ProductDetailInputProps = {
     value: string,
     fn?: (val: string) => void,
     disabled?: boolean
+    id?:string,
 }
 
-const ProductDetailInput = ({ fieldKey, value, placeholder, fn, disabled }: ProductDetailInputProps) => {
+const ProductDetailInput = ({ fieldKey, id, value, placeholder, fn, disabled }: ProductDetailInputProps) => {
     return (
         <div className='flex flex-col'>
             <div className='flex'>
                 <label className='w-full font-semibold '>{fieldKey}:</label>
                 <div className='w-full'>
-                    <input value={value} disabled={disabled || false} onChange={(e) => fn ? fn(e.currentTarget.value) : ''} placeholder={`Enter ${placeholder}`} className={`border border-gray-400 rounded-md box-border py-1 w-full pl-2 ${disabled && 'text-gray-400'}`} />
+                    <input id={id} name={id} value={value} disabled={disabled || false} onChange={(e) => fn ? fn(e.currentTarget.value) : ''} placeholder={`Enter ${placeholder}`} className={`border border-gray-400 rounded-md box-border py-1 w-full pl-2 ${disabled && 'text-gray-400'}`} />
                 </div>
             </div>
         </div>
@@ -51,14 +54,27 @@ const statusOptions = [
 
 const EditProductDetails = ({ product, categories, stores }: Props) => {
 
+    const router = useRouter();
+
     const [name, setName] = useState(product.name);
     const [stock, setStock] = useState(product.stock.toString());
     const [category, setCategory] = useState<string>(categories.find((cat) => cat.id === product.categoryId)?.id || '');
     const [store, setStore] = useState<string>(stores.find((store) => store.id === product.sellerId)?.id || '');
     const [status, setStatus] = useState<string>(product.status)
 
+    const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const form = new FormData(e.currentTarget);
+        
+        const result = await editProductAdmin(product.id,form);
+
+        console.log("RESULT: ", result)
+
+        if(result.success) router.refresh();
+    }
+
     return (
-        <form onSubmit={(e) => e.preventDefault()} className='mx-[5vw] pt-[3vh] lg:mx-[15vw] flex flex-col'>
+        <form onSubmit={handleFormSubmit} className='mx-[5vw] pt-[3vh] lg:mx-[15vw] flex flex-col'>
             <div className='flex gap-4 pb-4'>
                 <Link className='hover:text-blue-400' href={`/admin/product`}>Products</Link>
                 &gt;
@@ -78,7 +94,7 @@ const EditProductDetails = ({ product, categories, stores }: Props) => {
 
                     <h1 className='text-center text-xl font-semibold'>Product Details</h1>
                     <div className='flex pt-4 pl-8 flex-col text-lg  gap-2'>
-                        <ProductDetailInput fieldKey='Name' value={name} fn={setName} placeholder='product name' />
+                        <ProductDetailInput fieldKey='Name' id='name' value={name} fn={setName} placeholder='product name' />
                         <ProductDetailInput fieldKey='Slug' value={product.nameSlug || ''} placeholder='Slug' disabled />
                         <ProductDetailInput fieldKey='ID' value={product.id || ''} placeholder='ID' disabled />
                         <ProductDetailInput fieldKey='Date Created' value={`${product.createdAt.toLocaleDateString()} - ${product.createdAt.toLocaleTimeString()}` || ''} placeholder='Date Created' disabled />
@@ -90,11 +106,11 @@ const EditProductDetails = ({ product, categories, stores }: Props) => {
                         </div>
                         <div className='flex items-center'>
                             <label htmlFor="" className='flex-1 font-semibold'>Category:</label>
-                            <SelectWithSearch classes='flex-1 block' id='category' items={categories.map((cat) => ({ label: cat.name, value: cat.id }))} onChange={setCategory} placeholder='Select new category...' defaultSelected={category} />
+                            <SelectWithSearch classes='flex-1 block' id='categoryId' items={categories.map((cat) => ({ label: cat.name, value: cat.id }))} onChange={setCategory} placeholder='Select new category...' defaultSelected={category} />
                         </div>
                         <div className='flex items-center'>
                             <label htmlFor="" className='flex-1 font-semibold'>Store:</label>
-                            <SelectWithSearch classes='flex-1 block' id='store' items={stores.map((store) => ({ label: store.storeName, value: store.id }))} onChange={setStore} placeholder='Select seller store...' defaultSelected={store} />
+                            <SelectWithSearch classes='flex-1 block' id='sellerId' items={stores.map((store) => ({ label: store.storeName, value: store.id }))} onChange={setStore} placeholder='Select seller store...' defaultSelected={store} />
                         </div>
                         {/* 
                         <DetailRow fieldKey='Slug'>
