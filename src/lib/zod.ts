@@ -22,6 +22,12 @@ export const ProductSchema = z.object({
   seller: z.string().min(1),
   stock: z.coerce.number().int().default(1),
   price: z.coerce.number().positive(),
+  status: z.enum(['ACTIVE','DRAFT','ARCHIVED']).default('DRAFT')
 });
 
 export type ProductDto = z.infer<typeof ProductSchema>
+
+
+export const UpdateProductSchema = ProductSchema.partial();
+
+export type UpdateProductDto = z.infer<typeof UpdateProductSchema>;
