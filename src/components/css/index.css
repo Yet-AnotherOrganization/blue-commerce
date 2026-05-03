@@ -6,6 +6,12 @@
   font-size: 98%;
 }
 
+img{
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
 body {
   background: linear-gradient(to bottom, #fafeff, #f1fffe);
   overflow-x: clip;
