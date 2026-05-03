@@ -4,18 +4,19 @@ import { AddItemSchema } from "../../../lib/zod";
 import { addToCart, emptyCartByUserId } from "../../../services/cartService";
 import { findCartByUserId} from '../../../utils/serverUtils'
 import APIError from "../../../types/api";
+import { NextResponse } from "next/server";
 
 
 // ADD TO CART
 
-export async function postHandler(req: Request) {
+export async function postHandler(req: Request):Promise<Response> {
 
 
     const rawBody = await req.json();
 
     const validation = AddItemSchema.safeParse(rawBody);
 
-    if (!validation.success) throw new APIError("Body is missing 'quantity' field.", 400, 'NO_QUANTITY', validation.error)
+    if (!validation.success) throw new APIError("Body is missing 'quantity' field.", 400, 'NO_QUANTITY', validation.error.toString())
 
     const body = validation.data
 

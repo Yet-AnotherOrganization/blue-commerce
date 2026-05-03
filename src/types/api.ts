@@ -16,10 +16,10 @@ export class APIError extends Error {
     public statusCode: number;
     public errorCode: string;
     public status: 'FAIL' | 'ERROR';
-    public details: any;
+    public details: string | string[] | undefined;
 
 
-    constructor(message: string, statusCode: number, errorCode: string, details?: any) {
+    constructor(message: string, statusCode: number, errorCode: string, details?: string | string[]) {
         super(message);
 
         this.statusCode = statusCode

@@ -9,7 +9,7 @@ import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 
 export type ActionResponse =
-    | { success: true; message: string; data?: any }
+    | { success: true; message: string; }
     | { success: false; message: string; error?: string; errors?: Record<string, string[]> };
 
 export async function actionCatchAsync(fn: () => Promise<ActionResponse>): Promise<ActionResponse> {
