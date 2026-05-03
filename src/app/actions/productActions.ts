@@ -153,7 +153,7 @@ export async function editProductAdmin(id: string, formData: FormData) {
                 const key = k[0] as keyof typeof validData;
                 const value = k[1];
 
-                const exists = !!validData[key]
+                const exists = key in validData
 
                 return exists ? value : null;
             }

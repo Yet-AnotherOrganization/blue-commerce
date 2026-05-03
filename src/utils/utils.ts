@@ -13,15 +13,22 @@ const catchThunk = (fn: any) => {
   }
 }
 export const standardizeText = (value: string) => {
-  const newValue =  value
-  .trim()
-  .toLowerCase()
-  .split(',').join('')
-  .split(' ').join('')
-  .split('-').join('')
+  const newValue = value
+    .trim()
+    .toLowerCase()
+    .split(',').join('')
+    .split(' ').join('')
+    .split('-').join('')
 
   return newValue;
 }
+
+export const slugify = (text: string) => {
+  return text
+    .toLowerCase()
+    .replace(/\s+/g, '')
+    .replace(/[.,'\-_~]/g, ''); // Efficient regex instead of .map
+};
 
 
 export const thunkWrapper = <T = void>(
