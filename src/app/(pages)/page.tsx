@@ -3,8 +3,7 @@ import { hotbarElements, ribbons } from "../../constants/constants";
 import React from "react";
 import Slider from "../../components/Carousel";
 import { prisma } from "../../lib/prisma";
-import { Product } from "../../generated/prisma";
-import { ProductWithCategory } from "../../types/product";
+import { Category, Product } from "../../generated/prisma";
 
 const MainPage = async ({
   searchParams,
@@ -27,7 +26,7 @@ const MainPage = async ({
 
   const count = 5;
 
-  const randomProducts = await prisma.$queryRaw<ProductWithCategory[]>`
+  const randomProducts = await prisma.$queryRaw<(Omit<Product,'category'> & {category: Category})[]>`
   SELECT p.*, c.name AS catName FROM "Product" p 
   JOIN "Category" c ON p."categoryId" = c.id 
   WHERE p.stock > 0 AND p.status = 'ACTIVE'::"ProductStatus"
