@@ -3,15 +3,15 @@ import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 
-const catchThunk = (fn: any) => {
-  return (...args: any) => {
-    try {
-      fn(...args)
-    }
-    catch (err: unknown) {
-    }
-  }
-}
+// const catchThunk = (fn: any) => {
+//   return (...args: any) => {
+//     try {
+//       fn(...args)
+//     }
+//     catch (err: unknown) {
+//     }
+//   }
+// }
 export const standardizeText = (value: string) => {
   const newValue = value
     .trim()
@@ -29,6 +29,7 @@ export const slugify = (text: string) => {
     .replace(/\s+/g, '')
     .replace(/[.,'\-_~]/g, ''); // Efficient regex instead of .map
 };
+
 
 
 export const thunkWrapper = <T = void>(

@@ -4,6 +4,7 @@ import { prisma } from "../lib/prisma";
 import { authOptions } from "../app/api/auth/[...nextauth]/route";
 import { Cart } from "../generated/prisma";
 import APIError from "../types/api";
+import { ZodError } from "zod";
 
 export const res = <T>(
     status: number,
@@ -20,27 +21,27 @@ export const res = <T>(
 
 
 
-// API fonksiyonunun tipini tanımlıyoruz
-type ApiHandler = (req: Request, context: any) => Promise<NextResponse | any>;
+// define api func type
+type ApiHandler = (req: Request, context: any) => Promise<Response>;
 
 export const withErrorHandler = (handler: ApiHandler) => {
     return async (req: Request, context: any) => {
         try {
             return await handler(req, context);
-        } catch (err: any) {
+        } catch (err) {
             console.error("Global Error Handler:", err);
 
 
             if (err instanceof APIError) {
-                return res(err.statusCode, err.message, err.errorCode, err.details);
+                return res(err.statusCode, err.message, err.errorCode);
             }
 
 
-            if (err.name === "ZodError") {
-                return res(400, "Validation error, check details.", "VALIDATION_ERROR", err.errors);
+            if (err instanceof ZodError) {
+                return res(400, "Validation error, check details.", "VALIDATION_ERROR", err.errors.toString());
             }
 
-            // 3. Genel sistem hataları
+            // general system errors
             const message = err instanceof Error ? err.message : "Internal server error";
             const status = err instanceof Error ? 400 : 500;
 
@@ -49,7 +50,9 @@ export const withErrorHandler = (handler: ApiHandler) => {
     };
 };
 
-
+export const requireAdmin = () => {
+    
+}
 
 export const getUser = async (): Promise<User> => {
 
