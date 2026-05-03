@@ -5,6 +5,7 @@ import cloudinary from "@/lib/cloudinary";
 import { prisma } from "@/lib/prisma";
 import { ProductSchema, UpdateProductSchema } from "@/lib/zod";
 import { UploadApiResponse } from "cloudinary";
+import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 
 export type ActionResponse =
@@ -67,6 +68,11 @@ export async function actionCatchAsync(fn: () => Promise<ActionResponse>): Promi
 
 export async function deleteProduct(id: string) {
     return actionCatchAsync(async () => {
+
+        const isAdmin = (await getServerSession())?.user.role === 'ADMIN';
+
+        if (!isAdmin) return { success: false, message: 'You are either not logged in or not an admin.' }
+
         await prisma.product.update({ where: { id }, data: { status: "ARCHIVED" } })
         revalidatePath('/admin')
         return { success: true, message: "Successfully marked product as deleted." }
@@ -75,6 +81,11 @@ export async function deleteProduct(id: string) {
 
 export async function activateProduct(id: string) {
     return actionCatchAsync(async () => {
+
+        const isAdmin = (await getServerSession())?.user.role === 'ADMIN';
+
+        if (!isAdmin) return { success: false, message: 'You are either not logged in or not an admin.' }
+
         await prisma.product.update({ where: { id }, data: { status: "ACTIVE" } })
         revalidatePath('/admin')
         return { success: true, message: "Successfully marked product as active." }
@@ -83,6 +94,10 @@ export async function activateProduct(id: string) {
 
 export async function createProduct(formData: FormData) {
     return actionCatchAsync(async () => {
+        const isAdmin = (await getServerSession())?.user.role === 'ADMIN';
+
+        if (!isAdmin) return { success: false, message: 'You are either not logged in or not an admin.' }
+
         const rawData = Object.fromEntries(formData.entries());
         const validatedFields = ProductSchema.safeParse(rawData);
 
@@ -145,23 +160,29 @@ export async function createProduct(formData: FormData) {
 
 export async function editProductAdmin(id: string, formData: FormData) {
     return actionCatchAsync(async () => {
+
+        const isAdmin = (await getServerSession())?.user.role === 'ADMIN';
+
+        if (!isAdmin) return { success: false, message: 'You are either not logged in or not an admin.' }
+
+
         const rawData = Object.fromEntries(formData);
         const validatedFields = UpdateProductSchema.safeParse(rawData);
-        const validData = validatedFields.data;
-        if (validData) {
-            const invalidFields = Object.entries(rawData).map((k) => {
-                const key = k[0] as keyof typeof validData;
-                const value = k[1];
 
-                const exists = key in validData
+        if (validatedFields.success) {
+            const rawKeys = Object.keys(rawData);
+            const validKeys = Object.keys(validatedFields.data);
 
-                return exists ? value : null;
+            const ignoredFields = rawKeys.filter(key => !validKeys.includes(key));
+
+            if (ignoredFields.length > 0) {
+                console.warn("The following fields were ignored by Zod (likely renamed or missing in Schema):", ignoredFields);
+                return {
+                    success: false,
+                    message: `Server couldn't update these fields: ${ignoredFields.toString()}`,
+                }
             }
-            );
-
-            console.log("invalids: ", invalidFields)
         }
-        console.log("raw:", validatedFields.data)
 
         if (!validatedFields.success) {
             return {
