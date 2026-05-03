@@ -1,15 +1,15 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 import Sidebar from './Sidebar'
-import './css/index.css'
 import { IoIosMenu } from "react-icons/io";
-import { FaSearch, FaUser } from "react-icons/fa";
+import { FaHeart, FaSearch, FaUser } from "react-icons/fa";
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState, } from '../redux/store';
 import { FaShoppingCart } from "react-icons/fa";
 import CartModal from './CartModal';
 import { useSession } from 'next-auth/react';
 import { toggleModal } from '../redux/slices/uiSlice';
+import Link from 'next/link';
 
 
 const Header = () => {
@@ -160,6 +160,13 @@ const Header = () => {
             </button>
             <CartModal />
           </div>
+
+
+          <Link 
+          href='/favorites'
+          className='inline-flex items-center justify-center gap-1 bg-white text-blue-400 px-2 py-2 border-2 rounded-xl hover:text-red-600 hover:border-red-600 transition-all duration-300'>
+            <FaHeart />Favorites</Link>
+
 
 
           <div className='flex gap-[20px] justify-between items-center'>

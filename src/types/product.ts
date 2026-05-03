@@ -1,4 +1,4 @@
-import { Category, Product } from "../generated/prisma";
+import { Category, Favorite, Product } from "../generated/prisma";
 
 export type ProductType = {
     id: string,
@@ -20,6 +20,10 @@ export type ProductType = {
 
 export type SerializedProduct = Omit<Product, 'price'> & {
     price: number
+}
+
+export type SerializedFavorite = Omit<Favorite, 'item'> & {
+    item: SerializedProduct
 }
 
 export type CartItemWithProduct = {

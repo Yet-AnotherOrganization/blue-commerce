@@ -58,10 +58,10 @@ export const fetchCartAsync = createAsyncThunk(
     'cart/fetchCartAsync',
     async (_, { rejectWithValue }) => {
         try {
-            // 1. Session'ı manuel çek (Promise döner)
+            // get session manually
             const session = await getSession();
 
-            // 2. Token var mı kontrol et
+            // see if token exists
             if (!session) {
                 return rejectWithValue("Oturum bulunamadı");
             }
