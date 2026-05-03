@@ -21,7 +21,7 @@ type ProductDetailInputProps = {
     value: string,
     fn?: (val: string) => void,
     disabled?: boolean
-    id?:string,
+    id?: string,
 }
 
 const ProductDetailInput = ({ fieldKey, id, value, placeholder, fn, disabled }: ProductDetailInputProps) => {
@@ -66,14 +66,19 @@ const EditProductDetails = ({ product, categories, stores }: Props) => {
     const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const form = new FormData(e.currentTarget);
-        
-        const result = await editProductAdmin(product.id,form);
+        const obj = Object.fromEntries(form);
+        console.log(obj)
+
+        const result = await editProductAdmin(product.id, form);
 
         console.log("RESULT: ", result)
 
-        if(result.success) router.refresh();
+        if (result.success) {
+            toast.success('Product has been successfully updated.')
+            router.refresh()
+        };
 
-        if(!result.success) toast.error(result.message);
+        if (!result.success) toast.error(result.message);
     }
 
     return (
@@ -109,11 +114,11 @@ const EditProductDetails = ({ product, categories, stores }: Props) => {
                         </div>
                         <div className='flex items-center'>
                             <label htmlFor="" className='flex-1 font-semibold'>Category:</label>
-                            <SelectWithSearch classes='flex-1 block' id='categoryId' items={categories.map((cat) => ({ label: cat.name, value: cat.id }))} onChange={setCategory} placeholder='Select new category...' defaultSelected={category} />
+                            <SelectWithSearch classes='flex-1 block' id='category' items={categories.map((cat) => ({ label: cat.name, value: cat.id }))} onChange={setCategory} placeholder='Select new category...' defaultSelected={category} />
                         </div>
                         <div className='flex items-center'>
                             <label htmlFor="" className='flex-1 font-semibold'>Store:</label>
-                            <SelectWithSearch classes='flex-1 block' id='sellerId' items={stores.map((store) => ({ label: store.storeName, value: store.id }))} onChange={setStore} placeholder='Select seller store...' defaultSelected={store} />
+                            <SelectWithSearch classes='flex-1 block' id='seller' items={stores.map((store) => ({ label: store.storeName, value: store.id }))} onChange={setStore} placeholder='Select seller store...' defaultSelected={store} />
                         </div>
                         {/* 
                         <DetailRow fieldKey='Slug'>

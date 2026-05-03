@@ -10,9 +10,9 @@ type Props = {
     searchParams: {
         q?: string,
         page?: string,
-        limit: number,
-        sort: string,
-        order: 'asc' | 'desc' | ''
+        limit?: string,
+        sort?: string,
+        order?: 'asc' | 'desc'
     }
 }
 
@@ -23,32 +23,28 @@ const ProductsPage = async ({ searchParams }: Props) => {
     const limit = Number(searchParams.limit) || 10
     const sort = searchParams.sort;
     const order = searchParams.order;
-    let totalAmount;
 
 
-    const getProductsTable = async (query: string, limit: number, page: number) => {
-        let data = await prisma.product.findMany({
-            where: {
-                nameSlug: { contains: query, mode: "insensitive" },
-                // status: "ACTIVE"
-            },
+    const [data, totalAmount] = await Promise.all([
+        prisma.product.findMany({
+            where: { nameSlug: { contains: query, mode: "insensitive" } },
             take: limit,
-            skip: (page - 1) * 10,
+            skip: (page - 1) * limit,
             orderBy: sort ? { [sort]: order || 'asc' } : undefined
+        }),
+        prisma.product.count({
+            where: { nameSlug: { contains: query, mode: "insensitive" } }
         })
-        totalAmount = query ? data.length : await prisma.product.count();
-        console.log("total amount: ", totalAmount)
+    ]);
 
-        const serializedData = data.map((item) => { return ({ ...item, price: item.price.toNumber() }) })
+    const serializedData = data.map((item) => { return ({ ...item, price: item.price.toNumber() }) })
 
-        return serializedData
-    }
     return (
         <>
 
             <div className='flex-[4] flex flex-col h-full mx-[10vw]'>
                 <SearchInput placeholder='product name' />
-                <ProductsTable data={(await getProductsTable(query, limit, page))} />
+                <ProductsTable data={serializedData} />
                 <TableControls totalAmount={totalAmount || 0} />
                 <div className='flex justify-center items-center'>
                     <Link href='/admin/product/create' className='bg-blue-400 px-4 py-2 rounded-md shadow-md text-white hover:scale-105 transition-all'>
