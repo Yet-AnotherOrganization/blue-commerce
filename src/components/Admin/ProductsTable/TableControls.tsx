@@ -14,15 +14,8 @@ const TableControls = ({ totalAmount }: Props) => {
   const router = useRouter();
 
   const searchParams = useSearchParams();
-  const page = searchParams.get('page')
-  const limit = searchParams.get('limit')
-
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString())
-    params.set('limit', "10")
-    params.set('page', "1")
-    router.replace(`${pathname}?${params.toString()}`)
-  }, [])
+  const page = searchParams.get('page') || 1
+  const limit = searchParams.get('limit') || 10
 
   return (
     <Suspense>
@@ -46,7 +39,6 @@ const TableControls = ({ totalAmount }: Props) => {
           <label htmlFor="itemsPP">Items Per Page</label>
           <select name="itemsPP" id="itemsPP" className='border border-black'
             onChange={(e) => {
-              console.log("mougs")
               const params = new URLSearchParams(searchParams.toString())
               params.set('limit', e.currentTarget.value)
               params.set('page', "1")
