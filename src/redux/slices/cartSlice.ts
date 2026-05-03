@@ -21,7 +21,7 @@ import { toast } from "sonner";
 //     }
 // })
 
-const cartInitialState: { cart: CartItemWithProduct[], loading: boolean, error: any } = {
+const cartInitialState: { cart: CartItemWithProduct[], loading: boolean, error: unknown } = {
     cart: [],
     loading: true,
     error: false

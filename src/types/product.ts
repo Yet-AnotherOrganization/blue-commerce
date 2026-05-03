@@ -13,9 +13,7 @@ export type ProductType = {
     sellerId: string
 }
 
-// export type ProductWithCategory = Product & {
-//     category: Pick<Category, "name">;
-// };
+export type ProductWithCategory = Omit<Product, 'category'> & { category: Category }
 
 
 export type SerializedProduct = Omit<Product, 'price'> & {
