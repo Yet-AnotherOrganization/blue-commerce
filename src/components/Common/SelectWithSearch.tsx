@@ -51,6 +51,11 @@ const SelectWithSearch = ({ id, placeholder, searchPlaceholder, items, onChange,
         }
     }, [modalOpen]);
 
+    //* AUTOSCROLL ON KEYBOARD INPUT
+    useEffect(() => {
+        document.getElementById(`${id}-opt-${activeStep}`)
+            ?.scrollIntoView({ block: 'nearest' });
+    }, [activeStep]);
 
     const handleSelect = (value: string) => {
         onChange(value); // push back data to parent
@@ -92,8 +97,14 @@ const SelectWithSearch = ({ id, placeholder, searchPlaceholder, items, onChange,
 
     const handleModalOpen = (state: boolean) => {
         setModalOpen(state);
+        resetDropdown();
     }
 
+    const resetDropdown = () => {
+        setSearchQuery('');
+        setFilteredItems(items);
+        setActiveStep(0);
+    }
 
     const handleOuterKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (['Enter', ' ', 'ArrowDown'].includes(e.key)) {
@@ -128,8 +139,8 @@ const SelectWithSearch = ({ id, placeholder, searchPlaceholder, items, onChange,
 
     return (
         <div className={`relative inline-block  ${classes}`} ref={containerRef}>
-            <input id={id} name={id} className='block w-full border border-gray-400 rounded-md px-2 py-1' type="text" readOnly value={selectedItem?.label} placeholder={placeholder || 'Enter placeholder text'} onClick={() => handleModalOpen(true)} onKeyDown={handleOuterKeyDown} role='combobox' ref={outerInputRef} aria-controls={`${id}-listbox`} aria-expanded={modalOpen} />
-            <input readOnly className='hidden' value={selectedItem?.value} />
+            <input aria-label={`Select ${placeholder}`} className='block w-full border border-gray-400 rounded-md px-2 py-1' type="text" readOnly value={selectedItem?.label} placeholder={placeholder || 'Enter placeholder text'} onClick={() => handleModalOpen(true)} onKeyDown={handleOuterKeyDown} role='combobox' ref={outerInputRef} aria-controls={`${id}-listbox`} aria-expanded={modalOpen} />
+            <input readOnly className='hidden' value={selectedItem?.value} id={id} name={id} />
             <div className={`absolute flex max-h-[170px] overflow-y-auto flex-col px-2 pb-2 left-0 right-0 border rounded-md shadow-lg bg-white ${modalOpen ? 'block' : 'hidden'} z-[100]`} >
                 <div className='inline-flex sticky top-0 mb-2 border-b-2 items-center justify-center bg-white px-1'>
                     <input
@@ -140,6 +151,7 @@ const SelectWithSearch = ({ id, placeholder, searchPlaceholder, items, onChange,
                         value={searchQuery}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e.currentTarget.value)}
                         aria-activedescendant={`id-opt-${activeStep}`}
+                        role='searchbox'
                         onKeyDown={handleKeyDown}
                     />
                     <FaSearch />
