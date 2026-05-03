@@ -7,6 +7,7 @@ import { SerializedProduct } from '@/types/product';
 import SelectWithSearch from '@/components/Common/SelectWithSearch';
 import { editProductAdmin } from '@/app/actions/productActions';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 type Props = {
     product: SerializedProduct,
@@ -71,6 +72,8 @@ const EditProductDetails = ({ product, categories, stores }: Props) => {
         console.log("RESULT: ", result)
 
         if(result.success) router.refresh();
+
+        if(!result.success) toast.error(result.message);
     }
 
     return (
