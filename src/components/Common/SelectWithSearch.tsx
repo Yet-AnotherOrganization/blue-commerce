@@ -150,7 +150,7 @@ const SelectWithSearch = ({ id, placeholder, searchPlaceholder, items, onChange,
                         placeholder={searchPlaceholder || 'Search items'}
                         value={searchQuery}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange(e.currentTarget.value)}
-                        aria-activedescendant={`id-opt-${activeStep}`}
+                        aria-activedescendant={`${id}-opt-${activeStep}`}
                         role='searchbox'
                         onKeyDown={handleKeyDown}
                     />

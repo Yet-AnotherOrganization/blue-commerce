@@ -3,6 +3,7 @@ import { thunkWrapper } from "../../utils/utils"
 import axios from "axios"
 import { Favorite, Product } from "../../generated/prisma"
 import { toast } from "sonner"
+import { RootState } from "../store"
 
 interface StateType {
     error: unknown,
@@ -119,4 +120,4 @@ export default favoriteSlice
 export const {
     selectAll: selectAllFavorites,
     selectById: selectFavoriteById,
-} = favoritesAdapter.getSelectors((state: any) => state.favoriteReducer)
+} = favoritesAdapter.getSelectors((state: RootState) => state.favoriteReducer)
