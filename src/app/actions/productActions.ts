@@ -1,78 +1,19 @@
 'use server'
-
-import { PrismaClientKnownRequestError, PrismaClientValidationError } from "@/generated/prisma/runtime/client";
 import cloudinary from "@/lib/cloudinary";
 import { prisma } from "@/lib/prisma";
 import { ProductSchema, UpdateProductSchema } from "@/lib/zod";
+import { adminAction } from "@/utils/serverUtils";
 import { UploadApiResponse } from "cloudinary";
-import { getServerSession } from "next-auth";
 import { revalidatePath } from "next/cache";
 
 export type ActionResponse =
     | { success: true; message: string; }
     | { success: false; message: string; error?: string; errors?: Record<string, string[]> };
 
-export async function actionCatchAsync(fn: () => Promise<ActionResponse>): Promise<ActionResponse> {
-    try {
-        return await fn();
-    }
-    catch (err) {
-        let finalError;
 
-        if (err instanceof Error) {
-            finalError = err.message
-        }
-
-        if (err instanceof PrismaClientKnownRequestError) {
-            if (err.code === 'P2002') {
-
-                return {
-                    success: false,
-                    message: `A product with this name already exists.`,
-                    error: "Unique constraint failed."
-                }
-            }
-
-            if (err.code === 'P2003') {
-                return {
-                    success: false,
-                    message: "Foreign key constraint failed. Invalid category or seller ID.",
-                    error: "Relation error."
-                };
-            }
-
-            return {
-                success: false,
-                message: "A database error occurred.",
-                error: err.message
-            };
-        }
-
-        if (err instanceof PrismaClientValidationError) {
-            return {
-                success: false,
-                message: "Database validation failed. Ensure all required fields are provided.",
-                error: "Validation error."
-            };
-        }
-
-        console.log("Unidentifiable Error: ", err);
-
-        return {
-            success: false,
-            message: "An unidentifiable database error has occurred.",
-        };
-    }
-
-}
 
 export async function deleteProduct(id: string) {
-    return actionCatchAsync(async () => {
-
-        const isAdmin = (await getServerSession())?.user.role === 'ADMIN';
-
-        if (!isAdmin) return { success: false, message: 'You are either not logged in or not an admin.' }
-
+    return adminAction(async () => {
         await prisma.product.update({ where: { id }, data: { status: "ARCHIVED" } })
         revalidatePath('/admin')
         return { success: true, message: "Successfully marked product as deleted." }
@@ -80,11 +21,7 @@ export async function deleteProduct(id: string) {
 }
 
 export async function activateProduct(id: string) {
-    return actionCatchAsync(async () => {
-
-        const isAdmin = (await getServerSession())?.user.role === 'ADMIN';
-
-        if (!isAdmin) return { success: false, message: 'You are either not logged in or not an admin.' }
+    return adminAction(async () => {
 
         await prisma.product.update({ where: { id }, data: { status: "ACTIVE" } })
         revalidatePath('/admin')
@@ -93,10 +30,7 @@ export async function activateProduct(id: string) {
 }
 
 export async function createProduct(formData: FormData) {
-    return actionCatchAsync(async () => {
-        const isAdmin = (await getServerSession())?.user.role === 'ADMIN';
-
-        if (!isAdmin) return { success: false, message: 'You are either not logged in or not an admin.' }
+    return adminAction(async () => {
 
         const rawData = Object.fromEntries(formData.entries());
         const validatedFields = ProductSchema.safeParse(rawData);
@@ -159,11 +93,7 @@ export async function createProduct(formData: FormData) {
 }
 
 export async function editProductAdmin(id: string, formData: FormData) {
-    return actionCatchAsync(async () => {
-
-        const isAdmin = (await getServerSession())?.user.role === 'ADMIN';
-
-        if (!isAdmin) return { success: false, message: 'You are either not logged in or not an admin.' }
+    return adminAction(async () => {
 
 
         const rawData = Object.fromEntries(formData);

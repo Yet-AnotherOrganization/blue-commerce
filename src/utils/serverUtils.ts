@@ -5,6 +5,8 @@ import { authOptions } from "../app/api/auth/[...nextauth]/route";
 import { Cart } from "../generated/prisma";
 import APIError from "../types/api";
 import { ZodError } from "zod";
+import { ActionResponse } from "@/app/actions/productActions";
+import { PrismaClientKnownRequestError, PrismaClientValidationError } from "@/generated/prisma/runtime/client";
 
 export const res = <T>(
     status: number,
@@ -22,12 +24,12 @@ export const res = <T>(
 
 
 // define api func type
-type ApiHandler = (req: Request, context: any) => Promise<Response>;
+type ApiHandler = (req: Request) => Promise<Response>;
 
 export const withErrorHandler = (handler: ApiHandler) => {
-    return async (req: Request, context: any) => {
+    return async (req: Request) => {
         try {
-            return await handler(req, context);
+            return await handler(req);
         } catch (err) {
             console.error("Global Error Handler:", err);
 
@@ -38,7 +40,7 @@ export const withErrorHandler = (handler: ApiHandler) => {
 
 
             if (err instanceof ZodError) {
-                return res(400, "Validation error, check details.", "VALIDATION_ERROR", err.errors.toString());
+                return res(400, "Validation error, check details.", err.errors.toString(), "VALIDATION_ERROR");
             }
 
             // general system errors
@@ -50,8 +52,76 @@ export const withErrorHandler = (handler: ApiHandler) => {
     };
 };
 
-export const requireAdmin = () => {
-    
+export const actionRequireAdmin = async (): Promise<User> => {
+
+    const user = await getUser();
+    const isAdmin = user?.role === 'ADMIN';
+
+    if (!user || !isAdmin) throw new APIError('User is not an admin', 403, 'UNAUTHORIZED');
+
+    return user;
+}
+
+export async function actionCatchAsync(fn: () => Promise<ActionResponse>): Promise<ActionResponse> {
+    try {
+        return await fn();
+    }
+    catch (err) {
+        let finalError;
+
+        if (err instanceof Error) {
+            finalError = err.message
+        }
+
+        if (err instanceof PrismaClientKnownRequestError) {
+            if (err.code === 'P2002') {
+
+                return {
+                    success: false,
+                    message: `A product with this name already exists.`,
+                    error: "Unique constraint failed."
+                }
+            }
+
+            if (err.code === 'P2003') {
+                return {
+                    success: false,
+                    message: "Foreign key constraint failed. Invalid category or seller ID.",
+                    error: "Relation error."
+                };
+            }
+
+            return {
+                success: false,
+                message: "A database error occurred.",
+                error: err.message
+            };
+        }
+
+        if (err instanceof PrismaClientValidationError) {
+            return {
+                success: false,
+                message: "Database validation failed. Ensure all required fields are provided.",
+                error: "Validation error."
+            };
+        }
+
+        console.log("Unidentifiable Error: ", err);
+
+        return {
+            success: false,
+            message: "An unidentifiable database error has occurred.",
+            error: finalError
+        };
+    }
+
+}
+
+export async function adminAction(fn: () => Promise<ActionResponse>): Promise<ActionResponse> {
+    return actionCatchAsync(async () => {
+        await actionRequireAdmin();
+        return await fn();
+    })
 }
 
 export const getUser = async (): Promise<User> => {
