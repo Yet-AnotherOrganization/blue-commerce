@@ -12,20 +12,7 @@ export const addToCart = async (input: AddItemDto, user: User) => {
 
     let cart = await findCartByUserId(user.id);
 
-    // if the cart doesn't exist, then create it.
-    if (!cart) {
-        cart = await prisma.cart.create({
-            data: {
-                userId: user.id,
-            }
-        })
-    }
 
-    const product = await prisma.product.findUnique({
-        where: {
-            id: productId
-        }
-    })
 
 
     const quantity = input.quantity
@@ -33,6 +20,12 @@ export const addToCart = async (input: AddItemDto, user: User) => {
 
     // ^ TRANSACTION BEGIN
     const result = await prisma.$transaction(async (tx) => {
+
+        const product = await prisma.product.findUnique({
+            where: {
+                id: productId
+            }
+        })
 
         if (!product) throw new APIError('Product is not found on the database.', 404, 'PRODUCT_NOT_FOUND')
 
