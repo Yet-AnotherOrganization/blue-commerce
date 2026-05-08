@@ -4,7 +4,6 @@ import { AddItemSchema } from "../../../lib/zod";
 import { addToCart, emptyCartByUserId } from "../../../services/cartService";
 import { findCartByUserId} from '../../../utils/serverUtils'
 import APIError from "../../../types/api";
-import { NextResponse } from "next/server";
 
 
 // ADD TO CART

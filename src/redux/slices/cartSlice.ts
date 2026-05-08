@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User } from "next-auth";
-import { CartItem, Product } from "../../generated/prisma";
-import axios, { AxiosError, AxiosResponse } from 'axios';
-import { getSession, useSession } from "next-auth/react";
+import axios, { AxiosError} from 'axios';
+import { getSession } from "next-auth/react";
 import { CartItemWithProduct } from "../../types/product";
 import { GetCartResponse } from "../../types/api";
 import { toast } from "sonner";
