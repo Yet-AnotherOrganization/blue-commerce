@@ -2,8 +2,6 @@ import { User } from "next-auth";
 import { prisma } from "../lib/prisma";
 import { AddItemDto, RemoveItemDto } from "../lib/zod";
 import { findCartByUserId, res } from "../utils/serverUtils";
-import { getUser } from "../utils/serverUtils";
-import { Cart } from "../generated/prisma";
 import APIError from "../types/api";
 
 export const addToCart = async (input: AddItemDto, user: User) => {

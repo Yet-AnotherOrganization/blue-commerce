@@ -1,7 +1,7 @@
-import { createAsyncThunk, createEntityAdapter, createSlice } from "@reduxjs/toolkit"
+import { createEntityAdapter, createSlice } from "@reduxjs/toolkit"
 import { thunkWrapper } from "../../utils/utils"
 import axios from "axios"
-import { Favorite, Product } from "../../generated/prisma"
+import { Favorite} from "../../generated/prisma"
 import { toast } from "sonner"
 import { RootState } from "../store"
 
