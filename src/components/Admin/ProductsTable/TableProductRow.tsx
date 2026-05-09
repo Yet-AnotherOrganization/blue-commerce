@@ -1,4 +1,4 @@
-import { activateProduct, deleteProduct } from '@/app/actions/productActions'
+import { activateProduct, softDeleteProduct } from '@/app/actions/productActions'
 import { Product } from '@/generated/prisma'
 import { SerializedProduct } from '@/types/product'
 import React, { Dispatch } from 'react'
@@ -46,7 +46,7 @@ const TableProductRow = ({ item }: Props) => {
                             const confirmed = window.confirm('Are you sure you want to delete this product?');
 
                             if (confirmed) {
-                                const res = await deleteProduct(item.id)
+                                const res = await softDeleteProduct(item.id)
                                 if (!res?.success) {
                                     alert(res?.message)
                                 }
