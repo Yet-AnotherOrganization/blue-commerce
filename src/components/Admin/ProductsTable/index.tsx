@@ -1,11 +1,6 @@
 'use client'
-import { activateProduct, deleteProduct } from '@/app/actions/productActions';
-import { Product, User } from '@/generated/prisma';
-import { prisma } from '@/lib/prisma';
-import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { FaArrowDown, FaArrowUp, FaCircle, FaTrash } from 'react-icons/fa';
-import { TiTick } from "react-icons/ti";
+import { FaArrowDown, FaArrowUp} from 'react-icons/fa';
 import TableProductRow from './TableProductRow';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { SerializedProduct } from '@/types/product';
