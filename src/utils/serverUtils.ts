@@ -1,4 +1,4 @@
-import { getServerSession, Session, User } from "next-auth";
+import { getServerSession, User } from "next-auth";
 import { NextResponse } from "next/server";
 import { prisma } from "../lib/prisma";
 import { authOptions } from "../app/api/auth/[...nextauth]/route";
@@ -24,12 +24,12 @@ export const res = <T>(
 
 
 // define api func type
-type ApiHandler = (req: Request) => Promise<Response>;
+type ApiHandler<T> = (req: Request, params: T) => Promise<Response>;
 
-export const withErrorHandler = (handler: ApiHandler) => {
-    return async (req: Request) => {
+export const withErrorHandler = <T>(handler: ApiHandler<T>) => {
+    return async (req: Request, params: T) => {
         try {
-            return await handler(req);
+            return await handler(req, params);
         } catch (err) {
             console.error("Global Error Handler:", err);
 
