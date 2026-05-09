@@ -12,11 +12,19 @@ export type ActionResponse =
 
 
 
-export async function deleteProduct(id: string) {
+export async function softDeleteProduct(id: string) {
     return adminAction(async () => {
         await prisma.product.update({ where: { id }, data: { status: "ARCHIVED" } })
         revalidatePath('/admin')
-        return { success: true, message: "Successfully marked product as deleted." }
+        return { success: true, message: "Successfully marked product as archived." }
+    })
+}
+
+export async function hardDeleteProduct(id: string) {
+    return adminAction(async () => {
+        await prisma.product.delete({ where: { id }})
+        revalidatePath('/admin')
+        return { success: true, message: "Successfully deleted the product." }
     })
 }
 
