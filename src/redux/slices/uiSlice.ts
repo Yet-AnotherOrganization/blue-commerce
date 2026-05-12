@@ -2,6 +2,9 @@ import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
     cartModalOpen: false,
+    genericModalOpen: false,
+    genericModalText: '',
+    genericModalAction: null,
     theme: 'light',
 }
 
@@ -10,15 +13,22 @@ const uiSlice = createSlice({
     name: "uiSlice",
     initialState,
     reducers: {
-        openModal: (state,) => {
+        openCartModal: (state,) => {
             state.cartModalOpen = true;
         },
-        closeModal: (state,) => {
+        closeCartModal: (state,) => {
             state.cartModalOpen = false;
         },
-        toggleModal: (state,) => {
+        toggleCartModal: (state) => {
             state.cartModalOpen = !state.cartModalOpen
         },
+
+        askGenericModal: (state, action) => {
+            state.genericModalOpen = true;
+            state.genericModalText = action.payload.text
+            state.genericModalAction = action.payload.action
+        }
+        ,
 
         // THEME
 
@@ -30,4 +40,4 @@ const uiSlice = createSlice({
 
 
 export default uiSlice;
-export const { openModal, closeModal, toggleModal, toggleTheme } = uiSlice.actions;
+export const { openCartModal, closeCartModal, toggleCartModal, toggleTheme } = uiSlice.actions;
