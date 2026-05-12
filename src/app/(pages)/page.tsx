@@ -4,6 +4,7 @@ import React from "react";
 import Slider from "../../components/Carousel";
 import { prisma } from "../../lib/prisma";
 import { Category, Product } from "../../generated/prisma";
+import Link from "next/link";
 
 const MainPage = async ({
   searchParams,
@@ -47,9 +48,9 @@ const MainPage = async ({
         {hotbarElements.map((element, i) => {
           return (
             <div key={element.label} className={`${i !== 0 ? 'border-l-4' : ''} border-gray-300 p-2 px-6  group `}>
-              <a className="group-hover:text-red-300 transition-all" href={element.value}>
+              <Link className="group-hover:text-red-300 transition-all" href={element.value}>
                 {element.label}
-              </a>
+              </Link>
             </div>
           )
         })}
@@ -64,9 +65,9 @@ const MainPage = async ({
         {
           ribbons.map((ribbon) => (
             <div className="flex flex-col items-center">
-              <a href="" className="overflow-hidden border border-gray-300 rounded-md h-[7vh] w-[7vh] aspect-square">
+              <Link href="" className="overflow-hidden border border-gray-300 rounded-md h-[7vh] w-[7vh] aspect-square">
                 <img src={ribbon.url} alt="" className={`scale-[${ribbon.zoom}] w-full h-full`} />
-              </a>
+              </Link>
               <p className="text-center text-[10px]">{ribbon.title}</p>
 
             </div>

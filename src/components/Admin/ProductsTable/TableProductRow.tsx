@@ -1,6 +1,7 @@
 import { activateProduct, softDeleteProduct } from '@/app/actions/productActions'
 import { Product } from '@/generated/prisma'
 import { SerializedProduct } from '@/types/product'
+import Link from 'next/link'
 import React, { Dispatch } from 'react'
 import { FaCircle, FaTrash } from 'react-icons/fa'
 import { TiTick } from 'react-icons/ti'
@@ -19,9 +20,9 @@ const TableProductRow = ({ item }: Props) => {
                 <img src={item.imageUrl} className='w-12 h-12' alt="" />
             </td>
             <td>
-                <a href={`/admin/product/${item.id}`}>
+                <Link href={`/admin/product/${item.id}`}>
                     {item.name}
-                </a>
+                </Link>
             </td>
             <td>
                 <div className='inline-flex items-center justify-center gap-1'>

@@ -26,7 +26,7 @@ const CartDiv = () => {
                             <FaBoxOpen />
                         </span>
                         Your Cart is Currently Empty
-                        <a className='rounded-xl bg-blue-400 text-white p-4' href='/'>Go Back to Shopping</a>
+                        <Link className='rounded-xl bg-blue-400 text-white p-4' href='/'>Go Back to Shopping</Link>
                     </div>}
             </div>
             <TotalComponent cart={cart} />

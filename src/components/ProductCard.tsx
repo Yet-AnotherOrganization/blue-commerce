@@ -8,8 +8,9 @@ import { Product } from "../generated/prisma";
 import { addToCart } from "../redux/slices/cartSlice";
 import { useAppDispatch } from "../redux/hooks";
 import { IoHeart, IoHeartOutline } from "react-icons/io5";
-import axios from "axios";
 import { addToFavorites, removeFromFavorites, selectFavoriteById } from "../redux/slices/favoriteSlice";
+import Link from "next/link";
+import { RootState } from "@/redux/store";
 
 const ProductCard = ({ product }: { product: Product }) => {
   const dispatch = useAppDispatch();
@@ -19,7 +20,7 @@ const ProductCard = ({ product }: { product: Product }) => {
   const [isClient, setIsClient] = useState<boolean>(false);
   const [isDivHovered, setIsDivHovered] = useState<boolean>(false);
   const [width, setWidth] = useState<number>(0)
-  const isFavorite = useSelector((state) => !!selectFavoriteById(state, product.id))
+  const isFavorite = useSelector((state: RootState) => !!selectFavoriteById(state, product.id))
 
   useEffect(() => {
     // const userExists = JSON.parse(localStorage.getItem("user"));
@@ -51,7 +52,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         >
           {isFavorite ? <IoHeart color="red" /> : <IoHeartOutline />}
         </button>
-        <a className="text-center" href={`/product/${product.id}`}>
+        <Link className="text-center" href={`/product/${product.id}`}>
           <div className="flex justify-center items-center relative">
 
             <img
@@ -91,7 +92,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 
             {/* <span className="text-black px-1">{product.stars?.count || 0}</span> */}
           </div>
-        </a>
+        </Link>
 
         {/* PRICE AND BUTTONS */}
         <div className="flex flex-col justify-center items-center gap-2">

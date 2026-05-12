@@ -4,6 +4,7 @@ import { ProductParams } from "../../constants/constants";
 import ArrowAnimation from "./ArrowAnimation";
 import { Product } from "../../generated/prisma";
 import { ProductWithCategory } from "../../types/product";
+import Link from "next/link";
 
 const CarouselComponent = ({ product }: { product: ProductWithCategory }): React.ReactNode => {
   const {
@@ -20,10 +21,10 @@ const CarouselComponent = ({ product }: { product: ProductWithCategory }): React
   const photos = ['aircleaner.jpg','coffee.jpg','vacuum.jpg']
 
   return (
-        <a href={`/product/${product.id}`} className='block'>
+        <Link href={`/product/${product.id}`} className='block'>
           <img src={`/assets/banners/${photos[Math.floor(photos.length * Math.random())]}`} className="rounded-xl w-full object-cover" alt="carousel photo" />
           {/* <ArrowAnimation /> */}
-        </a>
+        </Link>
   );
 };
 

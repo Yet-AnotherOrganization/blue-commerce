@@ -23,7 +23,7 @@ const Review = ({ i, user, review }: { i: number, user: User, review: ReviewType
       <div key={i} className="relative flex py-1 gap-2  items-center justify-center w-full">
 
         <div className="flex flex-col items-center justify-center mx-5 w-[10vw]">
-          <a href={`/profile/${user.id}`}><img src={user?.avatar || '/vercel.svg'} className="w-[6.8vw] h-[6.8vw] rounded-full" alt="" /></a>
+          <Link href={`/profile/${user.id}`}><img src={user?.avatar || '/vercel.svg'} className="w-[6.8vw] h-[6.8vw] rounded-full" alt="" /></Link>
           <span className="md:text-[1rem] lg:text-[1.5rem] font-semibold text-center">{user?.name}</span>
         </div>
 

@@ -1,6 +1,6 @@
 import 'tailwindcss/tailwind.css'
 import '../components/css/index.css'
-import Header from '../components/Header.tsx'
+import Header from '../components/Header/index.tsx'
 import Footer from '../components/Footer.tsx'
 import StoreProvider from './StoreProvider.tsx'
 import { NextAuthProvider } from '../components/Auth/SessionWrapper.tsx'
