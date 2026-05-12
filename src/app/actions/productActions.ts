@@ -132,7 +132,7 @@ export async function editProductAdmin(id: string, formData: FormData) {
 
         const data = validatedFields.data;
 
-        const updated = await prisma.product.update({
+        await prisma.product.update({
             where: {
                 id
             },
@@ -145,8 +145,6 @@ export async function editProductAdmin(id: string, formData: FormData) {
                 name: data.name
             }
         })
-
-        // console.log(updated)
 
         revalidatePath('/admin/product');
         return {
