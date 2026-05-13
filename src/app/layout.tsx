@@ -5,7 +5,8 @@ import Footer from '../components/Footer.tsx'
 import StoreProvider from './StoreProvider.tsx'
 import { NextAuthProvider } from '../components/Auth/SessionWrapper.tsx'
 import InitCart from '../components/InitCart/index.tsx'
-import {Toaster, toast} from 'sonner'
+import { Toaster, toast } from 'sonner'
+import AskModal from '@/components/Common/AskModal.tsx'
 export const metadata = {
   title: "BluE-Commerce",
   description: "Hello hey!",
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactElement 
               {children}
             </main>
             <Footer />
+            <AskModal />
           </StoreProvider>
         </NextAuthProvider>
       </body>

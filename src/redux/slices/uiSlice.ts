@@ -1,34 +1,58 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-const initialState = {
+
+type ModalActionType = 'DELETE_PRODUCT' | 'ARCHIVE_PRODUCT' | 'PUBLISH_PRODUCT' | 'CONFIRM_PRODUCT' | null
+
+interface UIState {
+    cartModalOpen: boolean;
+    genericModalOpen: boolean;
+    genericModalText: string;
+    genericModalTitle: string;
+    theme: 'light' | 'dark';
+}
+
+type AskModalPayload = {
+    text: string,
+    title: string,
+}
+
+const initialState: UIState = {
     cartModalOpen: false,
     genericModalOpen: false,
-    genericModalText: '',
-    genericModalAction: null,
+    genericModalText: 'Amogus',
+    genericModalTitle: 'Amonghuito',
     theme: 'light',
 }
+
+
 
 
 const uiSlice = createSlice({
     name: "uiSlice",
     initialState,
     reducers: {
-        openCartModal: (state,) => {
+        openCartModal: (state) => {
             state.cartModalOpen = true;
         },
-        closeCartModal: (state,) => {
+        closeCartModal: (state) => {
             state.cartModalOpen = false;
         },
         toggleCartModal: (state) => {
             state.cartModalOpen = !state.cartModalOpen
         },
 
-        askGenericModal: (state, action) => {
+        askGenericModal: (state, action: PayloadAction<AskModalPayload>) => {
+            console.log('got action')
             state.genericModalOpen = true;
             state.genericModalText = action.payload.text
-            state.genericModalAction = action.payload.action
-        }
-        ,
+            state.genericModalTitle = action.payload.title
+        },
+
+        cancelGenericModal: (state) => {
+            state.genericModalOpen = false;
+            state.genericModalText = ''
+            state.genericModalTitle = ''
+        },
 
         // THEME
 
@@ -40,4 +64,4 @@ const uiSlice = createSlice({
 
 
 export default uiSlice;
-export const { openCartModal, closeCartModal, toggleCartModal, toggleTheme } = uiSlice.actions;
+export const { openCartModal, closeCartModal, toggleCartModal, toggleTheme, askGenericModal, cancelGenericModal } = uiSlice.actions;
