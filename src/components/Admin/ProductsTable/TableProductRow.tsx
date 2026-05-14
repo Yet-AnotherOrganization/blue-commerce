@@ -1,16 +1,38 @@
 import { activateProduct, softDeleteProduct } from '@/app/actions/productActions'
+import { useConfirm } from '@/context/ConfirmContext'
 import { Product } from '@/generated/prisma'
 import { SerializedProduct } from '@/types/product'
 import Link from 'next/link'
 import React, { Dispatch } from 'react'
 import { FaCircle, FaTrash } from 'react-icons/fa'
 import { TiTick } from 'react-icons/ti'
+import { toast } from 'sonner'
 
 type Props = {
     item: SerializedProduct,
 }
 
 const TableProductRow = ({ item }: Props) => {
+
+    const ask = useConfirm();
+
+    const handleArchive = async () => {
+        const confirmed = await ask('Are you sure you want to archive this product?');
+        if (confirmed) {
+            const res = await softDeleteProduct(item.id)
+            toast(res.success ? 'Successfully archived.' : `ERROR: ${res.error}`)
+        }
+    }
+
+    const handlePublish = async () => {
+        const confirmed = await ask('Are you sure you want to activate this product for listing?');
+
+        if (confirmed) {
+            const res = await activateProduct(item.id)
+            toast(res.success ? 'Successfully published.' : `ERROR: ${res.error}`)
+
+        }
+    }
 
 
     const color = item.status === "ACTIVE" ? "green" : item.status === "DRAFT" ? "orange" : "red"
@@ -43,28 +65,10 @@ const TableProductRow = ({ item }: Props) => {
             <td>
                 {
                     item.status == "ACTIVE" ?
-                        <button onClick={async () => {
-                            const confirmed = window.confirm('Are you sure you want to delete this product?');
-
-                            if (confirmed) {
-                                const res = await softDeleteProduct(item.id)
-                                if (!res?.success) {
-                                    alert(res?.message)
-                                }
-                            }
-                        }}>
+                        <button onClick={handleArchive}>
                             <FaTrash />
                         </button> :
-                        <button onClick={async () => {
-                            const confirmed = window.confirm('Are you sure you want to activate this product for listing?');
-
-                            if (confirmed) {
-                                const res = await activateProduct(item.id)
-                                if (!res?.success) {
-                                    alert(res?.message)
-                                }
-                            }
-                        }}>
+                        <button onClick={handlePublish}>
                             <TiTick />
                         </button>
                 }
