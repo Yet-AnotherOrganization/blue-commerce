@@ -36,8 +36,6 @@ const MainPage = async ({
 
   const reversedProducts = randomProducts.reverse();
 
-  console.log("random prods: ", randomProducts)
-
 
 
   return (

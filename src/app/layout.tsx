@@ -6,7 +6,6 @@ import StoreProvider from './StoreProvider.tsx'
 import { NextAuthProvider } from '../components/Auth/SessionWrapper.tsx'
 import InitCart from '../components/InitCart/index.tsx'
 import { Toaster, toast } from 'sonner'
-import AskModal from '@/components/Common/AskModal.tsx'
 import ConfirmProvider from '@/context/ConfirmContext.tsx'
 export const metadata = {
   title: "BluE-Commerce",

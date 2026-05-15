@@ -9,6 +9,7 @@ import { useSession } from 'next-auth/react'
 import { useAppDispatch } from '../../../redux/hooks'
 import { decrementItem, removeItem } from '../../../redux/slices/cartSlice'
 import CartItem from './CartItem';
+import Link from 'next/link';
 
 const CartDiv = () => {
     const { cart, loading } = useSelector((store: RootState) => store.cartReducer)

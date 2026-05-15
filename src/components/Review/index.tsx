@@ -3,6 +3,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { ReviewParams } from '../../constants/constants'
 import { FaRegStar, FaStar } from 'react-icons/fa'
 import { Review as ReviewType, User } from '../../generated/prisma'
+import Link from 'next/link'
 
 const Review = ({ i, user, review }: { i: number, user: User, review: ReviewType }) => {
 

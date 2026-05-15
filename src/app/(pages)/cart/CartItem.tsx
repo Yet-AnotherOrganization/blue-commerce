@@ -3,6 +3,7 @@ import { useAppDispatch } from '../../../redux/hooks'
 import { CartItemWithProduct } from '../../../types/product'
 import { decrementItem, removeItem } from '../../../redux/slices/cartSlice'
 import { FaTrash } from 'react-icons/fa'
+import Link from 'next/link'
 
 type Props = {
     item: CartItemWithProduct

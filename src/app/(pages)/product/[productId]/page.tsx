@@ -2,7 +2,6 @@
 import { ReactNode } from "react";
 import ProductButtons from "../../../../components/ProductButtons";
 import { ProductParams, ReviewParams } from "../../../../constants/constants";
-import { getSpecificProduct, getUser } from "../../../../utils/utils";
 import Reviews from "./reviews";
 import { IoStar, IoStarOutline } from "react-icons/io5";
 import Review from "../../../../components/Review";
@@ -10,6 +9,7 @@ import PriceComponent from "../../../../components/PriceComponent";
 import { prisma } from "../../../../lib/prisma";
 import { Prisma, Product } from "../../../../generated/prisma";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 
 
 type ProductWithSeller = Prisma.ProductGetPayload<{ include: { seller: true } }>
