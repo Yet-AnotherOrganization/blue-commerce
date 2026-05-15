@@ -1,5 +1,5 @@
 import { getServerSession, User } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../lib/prisma";
 import { authOptions } from "../app/api/auth/[...nextauth]/route";
 import { Cart } from "../generated/prisma";
@@ -24,10 +24,10 @@ export const res = <T>(
 
 
 // define api func type
-type ApiHandler<T> = (req: Request, params: T) => Promise<Response>;
+type ApiHandler<T> = (req: NextRequest, params: T) => Promise<Response>;
 
 export const withErrorHandler = <T>(handler: ApiHandler<T>) => {
-    return async (req: Request, params: T) => {
+    return async (req: NextRequest, params: T) => {
         try {
             return await handler(req, params);
         } catch (err) {

@@ -33,7 +33,7 @@ const ConfirmProvider = ({ children }: Props) => {
             {children}
             {
                 config.open && <div className={`${true ? 'block' : 'hidden'} fixed top-0 left-0 right-0 bottom-0 backdrop-blur-sm bg-black bg-opacity-15 z-50`}>
-                    <div className={`flex fixed flex-col top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-10 bg-white rounded-xl shadow-lg z-50`}>
+                    <div className={`flex fixed flex-col top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-10 bg-white rounded-xl shadow-lg z-50 border-2 border-neutral-800`}>
                         <p className='text-base text-center mt-8'>{config.text}</p>
                         <div className='flex justify-around mt-8 text-white'>
                             <button className='bg-red-400 hover:bg-red-600 transition-all px-4 py-2 rounded-md hover:scale-105' onClick={() => handleBtnClick(false)}>Cancel</button>
