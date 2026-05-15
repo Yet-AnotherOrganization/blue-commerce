@@ -36,7 +36,7 @@
     "**/*.ts",
     "**/*.tsx",
     "src/utils/utils.ts",
-    "src/components/Header.tsx",
+    "src/components/Header/index.tsx",
     "src/redux/store.js",
     "src/components/PriceComponent"
   ],

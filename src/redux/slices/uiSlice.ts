@@ -1,26 +1,20 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-
-
-type ModalActionType = 'DELETE_PRODUCT' | 'ARCHIVE_PRODUCT' | 'PUBLISH_PRODUCT' | 'CONFIRM_PRODUCT' | null
-
 interface UIState {
     cartModalOpen: boolean;
     genericModalOpen: boolean;
     genericModalText: string;
     genericModalTitle: string;
     theme: 'light' | 'dark';
+    headerSearchbarVisible: boolean
 }
 
-type AskModalPayload = {
-    text: string,
-    title: string,
-}
 
 const initialState: UIState = {
     cartModalOpen: false,
     genericModalOpen: false,
     genericModalText: 'Amogus',
     genericModalTitle: 'Amonghuito',
+    headerSearchbarVisible: false,
     theme: 'light',
 }
 
@@ -41,19 +35,9 @@ const uiSlice = createSlice({
             state.cartModalOpen = !state.cartModalOpen
         },
 
-        askGenericModal: (state, action: PayloadAction<AskModalPayload>) => {
-            console.log('got action')
-            state.genericModalOpen = true;
-            state.genericModalText = action.payload.text
-            state.genericModalTitle = action.payload.title
+        setSearchbarVisible: (state, action: { payload: boolean }) => {
+            state.headerSearchbarVisible = action.payload
         },
-
-        cancelGenericModal: (state) => {
-            state.genericModalOpen = false;
-            state.genericModalText = ''
-            state.genericModalTitle = ''
-        },
-
         // THEME
 
         toggleTheme: (state,) => {
@@ -64,4 +48,4 @@ const uiSlice = createSlice({
 
 
 export default uiSlice;
-export const { openCartModal, closeCartModal, toggleCartModal, toggleTheme, askGenericModal, cancelGenericModal } = uiSlice.actions;
+export const { openCartModal, closeCartModal, toggleCartModal, toggleTheme, setSearchbarVisible } = uiSlice.actions;
