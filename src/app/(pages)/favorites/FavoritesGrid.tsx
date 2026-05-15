@@ -19,7 +19,7 @@ const FavoriteCard = ({ fav }: { fav: SerializedFavorite }) => {
 
     return (
         <div
-            className='max-w-[150px] lg:max-w-[350px] p-2 lg:p-4 shadow-md border rounded-xl flex flex-col'
+            className='xl:max-w-[300px] p-2 lg:p-4 shadow-md border rounded-xl flex flex-col'
         >
             <div className='w-full'>
                 <Link href={`/product/${fav.item.id}`}>
@@ -30,7 +30,7 @@ const FavoriteCard = ({ fav }: { fav: SerializedFavorite }) => {
                 <div className='py-4 h-max'>
                     <h1 className='text-sm lg:text-lg font-semibold line-clamp-1' title={fav.item.name}>{fav.item.name}</h1>
                 </div>
-                <div className='flex justify-between'>
+                <div className='flex justify-between max-lg:flex-col'>
                     <span className={`font-semibold text-xl ${stockColor}`}>
                         {
                             stockText
@@ -40,11 +40,11 @@ const FavoriteCard = ({ fav }: { fav: SerializedFavorite }) => {
                         ${fav.item.price.toLocaleString()}
                     </span>
                 </div>
-                <div className='btns flex gap-4 pt-4'>
-                    <button className='block text-center flex-[3] bg-green-400 py-1 rounded-xl text-white hover:bg-green-500 transition-all text-lg'>
+                <div className='btns flex gap-4 pt-4 max-lg:flex-col'>
+                    <button className='block py-2 text-center flex-[3] bg-green-400 rounded-xl text-white hover:bg-green-500 transition-all text-lg'>
                         ADD TO CART
                     </button>
-                    <button className='inline-flex flex-1 justify-center items-center bg-red-400 text-white rounded-xl hover:bg-red-500 transition-all'>
+                    <button className='inline-flex py-3 flex-1 justify-center items-center bg-red-400 text-white rounded-xl hover:bg-red-500 transition-all'>
                         <FaTrash />
                     </button>
                 </div>
@@ -57,7 +57,7 @@ const FavoritesGrid = ({ favorites }: Props) => {
     return (
         <div className='mx-auto w-[90vw] shadow-md border m-8 rounded-xl'>
             <h1 className='text-center text-4xl py-8 font-bold tracking-wider'>Your Favorited Items</h1>
-            <div className='p-4 px-4 lg:px-20 gap-y-4 gap-x-4 grid max-md:grid-cols-[repeat(auto-fit,minmax(150px,1fr))]  max-lg:grid-cols-[repeat(auto-fill,minmax(250px,1fr))] grid-cols-[repeat(auto-fill,minmax(350px,1fr))] justify-items-center justify-center'>
+            <div className='p-4 px-4 lg:px-20 gap-y-4 gap-x-4 grid max-md:grid-cols-[repeat(auto-fit,minmax(200px,1fr))]  max-lg:grid-cols-[repeat(auto-fill,minmax(350px,1fr))] grid-cols-[repeat(auto-fill,minmax(350px,1fr))] justify-items-center justify-center'>
                 {
                     favorites.map((fav) => <FavoriteCard key={fav.id} fav={fav} />)
                 }
