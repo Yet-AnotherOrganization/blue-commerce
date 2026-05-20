@@ -1,4 +1,3 @@
-
 import { ReactNode } from "react";
 import ProductButtons from "../../../../components/ProductButtons";
 import { ProductParams, ReviewParams } from "../../../../constants/constants";
@@ -10,7 +9,6 @@ import { prisma } from "../../../../lib/prisma";
 import { Prisma, Product } from "../../../../generated/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-
 
 type ProductWithSeller = Prisma.ProductGetPayload<{ include: { seller: true } }>
 
@@ -28,52 +26,122 @@ const productId = async ({ params }: { params: { productId: string } }) => {
         notFound()
     }
 
-    const seller = currentProduct?.seller;
+    const seller = currentProduct.seller;
+
+    const images = (currentProduct as any).images || ['/placeholder.jpg'];
 
     return (
-        <div className="mt-20 md:mt-16 lg:mt-0 pb-">
+        <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8 mt-20 md:mt-16 lg:mt-0">
+            <div className="max-w-7xl mx-auto">
+                
+                <nav className="mb-6 text-sm text-slate-500 flex items-center gap-2">
+                    <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
+                    <span>/</span>
+                    <Link href="/products" className="hover:text-blue-600 transition-colors">Products</Link>
+                    <span>/</span>
+                    <span className="text-slate-800 font-medium truncate max-w-xs">{currentProduct.name}</span>
+                </nav>
 
-            <div className="lg:w-auto md:mx-[3rem] 2xl:mx-[10rem] mx-4 mt-4 flex lg:flex-row flex-col justify-center  items-center bg-white border-2 border-gray-300 rounded-t-xl">
-                <div className="w-full rounded-xl md:w-full h-full flex justify-center items-center p-4 bg-white">
-                    <img src={currentProduct?.imageUrl} className="w-full max-w-[80vw] h-[40vh] lg:h-[60vh] rounded-xl" alt="" />
-                </div>
-                <div className="w-full flex flex-col justify-center lg:items-stretch items-center lg:gap-8 gap-16 bg-gray-200 p-2 md:p-10 2xl:p-20 h-full rounded-tr-xl">
-                    <div className="mb-8 flex w-full flex-col items-center justify-center">
-                        <p className="text-[2rem] md:text-[2.5rem] font-semibold text-center md:text-start">{currentProduct?.name}</p>
-                        <Link href={`/profile/${currentProduct?.sellerId}`}><div className="flex text-gray-600 text-[1rem] lg:text-[1.5rem] items-center gap-2">Listed by
-                            <img src={seller?.avatar || 'default'} className="w-[30px] rounded-[50%]" alt="" />{seller?.storeName}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    
+                    <div className="lg:col-span-5 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm sticky top-24">
+                        <div className="aspect-square relative w-full overflow-hidden rounded-xl bg-slate-100 flex items-center justify-center">
+                            <img 
+                                src={currentProduct.imageUrl} 
+                                alt={currentProduct.name}
+                                className="object-contain w-full h-full max-h-[500px] hover:scale-105 transition-transform duration-300"
+                            />
                         </div>
-                        </Link>
+                        {images.length > 1 && (
+                            <div className="grid grid-cols-4 gap-2 mt-4">
+                                {images.map((img: string, idx: number) => (
+                                    <div key={idx} className="aspect-square border-2 border-slate-200 hover:border-blue-500 rounded-lg overflow-hidden cursor-pointer bg-slate-50">
+                                        <img src={img} alt="" className="object-cover w-full h-full" />
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
-                    {/* Price and Stars */}
-                    <div className="flex flex-col lg:flex-row justify-between md:gap-10 lg:leading-[3rem]">
-                        <div className="flex flex-col">
-                            <PriceComponent currentProduct={currentProduct} />
+                    <div className="lg:col-span-4 flex flex-col gap-6">
+                        <div>
+                            {/* Seller Link */}
+                            {seller && (
+                                <Link 
+                                    href={`/sellers/${seller.id}`}
+                                    className="text-xs font-semibold uppercase tracking-wider text-blue-600 hover:underline"
+                                >
+                                    {seller.storeName || 'Blue-Commerce'}
+                                </Link>
+                            )}
+                            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1 leading-tight">
+                                {currentProduct.name}
+                            </h1>
                         </div>
 
-                        <div className="flex text-[2rem] flex-col">
-                            {/* <div className="text-yellow-400 flex items-center h-[40px]"><span className="text-black font-semibold mr-2">{currentProduct.stars?.stars}</span>{[...Array(5)].map((_, index) => { return index < (currentProduct.stars?.stars || 3) ? <IoStar key={index} /> : <IoStarOutline key={index} />; })}</div>
-                            <span className="text-center text-gray-500">{currentProduct.stars?.count} Reviews</span> */}
+                        {/* Rating Summary Mockup */}
+                        <div className="flex items-center gap-2 border-b border-slate-200 pb-4">
+                            <div className="flex text-amber-400">
+                                <IoStar className="w-5 h-5" />
+                                <IoStar className="w-5 h-5" />
+                                <IoStar className="w-5 h-5" />
+                                <IoStar className="w-5 h-5" />
+                                <IoStarOutline className="w-5 h-5" />
+                            </div>
+                            <span className="text-sm font-medium text-slate-600">(4.0)</span>
+                            <span className="text-slate-300">|</span>
+                            <a href="#reviews" className="text-sm font-medium text-blue-600 hover:underline">
+                                View Reviews
+                            </a>
+                        </div>
+
+                        <div>
+                            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wide mb-2">Description</h3>
+                            <p className="text-slate-600 leading-relaxed text-sm whitespace-pre-line">
+                                {currentProduct.description || "No description provided for this product."}
+                            </p>
                         </div>
                     </div>
 
-                    <div className="h-full flex items-center md:text-[1rem] lg:text-[1.5rem] text-center">
-                        <p>{currentProduct?.description}</p>
+                    <div className="lg:col-span-3 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm sticky top-24 flex flex-col gap-6">
+                        <div>
+                            <span className="text-xs font-medium text-slate-400 block mb-1">Total Price</span>
+                            {/* Integrated PriceComponent */}
+                            <div className="text-2xl font-bold text-slate-900">
+                                <PriceComponent currentProduct={currentProduct} />
+                            </div>
+                        </div>
+
+                        <div className="border-t border-b border-slate-100 py-4 my-2">
+                            <div className="flex items-center gap-3 text-sm text-slate-600 mb-2">
+                                <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                                <span>In Stock & Ready to Ship</span>
+                            </div>
+                            <div className="text-xs text-slate-400">
+                                Sold and fulfilled by <span className="font-medium text-slate-700">{seller?.storeName || "BlueCommerce"}</span>
+                            </div>
+                        </div>
+
+                        {/* Integrated ProductButtons component */}
+                        <div className="w-full">
+                            <ProductButtons style="flex flex-wrap flex-col text-white" product={currentProduct.id} />
+                        </div>
                     </div>
 
-                    <div>
-                        <ProductButtons product={params?.productId} />
+                </div>
+
+                {/* Bottom Section: Reviews Section */}
+                <div id="reviews" className="mt-16 border-t border-slate-200 pt-12 max-w-4xl">
+                    <h2 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-2">
+                        Customer Feedback
+                    </h2>
+                    
+                    {/* Render your imported Review and Reviews context components here */}
+                    <div className="space-y-6">
+                        <Reviews currentProduct={currentProduct} />
                     </div>
                 </div>
 
-            </div>
-            {/* Reviews */}
-            <div className="mx-4 lg:mx-0 lg:w-auto md:mx-[3rem] 2xl:mx-[10rem] flex flex-col justify-center lg:items-stretch items-center bg-white border-2 border-gray-300 rounded-b-xl">
-                <div className="w-full text-[1.7rem] font-semibold p-2 text-center capitalize"><h1>Reviews About The Product</h1></div>
-                <div>
-                    <Reviews currentProduct={currentProduct} />
-                </div>
             </div>
         </div>
     );
