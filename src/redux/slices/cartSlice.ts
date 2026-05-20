@@ -27,7 +27,7 @@ const cartInitialState: { cart: CartItemWithProduct[], loading: boolean, error: 
 
 interface AddToCartPayload {
     productId: string;
-    quantity: number;
+    quantity?: number;
     // userEmail gibi verileri göndermene gerek yok, backend session'dan alacak!
 }
 
@@ -36,7 +36,10 @@ export const addToCart = createAsyncThunk(
     'cart/addToCart',
     async (payload: AddToCartPayload, { rejectWithValue }) => {
         try {
-            const response = await axios.post('/api/cart', { ...payload, method: 'ADD' });
+
+            const sendPayload = {...payload, quantity: payload.quantity ?? 1}
+
+            const response = await axios.post('/api/cart', { ...sendPayload, method: 'ADD' });
 
             return response.data.data.data.items
         }
