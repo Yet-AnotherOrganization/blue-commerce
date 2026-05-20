@@ -1,9 +1,3 @@
-import { useEffect, useState } from "react";
-import { ProductParams, ReviewParams } from "../../../../constants/constants";
-import { getReviews, } from "../../../../utils/utils";
-import { FaStar } from "react-icons/fa";
-import { FaRegStar } from "react-icons/fa";
-import { IconType } from "react-icons";
 import Loader from "../../../../components/Loader";
 import Review from "../../../../components/Review";
 import { Prisma, Product, Review as ReviewType } from "../../../../generated/prisma";
