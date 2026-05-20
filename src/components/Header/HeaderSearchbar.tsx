@@ -8,6 +8,7 @@ import { SerializedProduct } from '@/types/product';
 import { debounce } from '@/utils/clientOnlyUtils';
 import axios from 'axios';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react'
 import { FaSearch } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
@@ -20,15 +21,16 @@ type Props = {
 const HeaderProduct = ({ product }: Props) => {
 
     const dispatch = useAppDispatch();
+    const router = useRouter();
 
 
     return (
-        <Link onMouseUp={() => dispatch(setSearchbarVisible(false))} href={`/product/${product.id}`} className='flex items-center gap-4 border-b p-2'>
+        <div  onMouseUp={() => {dispatch(setSearchbarVisible(false)); router.push(`/product/${product.id}`)}}  className='cursor-pointer flex items-center gap-4 border-b p-2'>
             <img src={product.imageUrl} className='w-10 h-10 rounded-md' alt="" />
             <span className='text-ellipsis text-base text-pretty'>{product.name}</span>
 
             <span></span>
-        </Link>
+        </div>
     )
 }
 
@@ -95,6 +97,9 @@ const HeaderSearchbar = () => {
                     }
                     {
                         foundProducts.length > 8 && <div className='pt-4'>{foundProducts.length - 8} more results</div>
+                    }
+                    {
+                        foundProducts.length == 0 && <div className='pt-4'>No products matching your query were found.</div>
                     }
                 </div>
             }
