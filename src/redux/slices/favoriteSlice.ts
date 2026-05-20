@@ -1,9 +1,10 @@
 import { createEntityAdapter, createSlice } from "@reduxjs/toolkit"
 import { thunkWrapper } from "../../utils/utils"
 import axios from "axios"
-import { Favorite} from "../../generated/prisma"
+import { Favorite, Product} from "../../generated/prisma"
 import { toast } from "sonner"
 import { RootState } from "../store"
+import { SerializedProduct } from "@/types/product"
 
 interface StateType {
     error: unknown,
@@ -15,9 +16,10 @@ const initialState: StateType = {
 }
 
 interface FavoriteRecord {
-    id: string;        // Favori işlem ID'si
+    id: string;       
     ownerId: string;
-    productId: string; // Eşleşme yapacağımız asıl ID
+    productId: string; 
+    item: SerializedProduct
 }
 
 const addToFavoritesLogic = async (productId: string) => {
@@ -25,13 +27,14 @@ const addToFavoritesLogic = async (productId: string) => {
         productId
     })
 
+    console.log("eklenen cevap:", res)
     return res.data.data
 }
 
 const fetchFavoritesLogic = async () => {
     const res = await axios.get('/api/favorite');
 
-    return res.data.data
+    return res.data.data as Favorite[]
 }
 
 const removeFromFavoritesLogic = async (productId: string) => {
@@ -49,7 +52,7 @@ export const removeFromFavorites = thunkWrapper<string>('favorites/removeFromFav
 
 
 const favoritesAdapter = createEntityAdapter<FavoriteRecord, string>({
-    selectId: (favorite: Favorite) => { return favorite.productId }
+    selectId: (favorite: FavoriteRecord) => { return favorite.productId }
 }
 );
 
@@ -110,6 +113,7 @@ const favoriteSlice = createSlice({
             state.loading = false;
             state.error = null;
             toast.success('Item removed from wishlist.')
+            console.log('removing id from state: ', action.payload)
             favoritesAdapter.removeOne(state, action.payload)
         })
     }

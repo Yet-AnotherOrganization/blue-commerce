@@ -32,6 +32,9 @@ const postHandler = async (req: Request) => {
         create: {
             ownerId: user.id,
             productId
+        },
+        include:{
+            item: true
         }
     })
 
@@ -48,6 +51,9 @@ const getHandler = async (req: Request) => {
     const favorites = await prisma.favorite.findMany({
         where: {
             ownerId: user.id
+        },
+        include:{
+            item: true
         }
     })
 
