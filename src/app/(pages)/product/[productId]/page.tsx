@@ -31,7 +31,7 @@ const productId = async ({ params }: { params: { productId: string } }) => {
     const images = (currentProduct as any).images || ['/placeholder.jpg'];
 
     return (
-        <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8 mt-20 md:mt-16 lg:mt-0">
+        <div className="min-h-screen bg-slate-50 py-8 max-lg:pb-20 px-4 sm:px-6 lg:px-8 mt-20 md:mt-16 lg:mt-0">
             <div className="max-w-7xl mx-auto">
                 
                 <nav className="mb-6 text-sm text-slate-500 flex items-center gap-2">
@@ -124,7 +124,7 @@ const productId = async ({ params }: { params: { productId: string } }) => {
 
                         {/* Integrated ProductButtons component */}
                         <div className="w-full">
-                            <ProductButtons style="flex flex-wrap flex-col text-white" product={currentProduct.id} />
+                            <ProductButtons style="max-lg:hidden flex flex-wrap flex-col text-white text-md" product={currentProduct.id} />
                         </div>
                     </div>
 
