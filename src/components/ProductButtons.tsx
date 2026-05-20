@@ -9,22 +9,24 @@ import { addToFavorites, removeFromFavorites } from "@/redux/slices/favoriteSlic
 
 const ProductButtons = ({ product, style }: { product: string, style?: string }) => {
   const dispatch = useAppDispatch();
-  const user = getActiveUserFromStorage();
   const [isAddClicked, setIsAddClicked] = useState<boolean>(false)
   const [isFavClicked, setIsFavClicked] = useState<boolean>(false)
-  const hasWindow = typeof window !== "undefined";
-  const width = hasWindow ? window.innerWidth : null;
-  const favorites = useAppSelector(state => state.favoriteReducer.ids )
+  const favorites = useAppSelector(state => state.favoriteReducer.ids)
   const isFavorited = favorites.includes(product);
 
   return (
     <div className={`${style}`}>
       <button
         className="bg-green-500 shadow-md relative p-2 lg:p-4 m-4 flex flex-1 justify-center items-center rounded-xl hover:translate-y-[-5px] transition-all"
-        onClick={async () => await dispatch(addToCart({ productId: product }))}
+        onClick={async () => { 
+          const confirm = await dispatch(addToCart({ productId: product }))
+          if(confirm.meta.requestStatus == 'fulfilled') {
+            setIsAddClicked(true)
+            !isAddClicked ? setTimeout(() => setIsAddClicked(false), 2000) : '';
+          }
+      }}
       >
         <motion.span
-          onClick={() => { setIsAddClicked(true); !isAddClicked ? setTimeout(() => setIsAddClicked(false), 2000) : ''; }}
           whileTap={{ scale: 0.9 }}
           animate={{ y: isAddClicked ? 30 : 0, opacity: isAddClicked ? 0 : 100 }}
           transition={{ duration: 0.3 }}
@@ -42,11 +44,11 @@ const ProductButtons = ({ product, style }: { product: string, style?: string })
       </button>
 
 
-      <button 
-      onClick={async () => dispatch(!isFavorited ? addToFavorites(product) : removeFromFavorites(product))}
-      className="bg-blue-500 shadow-md p-2 lg:p-4 m-4 rounded-xl flex flex-1 justify-center items-center hover:translate-y-[-5px] text-center transition-all">
+      <button
+        onClick={async () => dispatch(!isFavorited ? addToFavorites(product) : removeFromFavorites(product))}
+        className="bg-blue-500 shadow-md p-2 lg:p-4 m-4 rounded-xl flex flex-1 justify-center items-center hover:translate-y-[-5px] text-center transition-all">
         <motion.span
-          onClick={() => { setIsFavClicked(true); !isFavClicked ? setTimeout(() => setIsFavClicked(false), 2000) : ''; }}
+          // onClick={() => { setIsFavClicked(true); !isFavClicked ? setTimeout(() => setIsFavClicked(false), 2000) : ''; }}
           whileTap={{ scale: 0.9 }}
           animate={{ y: isFavClicked ? 30 : 0, opacity: isFavClicked ? 0 : 100 }}
           transition={{ duration: 0.3 }}
@@ -54,13 +56,13 @@ const ProductButtons = ({ product, style }: { product: string, style?: string })
           {!isFavorited ? 'ADD TO WISHLIST' : 'REMOVE FROM WISHLIST'}
         </motion.span>
 
-        <motion.span
+        {/* <motion.span
           onClick={() => { setIsFavClicked(true); setTimeout(() => setIsFavClicked(false), 2000); }}
           whileTap={{ scale: 0.9 }}
           animate={{ y: isFavClicked ? 0 : -30, opacity: isFavClicked ? 100 : 0 }}
           transition={{ duration: 0.3 }}
           className="absolute"
-        >{!isFavorited ? 'ITEM ADDED TO WISHLIST' : 'ITEM REMOVED FROM WISHLIST'}</motion.span>
+        >{!isFavorited ? 'ITEM ADDED TO WISHLIST' : 'ITEM REMOVED FROM WISHLIST'}</motion.span> */}
       </button>
 
     </div>
