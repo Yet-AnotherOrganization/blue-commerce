@@ -1,30 +1,20 @@
+'use client';
 import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import React from 'react'
 import FavoritesGrid from './FavoritesGrid'
+import { useAppSelector } from '@/redux/hooks';
+import { selectAllFavorites } from '@/redux/slices/favoriteSlice';
 
 type Props = {}
 
-const FavoritesPage = async (props: Props) => {
+const FavoritesPage = (props: Props) => {
 
-    const session = await getServerSession();
-
-    const favorites = await prisma.favorite.findMany({
-        where: {
-            ownerId: session?.user.id
-        },
-        include: {
-            item: true
-        }
-    });
-
-    const serializedData = favorites.map((fav) => { return { ...fav, item: { ...fav.item, price: fav.item.price.toNumber() } } })
-
-
+    const favorites = useAppSelector(selectAllFavorites).map((item) => item);
 
     return (
         <div className='grid auto-cols-fr'>
-            <FavoritesGrid favorites={serializedData} />
+            <FavoritesGrid favorites={favorites} />
         </div>
     )
 }
