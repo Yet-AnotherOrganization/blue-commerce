@@ -44,8 +44,8 @@ const productId = async ({ params }: { params: { productId: string } }) => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                     
-                    <div className="lg:col-span-5 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm sticky top-24">
-                        <div className="aspect-square relative w-full overflow-hidden rounded-xl bg-slate-100 flex items-center justify-center">
+                    <div className="lg:col-span-5 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm top-24">
+                        <div className="aspect-square relative w-[75%] mx-auto overflow-hidden rounded-xl bg-slate-100 flex items-center justify-center">
                             <img 
                                 src={currentProduct.imageUrl} 
                                 alt={currentProduct.name}
@@ -103,7 +103,7 @@ const productId = async ({ params }: { params: { productId: string } }) => {
                         </div>
                     </div>
 
-                    <div className="lg:col-span-3 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm sticky top-24 flex flex-col gap-6">
+                    <div className="lg:col-span-3 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm top-24 flex flex-col">
                         <div>
                             <span className="text-xs font-medium text-slate-400 block mb-1">Total Price</span>
                             {/* Integrated PriceComponent */}
