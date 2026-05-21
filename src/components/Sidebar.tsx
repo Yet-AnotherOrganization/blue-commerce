@@ -16,13 +16,13 @@ const Sidebar = () => {
 
     const ask = useConfirm();
 
-    const handleBtnClick = async () => {
+    // const handleBtnClick = async () => {
 
-        const res = await ask('Do you really want to do this?')
+    //     const res = await ask('Do you really want to do this?')
 
-        if (res) { alert('Modal accepted.') } else { alert('Modal Rejected') }
+    //     if (res) { alert('Modal accepted.') } else { alert('Modal Rejected') }
 
-    }
+    // }
 
     return (
         <>
@@ -59,10 +59,6 @@ const Sidebar = () => {
                             <button onClick={async () => { await signOut(); setSidebar(false) }} className='flex justify-start items-center uppercase border-b-[3px] border-blue-900 hover:border-b-[5px] text-[23px] hover:border-white hover:text-shadow-white transition-all font-semibold'>LOG OUT</button>
                         </Link>
                     </li>}
-
-                    <button onClick={handleBtnClick}>
-                        TEST MODAL
-                    </button>
                 </ul>
             </div>
         </>
