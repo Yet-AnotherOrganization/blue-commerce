@@ -6,15 +6,9 @@ import { FaBoxOpen, FaMinus, FaPlus, FaShieldAlt, FaTrash, FaTruck } from "react
 import Link from 'next/link';
 import { useAppDispatch } from '@/redux/hooks';
 import { addToCart, decrementItem, removeItem } from '@/redux/slices/cartSlice';
+import { CartItemWithProduct } from '@/types/product';
 interface CartItemProps {
-    item: {
-        id: string
-        name: string
-        price: number
-        imageUrl: string
-        quantity: number
-        stock: number
-    }
+    item: CartItemWithProduct
     disabled: boolean
 }
 
@@ -27,19 +21,19 @@ export const CartItem = ({ item, disabled }: CartItemProps) => {
             {/* Image & Main Info Info */}
             <div className="flex gap-4 w-full sm:w-auto">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 bg-slate-50 border border-slate-100 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center">
-                    <img src={item.imageUrl} alt={item.name} className="object-contain max-h-full max-w-full" />
+                    <img src={item.product.imageUrl} alt={item.product.name} className="object-contain max-h-full max-w-full" />
                 </div>
 
                 <div className="flex flex-col justify-between py-1">
                     <div>
                         <h3 className="font-semibold text-slate-800 text-sm sm:text-base line-clamp-2 leading-snug">
-                            {item.name}
+                            {item.product.name}
                         </h3>
                         <p className="text-xs text-slate-400 mt-1">ID: {item.id}</p>
                     </div>
 
                     <div className="text-sm font-bold text-slate-900 sm:hidden mt-2">
-                        ${formatter.format(item.price * item.quantity)}
+                        ${formatter.format(item.product.price * item.quantity)}
                     </div>
                 </div>
             </div>
@@ -60,8 +54,8 @@ export const CartItem = ({ item, disabled }: CartItemProps) => {
                         {item.quantity}
                     </span>
                     <button
-                        onClick={() => dispatch(addToCart({ productId: item.id }))}
-                        disabled={disabled || item.quantity >= item.stock}
+                        onClick={() => {console.log(item.id); dispatch(addToCart({ productId: item.product.id }))}}
+                        disabled={disabled || item.quantity >= item.product.stock}
                         className="px-3 h-full text-slate-500 hover:bg-slate-100 active:bg-slate-200 disabled:opacity-50 transition-colors"
                         title="Increase quantity"
                     >
@@ -72,11 +66,11 @@ export const CartItem = ({ item, disabled }: CartItemProps) => {
                 {/* Total Item Price (Desktop Only) */}
                 <div className="hidden sm:block text-right min-w-[5rem]">
                     <span className="text-base font-bold text-slate-900 block">
-                        ${formatter.format(item.price * item.quantity)}
+                        ${formatter.format(item.product.price * item.quantity)}
                     </span>
                     {item.quantity > 1 && (
                         <span className="text-xs text-slate-400 block mt-0.5">
-                            (${formatter.format(item.price)} each)
+                            (${formatter.format(item.product.price)} each)
                         </span>
                     )}
                 </div>
@@ -181,7 +175,7 @@ const CartDiv = () => {
                                         key={item.id}
                                         className={`transition-opacity duration-200 ${loading ? 'opacity-60 pointer-events-none' : 'opacity-100'}`}
                                     >
-                                        <CartItem item={{ ...item.product, quantity: item.quantity }} disabled={loading} />
+                                        <CartItem item={{ ...item, quantity: item.quantity }} disabled={loading} />
                                     </div>
                                 ))}
                             </div>

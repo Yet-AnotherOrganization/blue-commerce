@@ -6,7 +6,6 @@ import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.share
 import { useRouter } from 'next/navigation'
 import CartModalProduct from './CartModalProduct'
 import { ProductParams } from '../../constants/constants'
-import { getCart } from '../../utils/utils'
 import { calculateTotalCost } from '../../utils/clientOnlyUtils'
 import { getSession, useSession } from 'next-auth/react'
 import { Session } from 'next-auth'

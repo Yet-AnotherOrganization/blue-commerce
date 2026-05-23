@@ -44,6 +44,7 @@ export async function getHandler(req: Request, { params }: HandlerParams) {
     }
     ))
 
+    console.log('sent cart: ', cart.items[0])
 
     return res(200, 'Cart has been successfully sent.', cart)
 }
