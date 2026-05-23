@@ -1,12 +1,14 @@
 import { prisma } from "@/lib/prisma";
 import APIError from "@/types/api";
-import { stripe } from "@/utils/utils";
+import { getStripe } from "@/utils/utils";
 import { headers } from "next/headers";
 import Stripe from "stripe";
 
 export async function POST(req: Request) {
     const body = await req.text();
     const signature = (await headers()).get("stripe-signature")!;
+
+    const stripe = getStripe();
 
     let event;
 
@@ -17,44 +19,54 @@ export async function POST(req: Request) {
             process.env.STRIPE_WEBHOOK_SECRET!
         );
     } catch (err: any) {
-        throw new APIError(`Webhook Error: ${err.message}`, 400, 'WEBHOOK_PAYMENT_ERROR');
+        return Response.json(
+            { message: `Webhook Error: ${err.message}`, code: 'WEBHOOK_PAYMENT_ERROR' },
+            { status: 400 }
+        );;
     }
-
+    console.log('EVENT: ', event)
     // Handle the event
-    if (event.type === "checkout.session.completed") {
-        const session = event.data.object as Stripe.Checkout.Session;
+    if (event.type === "checkout.session.completed" || event.type === "payment_intent.succeeded" || event.type === 'checkout.session.async_payment_succeeded') {
+        const sessionOrIntent = event.data.object as any;
 
-
-        const userId = session.metadata?.userId;
-        const orderId = session.metadata?.orderId;
+        console.log('CHECKOUT COMPLETE')
+        // payment_intent objects store metadata directly at the root, just like checkout.session
+        const userId = sessionOrIntent.metadata?.userId;
+        const orderId = sessionOrIntent.metadata?.orderId;
 
         if (!userId || !orderId) {
             return Response.json(
-                { message: "Missing metadata tags in session context", code: 'METADATA_ERROR' },
+                { message: "Missing metadata tags in session/intent context", code: 'METADATA_ERROR' },
                 { status: 400 }
             );
         }
 
         try {
-            await prisma.order.update({
-                where: { id: orderId },
-                data: {
-                    status: 'COMPLETED',
-                    stripeSessionId: session.id
-                }
-            })
 
-            // 2. Clear user context if necessary (e.g., clearing the active cart)
-            await prisma.cart.delete({
-                where: { userId: userId }
-            });
-        }
-        catch (err: unknown) {
-            console.error(`Database fulfillment failed for session ${session.id}:`, err);
+            // Use a Prisma transaction to make sure BOTH operations succeed together
+            await prisma.$transaction(async (tx) => {
+                console.log('TRANSACTION CHECKOUT')
+                await tx.order.update({
+                    where: { id: orderId },
+                    data: {
+                        status: 'COMPLETED',
+                        stripeSessionId: sessionOrIntent.id
+                    }
+                });
+                await tx.cart.update({
+                    where: { userId: userId },
+                    data: {
+                        items: { set: [] }
+                    }
+                })
+            }
+            );
 
-            // Returning a 500 tells Stripe to retry sending this specific webhook event later
+            console.log(`Order ${orderId} successfully completed via webhook event: ${event.type}`);
+        } catch (err: unknown) {
+            console.error(`Database fulfillment failed for event ${event.id}:`, err);
             return Response.json(
-                { message: "Internal fulfillment error, please try again later or contact with customer service.", code: 'SERVER_FULFILLMENT_ERROR' },
+                { message: "Internal fulfillment error", code: 'SERVER_FULFILLMENT_ERROR' },
                 { status: 500 }
             );
         }
