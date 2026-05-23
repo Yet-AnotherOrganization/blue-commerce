@@ -166,6 +166,7 @@ body {
 /* LOADER */
 
 .loader {
+  z-index: 1000;
   position: relative;
   width: 124px;
   height: 124px;
@@ -173,12 +174,14 @@ body {
 }
 
 .loader div {
-  width: 8%;
-  height: 24%;
-  background: rgb(128, 128, 128);
+  z-index: 1000;
+  width: 2%;
+  height: 12%;
+  background: rgb(107, 142, 255);
   position: absolute;
   left: 50%;
-  top: 30%;
+  top: 50%;
+  transform: translate(-50%,-50%);
   opacity: 0;
   border-radius: 50px;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);

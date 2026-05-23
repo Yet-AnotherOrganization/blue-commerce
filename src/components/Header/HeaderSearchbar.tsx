@@ -86,7 +86,7 @@ const HeaderSearchbar = () => {
         <div className='w-[30%] relative' ref={wrapperRef}>
             <form id='searchbar' onSubmit={(e) => { }} >
                 <input onInput={onSearch} type="search" className={`outline-none w-full  rounded-xl border-2 border-gray-500 text-black p-1 lg:p-4 ${isVisible && 'border-b-0 rounded-b-none'} z-[21]`} placeholder='Search for products...' />
-                <button className='absolute transform top-[50%] right-4 translate-y-[-50%] text-[30px] text-gray-500'><FaSearch className='hidden lg:block' /></button>
+                <button className='absolute transform top-[50%] right-4 translate-y-[-50%] text-xl text-gray-500'><FaSearch className='hidden lg:block' /></button>
             </form>
             {
                 isVisible &&
