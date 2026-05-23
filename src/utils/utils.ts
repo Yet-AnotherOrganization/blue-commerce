@@ -1,7 +1,8 @@
 import { cache } from "react";
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-
+import Stripe from 'stripe';
+import 'dotenv/config'
 
 // const catchThunk = (fn: any) => {
 //   return (...args: any) => {
@@ -50,3 +51,24 @@ export const thunkWrapper = <T = void>(
     }
   })
 }
+
+
+let stripeInstance: Stripe | null = null;
+
+export function getStripe() {
+  if (!stripeInstance) {
+    const apiKey = process.env.STRIPE_SECRET_KEY;
+    
+    if (!apiKey) {
+      throw new Error("STRIPE_SECRET_KEY is missing from environment variables.");
+    }
+
+    stripeInstance = new Stripe(apiKey, {
+      apiVersion: '2026-04-22.dahlia' as any, // Cast if your local SDK types aren't matching the dahlia release string yet
+      typescript: true,
+    });
+  }
+  
+  return stripeInstance;
+}
+

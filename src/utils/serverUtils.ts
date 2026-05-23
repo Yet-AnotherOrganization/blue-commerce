@@ -128,18 +128,9 @@ export const getUser = async (): Promise<User> => {
 
     const session = await getServerSession(authOptions)
 
-    if (!session) throw new APIError('Please log in again', 401, 'SESSION_EXPIRED')
+    if (!session) throw new APIError('Please log in again', 401, 'SESSION_EXPIRED');
 
-
-    const user = await prisma.user.findUnique({
-        where: {
-            id: session?.user.id
-        }
-    })
-
-    if (!user) throw new APIError('Please log in again', 401, 'SESSION_EXPIRED')
-
-    return user
+    return session.user;
 }
 
 export const findCartByUserId = async (uid: string): Promise<Cart> => {
