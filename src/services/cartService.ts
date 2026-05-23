@@ -29,14 +29,14 @@ export const addToCart = async (input: AddItemDto, user: User) => {
 
         if (product.stock == 0) throw new APIError('The requested product is no longer on sale.', 409, 'PRODUCT_OUT_OF_STOCK');
 
-        const existingItem = await tx.cartItem.findUnique({
-            where:{
-                cartId_productId: {
-                    cartId: cart.id,
-                    productId: productId,
-                }
-            }
-        })
+        // const existingItem = await tx.cartItem.findUnique({
+        //     where:{
+        //         cartId_productId: {
+        //             cartId: cart.id,
+        //             productId: productId,
+        //         }
+        //     }
+        // })
 
 
         const updatedItem = await tx.cartItem.upsert({
