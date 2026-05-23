@@ -54,7 +54,7 @@ export const CartItem = ({ item, disabled }: CartItemProps) => {
                         {item.quantity}
                     </span>
                     <button
-                        onClick={() => {console.log(item.id); dispatch(addToCart({ productId: item.product.id }))}}
+                        onClick={() => {dispatch(addToCart({ productId: item.product.id }))}}
                         disabled={disabled || item.quantity >= item.product.stock}
                         className="px-3 h-full text-slate-500 hover:bg-slate-100 active:bg-slate-200 disabled:opacity-50 transition-colors"
                         title="Increase quantity"
@@ -137,9 +137,9 @@ export const TotalComponent = ({ cart }: TotalComponentProps) => {
                 </div>
             </div>
 
-            <button className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-3 px-4 rounded-xl transition-colors shadow-sm shadow-blue-100 mt-2 text-sm uppercase tracking-wider">
+            <Link href={'/checkout'} className="w-full inline-flex justify-center bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-3 px-4 rounded-xl transition-colors shadow-sm shadow-blue-100 mt-2 text-sm uppercase tracking-wider">
                 Proceed to Checkout
-            </button>
+            </Link>
 
             {/* Marketing Trust Badges */}
             <div className="border-t border-slate-100 pt-4 space-y-2.5">

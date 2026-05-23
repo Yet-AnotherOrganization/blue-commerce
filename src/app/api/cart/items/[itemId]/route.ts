@@ -37,8 +37,6 @@ async function deleteHandler(req: Request, { params }: CartItemParams) {
 
     const { itemId } = params;
 
-    console.log("\n\n params: \n\n", params)
-
 
     if (!itemId) {
         throw new APIError('Query lacks item ID.', 400, 'NO_ITEM_ID')
