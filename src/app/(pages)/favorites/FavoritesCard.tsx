@@ -1,15 +1,18 @@
 'use client';
+import Loader from "@/components/Loader";
 import { useConfirm } from "@/context/ConfirmContext";
 import { useAppDispatch } from "@/redux/hooks";
 import { addToCart } from "@/redux/slices/cartSlice";
 import { removeFromFavorites } from "@/redux/slices/favoriteSlice";
 import { SerializedFavorite } from "@/types/product";
 import Link from "next/link";
+import { useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { toast } from "sonner";
 
 const FavoriteCard = ({ fav }: { fav: SerializedFavorite }) => {
-    console.log(fav)
+
+    const [loading, setLoading] = useState(false);
 
     const stockText = fav.item.stock > 10 ? 'IN STOCK' :
         fav.item.stock > 0 ? 'LOW STOCK' :
@@ -17,7 +20,7 @@ const FavoriteCard = ({ fav }: { fav: SerializedFavorite }) => {
     const stockColor = fav.item.stock > 10 ? 'text-green-400' :
         fav.item.stock > 0 ? 'text-orange-400' :
             'text-red-600'
-    
+
 
     const dispatch = useAppDispatch();
 
@@ -26,10 +29,12 @@ const FavoriteCard = ({ fav }: { fav: SerializedFavorite }) => {
     const handleRemoveFromCart = async () => {
         const confirmed = await ask('Are you sure you want to remove this item from your favorites?');
 
+
         if (confirmed) {
+            setLoading(true);
             const res = await dispatch(removeFromFavorites(fav.productId));
 
-            if(res.meta.requestStatus == 'fulfilled') {
+            if (res.meta.requestStatus == 'fulfilled') {
                 return toast.success('Item successfully removed from wishlist.')
             }
 
@@ -41,11 +46,17 @@ const FavoriteCard = ({ fav }: { fav: SerializedFavorite }) => {
 
     return (
         <div
-            className='xl:max-w-[300px] p-2 lg:p-4 shadow-md border rounded-xl flex flex-col'
+            className=' xl:max-w-[300px] p-2 lg:p-4 shadow-md border rounded-xl flex flex-col'
         >
             <div className='w-full'>
-                <Link href={`/product/${fav.item.id}`}>
-                    <img src={fav.item.imageUrl} className='aspect-square rounded-md' alt="" />
+                <Link className="relative" href={`/product/${fav.item.id}`}>
+                    {
+                        loading &&
+                        <div className="absolute flex bottom-0 top-0 left-0 right-0 items-center justify-center backdrop-blur-sm">
+                            <Loader />
+                        </div>
+                    }
+                    <img src={fav.item.imageUrl} className='border aspect-square rounded-md' alt="" />
                 </Link>
             </div>
             <div className='text-content px-2'>
@@ -75,6 +86,7 @@ const FavoriteCard = ({ fav }: { fav: SerializedFavorite }) => {
                     </button>
                 </div>
             </div>
+
         </div>
     )
 }

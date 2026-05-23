@@ -26,7 +26,7 @@ const FavoritesGrid = ({ favorites }: Props) => {
                     <div className='text-center text-xl pb-10 gap-10 flex flex-col items-center'>
                         You don't have any products in your favorites list.
 
-                        <Link href={'/'} className='bg-blue-400 text-white py-4 px-8 rounded-xl hover:bg-blue-600 transition-all inline-flex items-center justify-center'>Back To Shopping <FaShoppingBasket /></Link>
+                        <Link href={'/'} className='bg-blue-400 text-white py-4 px-8 rounded-xl hover:bg-blue-600 transition-all inline-flex items-center justify-center gap-2'>Back To Shopping <FaShoppingBasket /></Link>
                     </div>
                 }
             </div>

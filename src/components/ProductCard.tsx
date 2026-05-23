@@ -11,10 +11,12 @@ import { IoHeart, IoHeartOutline } from "react-icons/io5";
 import { addToFavorites, removeFromFavorites, selectFavoriteById } from "../redux/slices/favoriteSlice";
 import Link from "next/link";
 import { RootState } from "@/redux/store";
+import Loader from "./Loader";
 
 const ProductCard = ({ product }: { product: Product }) => {
   const dispatch = useAppDispatch();
   const [id, setId] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
@@ -33,6 +35,23 @@ const ProductCard = ({ product }: { product: Product }) => {
     isClient ? setWidth(window.innerWidth) : ''
   }, [isClient])
 
+
+  const handleAddToCart = async () => {
+    setLoading(true);
+
+    const res = await dispatch(addToCart({ productId: product.id, quantity: 1 }));
+
+    if (res.meta.requestStatus == 'fulfilled') setLoading(false);
+  }
+
+  const handleFavorite = async () => {
+    setLoading(true);
+
+    const res = !isFavorite ? await dispatch(addToFavorites(product?.id)) : await dispatch(removeFromFavorites(product?.id))
+
+    if(res.meta.requestStatus == 'fulfilled') setLoading(false);
+  }
+
   return (
     <div
       style={{ zIndex: `${isHovered ? "9999999999" : "1"}` }}
@@ -46,15 +65,18 @@ const ProductCard = ({ product }: { product: Product }) => {
     >
       <div className="flex-col justify-between hover:translate-y-[-1px] hover:shadow-gray-200 transition-all border border-gray-150 shadow-md shadow-gray-100 rounded-xl flex group">
         <button className="opacity-0 group-hover:opacity-100 absolute top-3 right-3 z-20 bg-white rounded-full p-1 hover:scale-110 transition hover:text-red-600"
-          onClick={async () => {
-            !isFavorite ? dispatch(addToFavorites(product?.id)) : dispatch(removeFromFavorites(product?.id))
-          }}
+          onClick={handleFavorite}
         >
           {isFavorite ? <IoHeart color="red" /> : <IoHeartOutline />}
         </button>
-        <Link className="text-center" href={`/product/${product.id}`}>
+        <Link className="text-center relative" href={`/product/${product.id}`}>
           <div className="flex justify-center items-center relative">
-
+            {
+              loading &&
+              <div className="absolute z-50 flex bottom-0 top-0 left-0 right-0 items-center justify-center backdrop-blur-[1px]">
+                <Loader />
+              </div>
+            }
             <img
               // onMouseEnter={() => {
               //   setIsHovered(true);
@@ -127,9 +149,7 @@ const ProductCard = ({ product }: { product: Product }) => {
              text-white block md:p-1 md:px-2 md:m-2 m-1 p-1 rounded-xl hover:brightness-125 
             relative transition
             border-black text-[0.7rem] md:text-[0.5rem]"
-              onClick={() => {
-                dispatch(addToCart({ productId: product.id, quantity: 1 }))
-              }}
+              onClick={handleAddToCart}
             >
               <motion.span
                 animate={{ y: isClicked ? 30 : 0, opacity: isClicked ? 0 : 100 }}
