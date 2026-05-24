@@ -2,6 +2,7 @@ import "dotenv/config";
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '../generated/prisma/client'
 import { slugify } from "@/utils/utils";
+import bcrypt from "bcryptjs";
 
 const unwantedStrings = ['.', ',', "'", "-", "_", "~", ""]
 
@@ -17,13 +18,16 @@ const extendedClient = (baseClient: PrismaClient) => {
                 async create({ args, query }) {
                     if (args.data.name) args.data.nameSlug = slugify(args.data.name)
 
+                    if (args.data.password) args.data.password = await bcrypt.hash(args.data.password, 10)
+
                     return query(args);
                 },
 
                 // intercept update/upsert ops
                 async update({ args, query }) {
-                    if (args.data.name)
-                        args.data.nameSlug = slugify(args.data.name?.toString())
+                    if (args.data.name) args.data.nameSlug = slugify(args.data.name?.toString())
+
+                    if (args.data.password) args.data.password = await bcrypt.hash(args.data.password as string, 10)
                     return query(args);
                 }
             },

@@ -16,13 +16,13 @@ export const RemoveItemSchema =
 export type RemoveItemDto = z.infer<typeof RemoveItemSchema>
 
 export const ProductSchema = z.object({
-  name: z.string().min(1),
-  description: z.string().min(1),
-  category: z.string().min(1),
-  seller: z.string().min(1),
-  stock: z.coerce.number().int().default(1),
-  price: z.coerce.number().positive(),
-  status: z.enum(['ACTIVE','DRAFT','ARCHIVED']).default('DRAFT')
+    name: z.string().min(1),
+    description: z.string().min(1),
+    category: z.string().min(1),
+    seller: z.string().min(1),
+    stock: z.coerce.number().int().default(1),
+    price: z.coerce.number().positive(),
+    status: z.enum(['ACTIVE', 'DRAFT', 'ARCHIVED']).default('DRAFT')
 });
 
 export type ProductDto = z.infer<typeof ProductSchema>
@@ -31,3 +31,33 @@ export type ProductDto = z.infer<typeof ProductSchema>
 export const UpdateProductSchema = ProductSchema.partial();
 
 export type UpdateProductDto = z.infer<typeof UpdateProductSchema>;
+
+export const RegisterUserSchema = z.object({
+    name: z.string().min(3),
+    email: z.string().email(),
+    password: z.string(),
+    confirmPassword: z.string(),
+    phone: z.string().min(10),
+    country: z.string(),
+    defaultDeliveryLocation: z.string(),
+    newsletter: z.preprocess(
+        (val) => {
+            if (val === 'true') return true;
+            if (val === 'false') return false;
+            return val;
+        },
+        z.boolean().optional()
+    ),
+    terms: z.preprocess(
+        (val) => {
+            if (val === 'true') return true;
+            if (val === 'false') return false;
+            return val;
+        },
+        z.boolean().refine((val) => val === true, {
+            message: "You must accept the terms and conditions",
+        })
+    ),
+})
+
+export type RegisterUserDto = z.infer<typeof RegisterUserSchema>;
