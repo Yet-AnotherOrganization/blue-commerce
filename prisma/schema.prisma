@@ -26,6 +26,7 @@ model User {
   store     Store?
   defaultDeliveryLocation String?
   country   String?
+  newsletter Boolean?
 
   stripeCustomerId String? @unique
 }
