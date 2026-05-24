@@ -1,9 +1,9 @@
-const register = () => {
+import RegisterForm from "./RegisterForm";
+
+const RegisterPage = () => {
     return (
-        <div>
-            RegisterPage
-        </div>
+        <RegisterForm />
     );
 }
 
-export default register;
+export default RegisterPage;
