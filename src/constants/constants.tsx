@@ -164,3 +164,27 @@ export const ribbons = [
     },
 
 ]
+
+export const countries = [
+    {
+        label: 'United States of America',
+        value: 'US'
+    },
+    {
+        label: 'Türkiye',
+        value: 'TR'
+    },
+    {
+        label: 'The United Kingdom',
+        value: 'GB'
+    }
+    ,
+    {
+        label: 'Spain',
+        value: 'ES'
+    },
+    {
+        label: 'Germany',
+        value: 'DE'
+    }
+]

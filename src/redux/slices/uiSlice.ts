@@ -5,7 +5,9 @@ interface UIState {
     genericModalText: string;
     genericModalTitle: string;
     theme: 'light' | 'dark';
-    headerSearchbarVisible: boolean
+    headerSearchbarVisible: boolean;
+    onboardingStep: number;
+    onboardingData: Record<string, any>
 }
 
 
@@ -16,6 +18,8 @@ const initialState: UIState = {
     genericModalTitle: 'Amonghuito',
     headerSearchbarVisible: false,
     theme: 'light',
+    onboardingStep: 1,
+    onboardingData: {}
 }
 
 
@@ -42,10 +46,39 @@ const uiSlice = createSlice({
 
         toggleTheme: (state,) => {
             state.theme = state.theme == 'light' ? 'dark' : 'light';
+        },
+
+        // ONBOARDING
+
+        onboardingNextStep: (state) => {
+            state.onboardingStep++
+        },
+        onboardingPrevStep: (state) => {
+            state.onboardingStep--
+        },
+        onboardingSetStep: (state, action: PayloadAction<number>) => {
+            state.onboardingStep = action.payload
+        },
+        onboardingSetData: (state, action: PayloadAction<Record<string, string>>) => {
+            state.onboardingData = action.payload;
+        },
+        onboardingAddData: (state, action: PayloadAction<Record<string, any>>) => {
+            state.onboardingData = { ...state.onboardingData, ...action.payload };
         }
     }
 })
 
 
 export default uiSlice;
-export const { openCartModal, closeCartModal, toggleCartModal, toggleTheme, setSearchbarVisible } = uiSlice.actions;
+export const { 
+    openCartModal, 
+    closeCartModal, 
+    toggleCartModal, 
+    toggleTheme, 
+    setSearchbarVisible,
+    onboardingSetStep,
+    onboardingNextStep,
+    onboardingPrevStep,
+    onboardingAddData,
+    onboardingSetData
+} = uiSlice.actions;
