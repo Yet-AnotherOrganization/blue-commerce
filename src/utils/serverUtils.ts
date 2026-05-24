@@ -128,7 +128,7 @@ export const getUser = async (): Promise<User> => {
 
     const session = await getServerSession(authOptions)
 
-    if (!session) throw new APIError('Please log in again', 401, 'SESSION_EXPIRED');
+    if (!session) {throw new APIError('Please log in again', 401, 'SESSION_EXPIRED')};
 
     return session.user;
 }

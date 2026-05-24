@@ -1,6 +1,5 @@
 import { AxiosResponse } from "axios";
 import { CartItemWithProduct } from "./product";
-import { z, ZodIssue } from 'zod';
 
 
 export type GetCartResponse = AxiosResponse<{
