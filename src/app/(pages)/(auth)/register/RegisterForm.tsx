@@ -4,8 +4,11 @@ import SelectWithSearch from '@/components/Common/SelectWithSearch';
 import { countries } from '@/constants/constants';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { onboardingAddData, onboardingNextStep, onboardingPrevStep, onboardingSetData } from '@/redux/slices/uiSlice';
+import axios, { AxiosError } from 'axios';
+import { useRouter } from 'next/navigation';
 import React, { FormEvent, useEffect, useRef, useState } from 'react'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { toast } from 'sonner';
 
 type Props = {}
 
@@ -14,6 +17,7 @@ const RegisterForm = (props: Props) => {
     const { onboardingData, onboardingStep } = useAppSelector(state => state.uiReducer)
     const dispatch = useAppDispatch();
     const [flag, setFlag] = useState('TR');
+    const router = useRouter();
 
     const btnContent = onboardingStep !== 3 ? <>Next<FaChevronRight /></> : 'Finish'
 
@@ -41,6 +45,7 @@ const RegisterForm = (props: Props) => {
             currentForm =
                 <React.Fragment key='step-2'>
                     <Input id='phone' label='Phone Number' placeholder='e.g: +90 555 444 33 22' type='phone' defaultValue={onboardingData.phone} />
+                    <Input id='defaultDeliveryLocation' label='Delivery Location' placeholder='e.g: Sillicon Valley, CA' type='string' defaultValue={onboardingData.defaultDeliveryLocation} />
 
                     <div className='flex flex-col'>
                         <label htmlFor="" className='pl-2 text-stone-600 pb-1'>Country</label>
@@ -62,7 +67,7 @@ const RegisterForm = (props: Props) => {
             break;
     }
 
-    const handleStep = (e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>, direction: 'NEXT' | 'BACK') => {
+    const handleStep = async (e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>, direction: 'NEXT' | 'BACK') => {
         e.preventDefault();
 
         const formElement = 'currentTarget' in e && e.currentTarget instanceof HTMLFormElement
@@ -88,7 +93,16 @@ const RegisterForm = (props: Props) => {
             if (onboardingStep < 3) {
                 dispatch(onboardingNextStep());
             } else {
-                // submit
+                axios.post('/api/auth/register', { ...onboardingData, ...stepFields })
+                    .then((res) => {
+                        if (res.status == 201) {toast.success('You were successfully registered.'); router.replace('/login')}
+                    })
+                    .catch((err) => {
+                        if (err instanceof AxiosError) {
+                            toast.error(err.response?.data.message)
+                        }
+                    })
+
             }
         } else if (direction === 'BACK') {
             dispatch(onboardingPrevStep());
