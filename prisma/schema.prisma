@@ -24,6 +24,8 @@ model User {
   orders    Order[]
   reviews   Review[]
   store     Store?
+  defaultDeliveryLocation String?
+  country   String?
 
   stripeCustomerId String? @unique
 }
