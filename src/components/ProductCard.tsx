@@ -41,7 +41,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 
     const res = await dispatch(addToCart({ productId: product.id, quantity: 1 }));
 
-    if (res.meta.requestStatus == 'fulfilled') setLoading(false);
+    if (res.meta.requestStatus) setLoading(false);
   }
 
   const handleFavorite = async () => {
@@ -49,7 +49,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 
     const res = !isFavorite ? await dispatch(addToFavorites(product?.id)) : await dispatch(removeFromFavorites(product?.id))
 
-    if(res.meta.requestStatus == 'fulfilled') setLoading(false);
+    if (res.meta.requestStatus) setLoading(false);
   }
 
   return (

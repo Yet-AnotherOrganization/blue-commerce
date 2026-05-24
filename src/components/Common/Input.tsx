@@ -23,7 +23,7 @@ const Input = ({ placeholder = 'value', id, label, type, optional, defaultValue,
                 <label htmlFor={id} className='pl-2 text-stone-600'>{label}</label>
                 <div className='border items-center justify-center gap-1 px-2 py-1 rounded-xl border-stone-400'>
                     <input
-                        className=' pt-1 outline-none'
+                        className=' pt-1 outline-none w-full'
                         placeholder={`${placeholder}`}
                         id={id}
                         type={type || 'text'}
