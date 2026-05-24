@@ -12,7 +12,7 @@ type Props = {
     placeholder?: string,
     searchPlaceholder?: string,
     items: Item[],
-    onChange: (value: string) => void,
+    onChange?: (value: string) => void,
     classes?: string,
     defaultSelected?: string
 }
@@ -58,7 +58,7 @@ const SelectWithSearch = ({ id, placeholder, searchPlaceholder, items, onChange,
     }, [activeStep]);
 
     const handleSelect = (value: string) => {
-        onChange(value); // push back data to parent
+        if(onChange) onChange(value); // push back data to parent
         const foundItem = items.find((item) => item.value === value)
         // console.log("found", foundItem)
         if (foundItem) setSelectedItem(foundItem)
