@@ -73,8 +73,6 @@ export const fetchCartAsync = createAsyncThunk(
 
             const items = response.data.data.items;
 
-            console.log("fetched cart:", items)
-
             return items;
         }
         catch (err: unknown) {
