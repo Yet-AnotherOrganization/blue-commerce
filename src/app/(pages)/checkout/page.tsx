@@ -35,19 +35,19 @@ export default async function CheckoutPage(props: Props) {
 
     const activeOrder = await prisma.$transaction(async (tx) => {
         // Delete any stale, unpaid pending orders to prevent processing wrong items/prices
-        await tx.order.deleteMany({
-            where: {
-                ownerId: userId,
-                status: "PENDING"
-            }
-        });
+        // await tx.order.deleteMany({
+        //     where: {
+        //         ownerId: userId,
+        //         status: "UNPAID"
+        //     }
+        // });
 
         // Create the new accurate order mirror matching the current cart items precisely
         const newOrder = await tx.order.create({
             data: {
                 ownerId: userId,
                 totalAmount: totalAmount,
-                status: "PENDING",
+                status: "UNPAID",
                 items: {
                     create: cart.items.map((item) => ({
                         productId: item.productId,

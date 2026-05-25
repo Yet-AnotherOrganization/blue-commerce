@@ -1,8 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import APIError from "@/types/api";
 import { getStripe } from "@/utils/utils";
 import { headers } from "next/headers";
-import Stripe from "stripe";
 
 export async function POST(req: Request) {
     const body = await req.text();
@@ -26,9 +24,9 @@ export async function POST(req: Request) {
     }
     console.log('EVENT: ', event)
     // Handle the event
-    if (event.type === "checkout.session.completed" || event.type === "payment_intent.succeeded" || event.type === 'checkout.session.async_payment_succeeded') {
+    if (event.type == 'charge.succeeded' || event.type === "checkout.session.completed" || event.type === "payment_intent.succeeded" || event.type === 'checkout.session.async_payment_succeeded') {
         const sessionOrIntent = event.data.object as any;
-
+        console.log(Object(event.object))
         console.log('CHECKOUT COMPLETE')
         // payment_intent objects store metadata directly at the root, just like checkout.session
         const userId = sessionOrIntent.metadata?.userId;
@@ -49,15 +47,12 @@ export async function POST(req: Request) {
                 await tx.order.update({
                     where: { id: orderId },
                     data: {
-                        status: 'COMPLETED',
+                        status: 'PROCESSING',
                         stripeSessionId: sessionOrIntent.id
                     }
                 });
-                await tx.cart.update({
-                    where: { userId: userId },
-                    data: {
-                        items: { set: [] }
-                    }
+                await tx.cartItem.deleteMany({
+                    where: { cart: { userId: userId } },
                 })
             }
             );
