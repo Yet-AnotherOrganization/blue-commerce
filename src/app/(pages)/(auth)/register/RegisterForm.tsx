@@ -121,17 +121,17 @@ const RegisterForm = (props: Props) => {
     useEffect(() => console.log(onboardingData), [onboardingData])
 
     return (
-        <div className="relative mt-20 flex flex-col px-4 py-8 rounded-md bg-white shadow-md border items-center  border-stone-400 min-w-[500px]">
+        <div className="relative mt-20 flex flex-col px-4 py-8 rounded-md bg-white shadow-md border items-center  border-stone-400 md:min-w-[500px]">
             <div className="flex flex-col justify-center items-center">
                 {
                     onboardingStep == 1 ?
                         <>
-                            <h3 className="font-medium text-xl">Welcome to BluE-Commerce</h3>
-                            <span className="text-xs font-light">Convenient and affordable e-commerce with the highest quality products.</span>
+                            <h3 className="font-medium md:text-xl">Welcome to BluE-Commerce</h3>
+                            <span className="md:text-xs text-[0.6rem] text-wrap font-light">Convenient and affordable e-commerce with the highest quality products.</span>
                         </>
                         : onboardingStep == 2 ?
                             <>
-                                <h3 className="font-medium text-xl">Extra Details</h3>
+                                <h3 className="font-medium md:text-xl">Extra Details</h3>
                                 <span className="text-xs font-light">These informations will make it easier for us to give you the perfect experience</span>
                             </>
                             :
@@ -145,7 +145,7 @@ const RegisterForm = (props: Props) => {
                 onSubmit={(e) => handleStep(e, 'NEXT')}
                 className='flex flex-col pt-8 gap-4 w-full px-8 min-h-[400px]'>
                 {currentForm}
-                <div className='w-full flex gap-4 mt-auto'>
+                <div className='md:w-full flex gap-4 mt-auto'>
                     {
                         onboardingStep > 1 && <button
                             onClick={(e) => {
