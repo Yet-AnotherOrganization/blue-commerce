@@ -95,11 +95,18 @@ const RegisterForm = (props: Props) => {
             } else {
                 axios.post('/api/auth/register', { ...onboardingData, ...stepFields })
                     .then((res) => {
-                        if (res.status == 201) {toast.success('You were successfully registered.'); router.replace('/login')}
+                        if (res.status == 201) {
+                            // toast.success('You were successfully registered.');
+                            router.replace('/register/confirm-email')
+                        }
                     })
                     .catch((err) => {
                         if (err instanceof AxiosError) {
-                            toast.error(err.response?.data.message)
+                            toast.error(err.response?.data?.data?.details?.join(' | ') || err.response?.data.message || 'An unknown error has occurred.')
+                            console.log(err.response)
+                        }
+                        else {
+                            console.log(err)
                         }
                     })
 
