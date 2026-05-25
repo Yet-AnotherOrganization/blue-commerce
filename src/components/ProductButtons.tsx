@@ -15,9 +15,9 @@ const ProductButtons = ({ product, style }: { product: string, style?: string })
   const isFavorited = favorites.includes(product);
 
   return (
-    <div className={`${style}`}>
+    <div className={`${style} gap-2`}>
       <button
-        className="bg-green-500 shadow-md relative p-2 lg:p-4 m-4 flex flex-1 justify-center items-center rounded-xl hover:translate-y-[-5px] transition-all"
+        className="bg-green-500  max-lg:text-xs shadow-md relative p-2 lg:p-4 max-lg:m-0 m-4 flex flex-1 justify-center items-center rounded-xl hover:translate-y-[-5px] transition-all"
         onClick={async () => { 
           const confirm = await dispatch(addToCart({ productId: product }))
           if(confirm.meta.requestStatus == 'fulfilled') {
@@ -46,7 +46,7 @@ const ProductButtons = ({ product, style }: { product: string, style?: string })
 
       <button
         onClick={async () => dispatch(!isFavorited ? addToFavorites(product) : removeFromFavorites(product))}
-        className="bg-blue-500 shadow-md p-2 lg:p-4 m-4 rounded-xl flex flex-1 justify-center items-center hover:translate-y-[-5px] text-center transition-all">
+        className="bg-blue-500 max-lg:text-xs shadow-md p-2 lg:p-4 max-lg:m-0 m-4 rounded-xl flex flex-1 justify-center items-center hover:translate-y-[-5px] text-center transition-all">
         <motion.span
           // onClick={() => { setIsFavClicked(true); !isFavClicked ? setTimeout(() => setIsFavClicked(false), 2000) : ''; }}
           whileTap={{ scale: 0.9 }}

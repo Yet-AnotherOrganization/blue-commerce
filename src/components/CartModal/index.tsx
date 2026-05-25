@@ -35,7 +35,7 @@ const CartModal = (props: Props) => {
 
         cartModalOpen &&
         <>
-            <div>
+            <div className='relative z-50'>
                 <div className='bg-white text-black border flex-col justify-between overflow-hidden rounded-xl h-[40vh] w-[30vw] sm:w-[40vw] absolute bottom-[-42vh] right-0 z-[200000] hidden md:flex'
                 >
                     <div className='flex justify-between items-center text-xl font-semibold px-4 py-2 border-b'><div />

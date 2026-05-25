@@ -105,25 +105,24 @@ const Header = () => {
 
 
   return (
-    <header className='text-md'>
+    <header className='text-md max-lg:text-sm'>
 
       <div style={{ 'zIndex': '10000' }} className=' w-[100vw] bg-[#1e3a8a] text-white flex flex-col border-b-8 border-blue-100 p-4 px-2 md:px-8 lg:px-16 gap-2'>
 
-        <div className='flex justify-end gap-4 text-neutral-200 text-[10px] md:text-xs'>
-          <Link href="#">My Orders</Link>
+        <div className='flex justify-end gap-4 text-neutral-200 text-[10px] md:text-xs max-lg:hidden'>
+          <Link href="/orders">My Orders</Link>
           <Link href="#">Amazing Opportunities</Link>
           <Link href="#">Customer Services</Link>
           <Link href="#">Become a Seller</Link>
-          <Link href="#">My Orders</Link>
         </div>
 
         <div className='flex justify-between  items-center w-full'>
-          <div className='flex items-center justify-center gap-4 h-full lg:flex'>
+          <div className='flex items-center justify-center gap-2 h-full lg:flex'>
             <Link href="/" className='flex gap-2'>
               {/* <img loading='lazy' src="" alt="" className='object-cover w-[4rem] h-auto lg:w-[5rem] rounded-[50%] border-4 border-black-800' /> */}
               <h1 className='hidden lg:flex items-center gap-4 font-bold md:text-[15px] lg:text-[20px]'>
                 BluE-Commerce</h1>
-              <h1 className='lg:hidden flex text-[22px] px-10 font-bold'>BluE</h1>
+              <h1 className='lg:hidden flex text-[22px] max-lg:text-sm px-10 max-lg:px-2 font-bold'>BluE</h1>
             </Link>
           </div>
 
@@ -137,7 +136,7 @@ const Header = () => {
           <Link
             href='/favorites'
             className='inline-flex items-center justify-center gap-1 bg-white text-blue-400 px-2 py-2 border-2 rounded-xl hover:text-red-600 hover:border-red-600 transition-all duration-300'>
-            <FaHeart />Favorites
+            <FaHeart /> <span className='max-lg:hidden inline'>Favorites</span>
           </Link>
 
 
