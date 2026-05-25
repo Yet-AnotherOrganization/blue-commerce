@@ -93,7 +93,7 @@ const HeaderSearchbar = () => {
 
                 <div className='display-products flex flex-col w-[200%] md:w-[150%] xl:w-full min-h-8 p-4 bg-white text-black border-neutral-400 rounded-b-md border-2 z-20 absolute '>
                     {
-                        foundProducts.slice(0, 8).map((prod) => <HeaderProduct product={prod} />)
+                        foundProducts.slice(0, 8).map((prod) => <HeaderProduct product={prod} key={prod.id} />)
                     }
                     {
                         foundProducts.length > 8 && <div className='pt-4'>{foundProducts.length - 8} more results</div>

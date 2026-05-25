@@ -99,7 +99,7 @@ const UsersTable = ({ data }: Props) => {
                     {
                         data.map((item) => {
                             return (
-                                <TableUserRow item={item} />
+                                <TableUserRow item={item} key={item.id}/>
                             )
                         })
                     }

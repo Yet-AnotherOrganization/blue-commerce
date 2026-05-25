@@ -27,7 +27,7 @@ const MainPage = async ({
 
   const count = 5;
 
-  const randomProducts = await prisma.$queryRaw<(Omit<Product,'category'> & {category: Category})[]>`
+  const randomProducts = await prisma.$queryRaw<(Omit<Product, 'category'> & { category: Category })[]>`
   SELECT p.*, c.name AS catName FROM "Product" p 
   JOIN "Category" c ON p."categoryId" = c.id 
   WHERE p.stock > 0 AND p.status = 'ACTIVE'::"ProductStatus"
@@ -61,8 +61,8 @@ const MainPage = async ({
         }}
       >
         {
-          ribbons.map((ribbon) => (
-            <div className="flex flex-col items-center">
+          ribbons.map((ribbon, i) => (
+            <div className="flex flex-col items-center" key={i}>
               <Link href="" className="overflow-hidden border border-gray-300 rounded-md h-[7vh] w-[7vh] aspect-square">
                 <img src={ribbon.url} alt="" className={`scale-[${ribbon.zoom}] w-full h-full`} />
               </Link>
