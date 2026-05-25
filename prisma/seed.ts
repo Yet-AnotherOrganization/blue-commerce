@@ -30,7 +30,11 @@ async function main() {
                 name: faker.person.fullName(),
                 email: faker.internet.email(),
                 password: await bcrypt.hash("123456",10),
-                avatar: faker.image.avatar()
+                avatar: faker.image.avatar(),
+                newsletter: true,
+                phone: faker.phone.number(),
+                country: faker.location.countryCode('alpha-2'),
+                defaultDeliveryLocation: faker.location.streetAddress(),
             }
         })
 
@@ -173,7 +177,8 @@ async function main() {
             email: "admin@bluecommerce.com",
             password: password,
             role: "ADMIN",
-            avatar: "https://i.pravatar.cc/150?u=admin"
+            avatar: "https://i.pravatar.cc/150?u=admin",
+
         },
     });
 
