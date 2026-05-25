@@ -29,7 +29,7 @@ model User {
   newsletter Boolean?
 
   stripeCustomerId String? @unique
-  activateAccountCode String?
+  activateAccountCode String? @unique
 }
 
 model Cart {
@@ -68,7 +68,7 @@ model Order {
   id        String      @id @default(cuid())
   createdAt DateTime    @default(now())
   ownerId   String
-  status    OrderStatus @default(PENDING)
+  status    OrderStatus @default(UNPAID)
   owner     User        @relation(fields: [ownerId], references: [id])
   items     OrderItem[]
 
@@ -139,7 +139,9 @@ model Favorite {
 }
 
 enum OrderStatus {
-  PENDING
+  UNPAID
+  PROCESSING
+  CARGO
   COMPLETED
   CANCELLED
 }
