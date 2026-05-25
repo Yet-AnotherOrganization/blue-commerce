@@ -35,7 +35,9 @@ export const withErrorHandler = <T>(handler: ApiHandler<T>) => {
 
 
             if (err instanceof APIError) {
-                return res(err.statusCode, err.message, err.errorCode);
+                const details = err.details as string[]
+
+                return res<{ status: string, details: string[] }>(err.statusCode, err.message, { status: err.errorCode, details: details });
             }
 
 
@@ -128,7 +130,7 @@ export const getUser = async (): Promise<User> => {
 
     const session = await getServerSession(authOptions)
 
-    if (!session) {throw new APIError('Please log in again', 401, 'SESSION_EXPIRED')};
+    if (!session) { throw new APIError('Please log in again', 401, 'SESSION_EXPIRED') };
 
     return session.user;
 }
