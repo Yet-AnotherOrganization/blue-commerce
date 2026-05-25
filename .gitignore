@@ -42,3 +42,7 @@ README.md
 
 /src/generated/prisma
 
+.agents/skills/neon-postgres/SKILL.md
+package-lock.json
+skills-lock.json
+package-lock.json
