@@ -1,12 +1,12 @@
 import { getServerSession, User } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../lib/prisma";
-import { authOptions } from "../app/api/auth/[...nextauth]/route";
 import { Cart } from "../generated/prisma";
 import APIError from "../types/api";
 import { ZodError } from "zod";
 import { ActionResponse } from "@/app/actions/productActions";
 import { PrismaClientKnownRequestError, PrismaClientValidationError } from "@/generated/prisma/runtime/client";
+import { authOptions } from "@/lib/auth";
 
 export const res = <T>(
     status: number,

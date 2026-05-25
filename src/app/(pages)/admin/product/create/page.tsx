@@ -1,6 +1,3 @@
-
-import { Product } from '@/generated/prisma'
-import React, { useState } from 'react'
 import CreateProductForm from './form'
 import { prisma } from '@/lib/prisma'
 

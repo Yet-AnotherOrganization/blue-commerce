@@ -7,7 +7,7 @@ type HandlerParams = {
 }
 
 // REQUEST TO GET CART 
-export async function getHandler(req: Request, { params }: HandlerParams) {
+async function getHandler(req: Request, { params }: HandlerParams) {
     const user = await getUser();
 
 

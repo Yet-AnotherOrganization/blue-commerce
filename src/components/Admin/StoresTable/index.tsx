@@ -1,5 +1,5 @@
 'use client'
-import { activateProduct, deleteProduct } from '@/app/actions/productActions';
+import { activateProduct } from '@/app/actions/productActions';
 import { Product, Store, User } from '@/generated/prisma';
 import { prisma } from '@/lib/prisma';
 import axios from 'axios';

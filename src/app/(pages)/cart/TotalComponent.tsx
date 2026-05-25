@@ -1,5 +1,4 @@
 'use client'
-import '../../../components/css/index.css'
 import { ProductParams } from '../../../constants/constants';
 import { calculateTotalCost } from '../../../utils/clientOnlyUtils';
 import { CartItemWithProduct, ProductType } from '../../../types/product';

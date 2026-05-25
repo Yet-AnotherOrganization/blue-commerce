@@ -9,7 +9,7 @@ type HandlerParams = {
     params: { page: number, limit: number, query: string }
 }
 
-export async function getHandler(req: NextRequest, { params }: HandlerParams) {
+async function getHandler(req: NextRequest, { params }: HandlerParams) {
 
     const searchParams = req.nextUrl.searchParams;
 

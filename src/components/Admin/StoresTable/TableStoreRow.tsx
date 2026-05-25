@@ -1,4 +1,4 @@
-import { activateProduct, deleteProduct } from '@/app/actions/productActions'
+import { activateProduct } from '@/app/actions/productActions'
 import { Product, Store } from '@/generated/prisma'
 import React, { Dispatch } from 'react'
 import { FaCircle, FaTrash } from 'react-icons/fa'

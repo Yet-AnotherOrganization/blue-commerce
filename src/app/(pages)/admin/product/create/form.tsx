@@ -1,13 +1,9 @@
 'use client'
-import { createProduct } from '@/app/actions/productActions'
 import SelectWithSearch from '@/components/Common/SelectWithSearch'
-import { Button } from '@/components/ui/button'
-import { SearchableSelect } from '@/components/ui/searchable-select'
 import { Category, Product, Store } from '@/generated/prisma'
 import { handleProductCreateFormSubmit } from '@/utils/clientOnlyUtils'
 import { useRouter } from 'next/navigation'
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
-import { toast } from 'sonner'
+import React, { ChangeEvent, useState } from 'react'
 
 type Props = {
     categories: Category[],

@@ -1,8 +1,6 @@
-import { activateProduct, deleteProduct } from '@/app/actions/productActions'
-import { Product, User } from '@/generated/prisma'
-import React, { Dispatch } from 'react'
-import { FaCircle, FaTrash } from 'react-icons/fa'
-import { TiTick } from 'react-icons/ti'
+
+import { User } from '@/generated/prisma'
+import React from 'react'
 
 type Props = {
     item: User,

@@ -8,7 +8,7 @@ import APIError from "../../../types/api";
 
 // ADD TO CART
 
-export async function postHandler(req: Request):Promise<Response> {
+async function postHandler(req: Request):Promise<Response> {
 
 
     const rawBody = await req.json();
@@ -29,7 +29,7 @@ export async function postHandler(req: Request):Promise<Response> {
 
 }
 
-export async function deleteHandler(req: Request) {
+async function deleteHandler(req: Request) {
     const user = await getUser();
 
     const cart = await findCartByUserId(user.id)

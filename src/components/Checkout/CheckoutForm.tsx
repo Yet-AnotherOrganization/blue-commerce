@@ -6,10 +6,10 @@ import { CheckoutSessionParams, createCheckoutSession } from "@/app/actions/stri
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-export default function CheckoutForm({ priceId, userId, orderId }: CheckoutSessionParams) {
+export default function CheckoutForm({ userId, orderId }: CheckoutSessionParams) {
     // We fetch the clientSecret via the Server Action
     const fetchClientSecret = async () => {
-        const { clientSecret } = await createCheckoutSession({ priceId, userId, orderId });
+        const { clientSecret } = await createCheckoutSession({ userId, orderId });
         return clientSecret as string;
     };
 

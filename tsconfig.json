@@ -36,9 +36,12 @@
     "**/*.ts",
     "**/*.tsx",
     "src/utils/utils.ts",
-    "src/components/Header/index.tsx",
     "src/redux/store.js",
-    "src/components/PriceComponent"
+    ".next/dev/types/**/*.ts",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

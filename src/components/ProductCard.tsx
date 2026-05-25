@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import "./css/index.css";
 import { FaCartPlus, FaHeart, FaRegStar, FaStar } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { Product } from "../generated/prisma";
