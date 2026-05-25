@@ -24,6 +24,7 @@ const login = async () => {
     <div className='flex justify-center items-center w-full h-[60vh] box-border'>
       <div className='border-2 border-neutral-500 bg-white shadow-xl rounded-xl pt-12 py-6 px-8 flex gap-3 flex-col justify-center items-center'>
         <h1 className='text-lg font-semibold'>Let's get you back in</h1>
+        <h1>ADMIN ACCOUNT CREDENTIALS: admin@bluecommerce.com | 123456</h1>
 
         <LoginForm />
 
