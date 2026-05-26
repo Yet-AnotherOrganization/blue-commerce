@@ -1,12 +1,5 @@
 import Sidebar from '../Sidebar'
-import { IoIosMenu } from "react-icons/io";
-import { FaHeart, FaSearch, FaUser } from "react-icons/fa";
-import { useSelector, useDispatch } from 'react-redux'
-import { RootState, } from '../../redux/store';
-import { FaShoppingCart } from "react-icons/fa";
-import CartModal from '../CartModal';
-import { useSession } from 'next-auth/react';
-import { toggleCartModal } from '../../redux/slices/uiSlice';
+import { FaHeart} from "react-icons/fa";
 import Link from 'next/link';
 import CartAndControls from './CartAndControls';
 import HeaderSearchbar from './HeaderSearchbar';

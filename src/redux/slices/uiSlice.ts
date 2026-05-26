@@ -70,11 +70,11 @@ const uiSlice = createSlice({
 
 
 export default uiSlice;
-export const { 
-    openCartModal, 
-    closeCartModal, 
-    toggleCartModal, 
-    toggleTheme, 
+export const {
+    openCartModal,
+    closeCartModal,
+    toggleCartModal,
+    toggleTheme,
     setSearchbarVisible,
     onboardingSetStep,
     onboardingNextStep,
