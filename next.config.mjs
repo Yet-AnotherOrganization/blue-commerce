@@ -1,7 +1,23 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    experimental:{
-        missingSuspenseWithCSRBailout:false
+    experimental: {
+        missingSuspenseWithCSRBailout: false
+    },
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'picsum.photos',
+                port: '',
+                pathname: '/seed/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'avatars.githubusercontent.com',
+                pathname: '**'
+            }
+        ],
+
     }
 };
 

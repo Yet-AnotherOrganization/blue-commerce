@@ -4,6 +4,8 @@ import { ReviewParams } from '../../constants/constants'
 import { FaRegStar, FaStar } from 'react-icons/fa'
 import { Review as ReviewType, User } from '../../generated/prisma'
 import Link from 'next/link'
+import Image from 'next/image'
+import { shimmer, toBase64 } from '@/utils/clientOnlyUtils'
 
 const Review = ({ i, user, review }: { i: number, user: User, review: ReviewType }) => {
 
@@ -24,7 +26,7 @@ const Review = ({ i, user, review }: { i: number, user: User, review: ReviewType
       <div key={i} className="relative flex py-1 gap-2  items-center justify-center w-full">
 
         <Link href={`/profile/${user.id}`} className="flex flex-col items-center justify-center mx-5 w-[10vw]">
-          <div><img src={user?.avatar || '/vercel.svg'} className="w-10 h-10 rounded-full" alt="" /></div>
+          <div><Image width={70} height={70} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={user?.avatar || '/vercel.svg'} className="w-10 h-10 rounded-full" alt="" /></div>
           <span className="md:text-md lg:text-xs font-semibold text-center">{user?.name}</span>
         </Link>
 

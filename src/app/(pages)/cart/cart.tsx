@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { useAppDispatch } from '@/redux/hooks';
 import { addToCart, decrementItem, removeItem } from '@/redux/slices/cartSlice';
 import { CartItemWithProduct } from '@/types/product';
+import Image from 'next/image';
+import { shimmer, toBase64 } from '@/utils/clientOnlyUtils';
 interface CartItemProps {
     item: CartItemWithProduct
     disabled: boolean
@@ -21,7 +23,7 @@ export const CartItem = ({ item, disabled }: CartItemProps) => {
             {/* Image & Main Info Info */}
             <div className="flex gap-4 w-full sm:w-auto">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 bg-slate-50 border border-slate-100 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center">
-                    <img src={item.product.imageUrl} alt={item.product.name} className="object-contain max-h-full max-w-full" />
+                    <Image width={350} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={item.product.imageUrl} alt={item.product.name} className="object-contain max-h-full max-w-full" />
                 </div>
 
                 <div className="flex flex-col justify-between py-1">

@@ -4,6 +4,8 @@ import { CartItemWithProduct } from '../../../types/product'
 import { decrementItem, removeItem } from '../../../redux/slices/cartSlice'
 import { FaTrash } from 'react-icons/fa'
 import Link from 'next/link'
+import Image from 'next/image'
+import { shimmer, toBase64 } from '@/utils/clientOnlyUtils'
 
 type Props = {
     item: CartItemWithProduct
@@ -19,7 +21,7 @@ const CartItem = ({ item, disabled }: Props) => {
             <div className='overflow-hidden w-full h-full text-[1.5rem] gap-8 lg:gap-0 m-4 lg:m-4 p-4 bg-white border-gray-500 rounded-xl item-grid flex-col lg:flex-row'>
                 <Link href={`/product/${item.product.id}`}>
                     <div className='w-[77vw] h-[40vh] lg:w-[15rem] lg:h-[15rem] object-contain shadow-md rounded-md lg:m-2'>
-                        <img src={item.product.imageUrl} alt="" className='object-contain rounded-xl w-full h-full lg:p-2' />
+                        <Image width={150} height={150} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={item.product.imageUrl} alt="" className='object-contain rounded-xl w-full h-full lg:p-2' />
                     </div>
                 </Link>
                 <span className='text-center font-bold text-2xl'>{item?.product.name}</span>

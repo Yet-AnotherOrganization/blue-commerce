@@ -1,7 +1,8 @@
 'use client'
 import SelectWithSearch from '@/components/Common/SelectWithSearch'
 import { Category, Product, Store } from '@/generated/prisma'
-import { handleProductCreateFormSubmit } from '@/utils/clientOnlyUtils'
+import { handleProductCreateFormSubmit, shimmer, toBase64 } from '@/utils/clientOnlyUtils'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React, { ChangeEvent, useState } from 'react'
 
@@ -92,7 +93,7 @@ const CreateProductForm = ({ categories, stores }: Props) => {
                     <label htmlFor="image" className='text-lg max-lg:hidden'>Image</label>
                     <input name='image' id='image' type="file" placeholder='Select Image' className='hidden' onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleImageChange(e)} />
                     <label htmlFor="image" className='mt-2 shadow-md rounded-md border'>
-                        <img src={image || '/assets/select-image.jpg'} alt="" className='aspect-square rounded-md w-full' />
+                        <Image width={70} height={70} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={image || '/assets/select-image.jpg'} alt="" className='aspect-square rounded-md w-full' />
                     </label>
 
                     <div className='flex justify-center items-center my-4 max-lg:hidden'>

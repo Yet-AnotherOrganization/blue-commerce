@@ -5,6 +5,8 @@ import { useAppDispatch } from "@/redux/hooks";
 import { addToCart } from "@/redux/slices/cartSlice";
 import { removeFromFavorites } from "@/redux/slices/favoriteSlice";
 import { SerializedFavorite } from "@/types/product";
+import { shimmer, toBase64 } from "@/utils/clientOnlyUtils";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { FaTrash } from "react-icons/fa";
@@ -56,7 +58,7 @@ const FavoriteCard = ({ fav }: { fav: SerializedFavorite }) => {
                             <Loader />
                         </div>
                     }
-                    <img src={fav.item.imageUrl} className='border aspect-square rounded-md' alt="" />
+                    <Image width={150} height={150} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={fav.item.imageUrl} className='border aspect-square rounded-md' alt="" />
                 </Link>
             </div>
             <div className='text-content px-2'>

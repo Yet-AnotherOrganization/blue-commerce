@@ -11,6 +11,8 @@ import { addToFavorites, removeFromFavorites, selectFavoriteById } from "../redu
 import Link from "next/link";
 import { RootState } from "@/redux/store";
 import Loader from "./Loader";
+import Image from "next/image";
+import { shimmer, toBase64 } from "@/utils/clientOnlyUtils";
 
 const ProductCard = ({ product }: { product: Product }) => {
   const dispatch = useAppDispatch();
@@ -76,7 +78,7 @@ const ProductCard = ({ product }: { product: Product }) => {
                 <Loader />
               </div>
             }
-            <img
+            <Image width={150} height={150} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`}
               // onMouseEnter={() => {
               //   setIsHovered(true);
               // }}

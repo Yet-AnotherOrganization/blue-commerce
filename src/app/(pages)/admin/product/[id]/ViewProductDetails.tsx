@@ -4,6 +4,8 @@ import React from 'react'
 import ControlBar from './ControlBar'
 import { FaCircle } from 'react-icons/fa'
 import { SerializedProduct } from '@/types/product'
+import Image from 'next/image'
+import { shimmer, toBase64 } from '@/utils/clientOnlyUtils'
 
 type Props = {
     product: SerializedProduct & {
@@ -33,7 +35,7 @@ const ViewProductDetails = ({ product }: Props) => {
             </div>
             <div className='flex bg-neutral-50 shadow-md border rounded-xl p-[50px] relative  flex-wrap flex-col lg:flex-row'>
                 <div className='flex-1'>
-                    <img
+                    <Image width={300} height={300} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`}
                         src={product?.imageUrl}
                         alt=""
                         className='rounded-md shadow-lg aspect-square max-w-[300px] m-auto mb-0 max-lg:mb-10'
@@ -79,7 +81,7 @@ const ViewProductDetails = ({ product }: Props) => {
                         </DetailRow>
 
                         <DetailRow fieldKey='Seller'>
-                            <img src={product.seller.avatar || ''} className='w-6 rounded-full mr-1 border-gray-400 border' alt="" />
+                            <Image width={70} height={70} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={product.seller.avatar || ''} className='w-6 rounded-full mr-1 border-gray-400 border' alt="" />
                             {product.seller.storeName}
                         </DetailRow>
                     </div>

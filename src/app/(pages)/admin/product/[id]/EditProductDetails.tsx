@@ -8,6 +8,8 @@ import SelectWithSearch from '@/components/Common/SelectWithSearch';
 import { editProductAdmin } from '@/app/actions/productActions';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import Image from 'next/image';
+import { shimmer, toBase64 } from '@/utils/clientOnlyUtils';
 
 type Props = {
     product: SerializedProduct,
@@ -90,7 +92,7 @@ const EditProductDetails = ({ product, categories, stores }: Props) => {
             </div>
             <div className='flex bg-neutral-50 shadow-md border rounded-xl p-[50px] relative  flex-wrap flex-col lg:flex-row'>
                 <div className='flex-1'>
-                    <img
+                    <Image width={70} height={70} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`}
                         src={product?.imageUrl}
                         alt=""
                         className='rounded-md shadow-lg aspect-square max-w-[300px] m-auto mb-0 max-lg:mb-10'

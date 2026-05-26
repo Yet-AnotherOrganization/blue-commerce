@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import ProductButtons from "../../../../components/ProductButtons";
 import { ProductParams, ReviewParams } from "../../../../constants/constants";
 import Reviews from "./reviews";
 import { IoStar, IoStarOutline } from "react-icons/io5";
@@ -9,6 +8,9 @@ import { prisma } from "../../../../lib/prisma";
 import { Prisma, Product } from "../../../../generated/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
+import { shimmer, toBase64 } from "@/utils/clientOnlyUtils";
+import ProductButtons from "@/components/ProductButtons";
 
 type ProductWithSeller = Prisma.ProductGetPayload<{ include: { seller: true } }>
 
@@ -46,7 +48,7 @@ const productId = async ({ params }: { params: { productId: string } }) => {
                     
                     <div className="lg:col-span-5 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm top-24">
                         <div className="aspect-square relative w-[75%] mx-auto overflow-hidden rounded-xl bg-slate-100 flex items-center justify-center">
-                            <img 
+                            <Image width={150} height={150} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} 
                                 src={currentProduct.imageUrl} 
                                 alt={currentProduct.name}
                                 className="object-contain w-full h-full max-h-[500px] hover:scale-105 transition-transform duration-300"
@@ -56,7 +58,7 @@ const productId = async ({ params }: { params: { productId: string } }) => {
                             <div className="grid grid-cols-4 gap-2 mt-4">
                                 {images.map((img: string, idx: number) => (
                                     <div key={idx} className="aspect-square border-2 border-slate-200 hover:border-blue-500 rounded-lg overflow-hidden cursor-pointer bg-slate-50">
-                                        <img src={img} alt="" className="object-cover w-full h-full" />
+                                        <Image width={150} height={150} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={img} alt="" className="object-cover w-full h-full" />
                                     </div>
                                 ))}
                             </div>

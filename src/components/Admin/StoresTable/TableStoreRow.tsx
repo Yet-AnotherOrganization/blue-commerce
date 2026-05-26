@@ -1,5 +1,7 @@
 import { activateProduct } from '@/app/actions/productActions'
 import { Product, Store } from '@/generated/prisma'
+import { shimmer, toBase64 } from '@/utils/clientOnlyUtils'
+import Image from 'next/image'
 import React, { Dispatch } from 'react'
 import { FaCircle, FaTrash } from 'react-icons/fa'
 import { TiTick } from 'react-icons/ti'
@@ -22,7 +24,7 @@ const TableProductRow = ({ item }: Props) => {
     return (
         <tr className='border-y'>
             <td className='px-4'>
-                <img src={item.avatar || ''} className='w-12 h-12' alt="" />
+                <Image width={50} height={50} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={item.avatar || ''} className='w-12 h-12' alt="" />
             </td>
             <td>{item.storeName}</td>
             <td>

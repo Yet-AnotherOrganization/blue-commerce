@@ -1,5 +1,7 @@
 
 import { User } from '@/generated/prisma'
+import { shimmer, toBase64 } from '@/utils/clientOnlyUtils'
+import Image from 'next/image'
 import React from 'react'
 
 type Props = {
@@ -12,7 +14,7 @@ const TableUserRow = ({ item }: Props) => {
     return (
         <tr className='border-y'>
             <td className='px-4'>
-                <img src={item.avatar || ''} className='w-12 h-12' alt="" />
+                <Image width={70} height={70} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={item.avatar || ''} className='w-12 h-12' alt="" />
             </td>
             <td>{item.name}</td>
             <td>

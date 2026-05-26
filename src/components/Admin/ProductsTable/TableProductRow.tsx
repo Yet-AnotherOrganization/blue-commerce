@@ -2,6 +2,8 @@ import { activateProduct, softDeleteProduct } from '@/app/actions/productActions
 import { useConfirm } from '@/context/ConfirmContext'
 import { Product } from '@/generated/prisma'
 import { SerializedProduct } from '@/types/product'
+import { shimmer, toBase64 } from '@/utils/clientOnlyUtils'
+import Image from 'next/image'
 import Link from 'next/link'
 import React, { Dispatch } from 'react'
 import { FaCircle, FaTrash } from 'react-icons/fa'
@@ -39,7 +41,7 @@ const TableProductRow = ({ item }: Props) => {
     return (
         <tr className='border-y'>
             <td className='px-4'>
-                <img src={item.imageUrl} className='w-12 h-12' alt="" />
+                <Image width={50} height={50} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={item.imageUrl} className='w-12 h-12' alt="" />
             </td>
             <td>
                 <Link href={`/admin/product/${item.id}`}>

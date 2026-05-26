@@ -5,8 +5,9 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { setSearchbarVisible } from '@/redux/slices/uiSlice';
 import { RootState } from '@/redux/store';
 import { SerializedProduct } from '@/types/product';
-import { debounce } from '@/utils/clientOnlyUtils';
+import { debounce, shimmer, toBase64 } from '@/utils/clientOnlyUtils';
 import axios from 'axios';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react'
@@ -26,7 +27,7 @@ const HeaderProduct = ({ product }: Props) => {
 
     return (
         <div  onMouseUp={() => {dispatch(setSearchbarVisible(false)); router.push(`/product/${product.id}`)}}  className='cursor-pointer flex items-center gap-4 border-b p-2'>
-            <img src={product.imageUrl} className='w-10 h-10 rounded-md' alt="" />
+            <Image width={70} height={70} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={product.imageUrl} className='w-10 h-10 rounded-md' alt="" />
             <span className='text-ellipsis text-base text-pretty'>{product.name}</span>
 
             <span></span>
