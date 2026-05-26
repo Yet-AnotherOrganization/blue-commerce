@@ -1,12 +1,7 @@
-import AdminSidebar from '@/components/Admin/AdminSidebar'
-import ProductsTable from '@/components/Admin/ProductsTable'
-import TableControls from '@/components/Admin/ProductsTable/TableControls'
-import UsersTable from '@/components/Admin/UsersTable'
-import { Product, User } from '@/generated/prisma'
-import { prisma } from '@/lib/prisma'
+
 import Link from 'next/link'
 import React from 'react'
-import { FaArrowLeft, FaBox, FaDatabase, FaShoppingCart, FaUser } from 'react-icons/fa'
+import { FaBox, FaDatabase, FaShoppingCart, FaUser } from 'react-icons/fa'
 
 type Props = {
 
@@ -33,7 +28,7 @@ const AdminPage = async (props: Props) => {
                     <span className='text-md text-center mt-4 text-gray-700 hover:text-white group-hover:text-white'>Control and analyze products on the database</span>
                 </Link>
                 <Link href="/admin/user" className='flex flex-1 flex-col items-center justify-center border p-8 shadow-md hover:bg-black hover:text-white transition-all group'>
-                    <FaUser className='text-4xl'/>
+                    <FaUser className='text-4xl' />
                     <h1 className='text-xl mt-4'>Users</h1>
                     <span className='text-md text-center mt-4 text-gray-700 hover:text-white group-hover:text-white'>Administrate users and stores existing on the database</span>
                 </Link>

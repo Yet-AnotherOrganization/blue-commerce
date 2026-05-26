@@ -7,6 +7,8 @@ type Props = {
 }
 
 const AdminLayout = ({ children }: Props) => {
+
+  console.log("visited admin page layout")
   return (
     <div className='flex-col relative'>
       <AdminSidebar />
