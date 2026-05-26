@@ -45,7 +45,7 @@ const OrderRow = ({ order }: { order: any }) => {
                         <div key={item.id} className="p-4 flex items-center justify-between gap-4 text-sm">
                             <div className="flex gap-4 items-center">
                                 <div className="relative w-12 h-12 bg-stone-100 rounded border flex-shrink-0 overflow-hidden">
-                                    <Image width={50} height={50} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={item.product.imageUrl} alt={item.product.name} fill className="object-cover" unoptimized />
+                                    <Image  placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={item.product.imageUrl} alt={item.product.name} fill className="object-cover" unoptimized />
                                 </div>
                                 <div>
                                     <h4 className="font-semibold text-stone-900">{item.product.name}</h4>

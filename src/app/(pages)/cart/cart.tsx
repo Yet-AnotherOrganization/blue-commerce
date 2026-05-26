@@ -22,15 +22,17 @@ export const CartItem = ({ item, disabled }: CartItemProps) => {
         <div className="flex flex-col sm:flex-row gap-4 py-6 first:pt-0 last:pb-0 items-start sm:items-center justify-between">
             {/* Image & Main Info Info */}
             <div className="flex gap-4 w-full sm:w-auto">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-slate-50 border border-slate-100 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center">
-                    <Image width={350} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={item.product.imageUrl} alt={item.product.name} className="object-contain max-h-full max-w-full" />
+                <div className=" relative w-20 h-20 sm:w-24 sm:h-24 bg-slate-50 border border-slate-100 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center">
+                    <Image fill sizes="(max-width: 768px) 100vw, 50vw" placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={item.product.imageUrl} alt={item.product.name} className="aspect-square object-contain max-h-full max-w-full" />
                 </div>
 
                 <div className="flex flex-col justify-between py-1">
                     <div>
-                        <h3 className="font-semibold text-slate-800 text-sm sm:text-base line-clamp-2 leading-snug">
-                            {item.product.name}
-                        </h3>
+                        <Link href={`/product/${item.product.id}`}>
+                            <h3 className="hover:text-blue-600 font-semibold text-slate-800 text-sm sm:text-base line-clamp-2 leading-snug">
+                                {item.product.name}
+                            </h3>
+                        </Link>
                         <p className="text-xs text-slate-400 mt-1">ID: {item.id}</p>
                     </div>
 
@@ -56,7 +58,7 @@ export const CartItem = ({ item, disabled }: CartItemProps) => {
                         {item.quantity}
                     </span>
                     <button
-                        onClick={() => {dispatch(addToCart({ productId: item.product.id }))}}
+                        onClick={() => { dispatch(addToCart({ productId: item.product.id })) }}
                         disabled={disabled || item.quantity >= item.product.stock}
                         className="px-3 h-full text-slate-500 hover:bg-slate-100 active:bg-slate-200 disabled:opacity-50 transition-colors"
                         title="Increase quantity"

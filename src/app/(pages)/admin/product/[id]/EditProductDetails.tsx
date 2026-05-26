@@ -91,11 +91,11 @@ const EditProductDetails = ({ product, categories, stores }: Props) => {
                 <Link className='hover:text-blue-400' href={`#`}>{product?.name}</Link>
             </div>
             <div className='flex bg-neutral-50 shadow-md border rounded-xl p-[50px] relative  flex-wrap flex-col lg:flex-row'>
-                <div className='flex-1'>
-                    <Image width={70} height={70} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`}
+                <div className='flex-1 relative aspect-square '>
+                    <Image fill sizes="(max-width: 768px) 100vw, 50vw" placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`}
                         src={product?.imageUrl}
                         alt=""
-                        className='rounded-md shadow-lg aspect-square max-w-[300px] m-auto mb-0 max-lg:mb-10'
+                        className='rounded-md shadow-lg aspect-square m-auto mb-0 max-lg:mb-10'
                     />
                 </div>
                 <div className='flex-[2] flex flex-col lg:border-l-2 md:ml-4'>

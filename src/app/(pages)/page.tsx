@@ -56,8 +56,8 @@ const MainPage = async ({
         {
           ribbons.map((ribbon, i) => (
             <div className="flex flex-col items-center" key={i}>
-              <Link href="" className="overflow-hidden border border-gray-300 rounded-md h-[7vh] w-[7vh] aspect-square">
-                <Image width={70} height={70} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={ribbon.url} alt="" className={`scale-[${ribbon.zoom}] w-full h-full`} />
+              <Link href="" className="relative overflow-hidden border border-gray-300 rounded-md h-[7vh] w-[7vh] aspect-square">
+                <Image fill placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={ribbon.url} alt="" className={`scale-[${ribbon.zoom}] w-full h-full`} />
               </Link>
               <p className="text-center text-[10px]">{ribbon.title}</p>
 
@@ -68,8 +68,8 @@ const MainPage = async ({
 
       {/* CAROUSEL */}
 
-      <Suspense fallback={<div className="w-[80vw] m-auto h-[40vh] p-8"><SkeletonLoader /></div>}><CarouselSection /></Suspense>
 
+      <Suspense fallback={<div className="w-[80vw] m-auto p-8"><SkeletonLoader /></div>}><CarouselSection /></Suspense>
 
 
 
@@ -121,8 +121,9 @@ export default MainPage;
 type Props = {}
 
 const CarouselSection = async (props: Props) => {
-  const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-  await delay(1000)
+  // for debug purposes
+  // const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+  // await delay(1000)
   const count = 5;
 
   const randomProducts = await prisma.$queryRaw<(Omit<Product, 'category'> & { category: Category })[]>`
@@ -134,8 +135,8 @@ const CarouselSection = async (props: Props) => {
 
   const reversedProducts = [...randomProducts].reverse();
   return (
-    <div className="flex w-[100vw] text-[1.5rem] md:text-[2rem] md:px-20 font-semibold gap-4 justify-center my-5 px-5">
-      <div className="flex-1 min-w-0">
+    <div className="flex w-[100vw] text-[1.5rem] md:text-[2rem] md:px-24 font-semibold gap-4 justify-center my-5 px-5">
+      <div className="flex-1 min-w-0 ">
         <Slider items={randomProducts} />
       </div>
       <div className="flex-1 lg:block min-w-0 hidden">

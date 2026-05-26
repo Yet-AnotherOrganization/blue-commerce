@@ -48,17 +48,17 @@ const FavoriteCard = ({ fav }: { fav: SerializedFavorite }) => {
 
     return (
         <div
-            className=' xl:max-w-[300px] p-2 lg:p-4 shadow-md border rounded-xl flex flex-col'
+            className=' w-[200px] md:w-[350px] xl:w-[350px] p-2 lg:p-4 shadow-md border rounded-xl flex flex-col'
         >
-            <div className='w-full'>
-                <Link className="relative" href={`/product/${fav.item.id}`}>
+            <div className='w-full relative aspect-square'>
+                <Link className="bg-red-400 " href={`/product/${fav.item.id}`}>
                     {
                         loading &&
                         <div className="absolute flex bottom-0 top-0 left-0 right-0 items-center justify-center backdrop-blur-sm">
                             <Loader />
                         </div>
                     }
-                    <Image width={150} height={150} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={fav.item.imageUrl} className='border aspect-square rounded-md' alt="" />
+                    <Image fill sizes="(max-width: 768px) 100vw, 50vw" placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={fav.item.imageUrl} className='object-stretch border rounded-md' alt="" />
                 </Link>
             </div>
             <div className='text-content px-2'>

@@ -32,6 +32,7 @@ const Slider = ({ items, style }: { items: ProductWithCategory[], style?: string
 
   return (
     <Carousel
+      ssr={true}
       className={``}
       responsive={responsive}
       slidesToSlide={1}
@@ -39,7 +40,7 @@ const Slider = ({ items, style }: { items: ProductWithCategory[], style?: string
       infinite={true}
       autoPlay={true}
       autoPlaySpeed={2500}>
-      {items.slice(0, 10).map((item, i) => { return <CarouselComponent key={i} product={item} /> })}
+      {items.slice(0, 10).map((item, i) => { return <CarouselComponent key={item.id || i} product={item} /> })}
     </Carousel>
   )
 }

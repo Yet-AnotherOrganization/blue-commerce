@@ -27,7 +27,7 @@ const HeaderProduct = ({ product }: Props) => {
 
     return (
         <div  onMouseUp={() => {dispatch(setSearchbarVisible(false)); router.push(`/product/${product.id}`)}}  className='cursor-pointer flex items-center gap-4 border-b p-2'>
-            <Image width={70} height={70} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={product.imageUrl} className='w-10 h-10 rounded-md' alt="" />
+            <Image fill sizes="(max-width: 768px) 100vw, 50vw" placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={product.imageUrl} className='w-10 h-10 rounded-md' alt="" />
             <span className='text-ellipsis text-base text-pretty'>{product.name}</span>
 
             <span></span>

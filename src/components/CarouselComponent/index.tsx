@@ -9,16 +9,6 @@ import Image from "next/image";
 import { shimmer, toBase64 } from "@/utils/clientOnlyUtils";
 
 const CarouselComponent = ({ product }: { product: ProductWithCategory }): React.ReactNode => {
-  const {
-    price,
-    category,
-    createdAt,
-    description,
-    id,
-    name,
-    imageUrl,
-    stock,
-  } = product;
 
   const [photo, setPhoto] = useState<string | null>(null);
   const photos = ['aircleaner.jpg', 'coffee.jpg', 'vacuum.jpg'];
@@ -30,9 +20,15 @@ const CarouselComponent = ({ product }: { product: ProductWithCategory }): React
   }, []);
 
   return (
-    <Link href={`/product/${product.id}`} className='block w-full'>
-      <Image width={500} height={300} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={`/assets/banners/${photo}`} className="rounded-xl w-full object-cover" alt="carousel photo" />
-      {/* <ArrowAnimation /> */}
+    <Link href={`/product/${product.id}`} className='block w-full aspect-[6/3] relative'>
+      {photo ?
+        <Image fill sizes="(max-width:768px) 100vw, 50vw" placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={`/assets/banners/${photo}`} className="rounded-xl w-full object-cover" alt="carousel photo" />
+        : <div
+          className="absolute inset-0 w-full h-full bg-slate-200 animate-pulse"
+          style={{ backgroundImage: `url(data:image/svg+xml;base64,${toBase64(shimmer(600, 300))})` }}
+        />
+      }
+      {/* <ArrowAnimation /> */}  
     </Link>
   );
 };
