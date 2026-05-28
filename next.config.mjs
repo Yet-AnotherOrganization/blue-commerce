@@ -21,6 +21,16 @@ const nextConfig = {
                 hostname: 'res.cloudinary.com',
                 pathname: '**'
             },
+            {
+                protocol: 'https',
+                hostname: 'cdn.jsdelivr.net',
+                pathname: '**'
+            },
+            {
+                protocol: 'https',
+                hostname: 'i.pravatar.cc',
+                pathname: '**'
+            },
         ],
 
     }
