@@ -113,8 +113,8 @@ const Header = () => {
           <div className='flex items-center justify-center gap-2 h-full lg:flex'>
             <Link href="/" className='flex gap-2'>
               {/* <img loading='lazy' src="" alt="" className='object-cover w-[4rem] h-auto lg:w-[5rem] rounded-[50%] border-4 border-black-800' /> */}
-              <h1 className='hidden lg:flex items-center gap-4 font-bold md:text-[15px] lg:text-[20px]'>
-                BluE-Commerce</h1>
+              <h1 className='hidden lg:flex items-center font-bold md:text-[15px] lg:text-[20px]'>
+                <span className='text-blue-500'>Blu</span>E-Commerce</h1>
               <h1 className='lg:hidden flex text-[22px] max-lg:text-sm px-10 max-lg:px-2 font-bold'>BluE</h1>
             </Link>
           </div>

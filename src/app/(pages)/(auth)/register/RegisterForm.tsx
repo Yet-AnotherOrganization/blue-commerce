@@ -126,7 +126,7 @@ const RegisterForm = (props: Props) => {
                 {
                     onboardingStep == 1 ?
                         <>
-                            <h3 className="font-medium md:text-xl">Welcome to BluE-Commerce</h3>
+                            <h3 className="font-medium md:text-xl">Welcome to <span className='text-blue-500'>Blu</span>E-Commerce</h3>
                             <span className="md:text-xs text-[0.6rem] text-wrap font-light">Convenient and affordable e-commerce with the highest quality products.</span>
                         </>
                         : onboardingStep == 2 ?
