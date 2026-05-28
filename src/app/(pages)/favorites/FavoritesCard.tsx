@@ -28,7 +28,7 @@ const FavoriteCard = ({ fav }: { fav: SerializedFavorite }) => {
 
     const ask = useConfirm();
 
-    const handleRemoveFromCart = async () => {
+    const handleRemoveFromFavorites = async () => {
         const confirmed = await ask('Are you sure you want to remove this item from your favorites?');
 
 
@@ -82,7 +82,7 @@ const FavoriteCard = ({ fav }: { fav: SerializedFavorite }) => {
                         ADD TO CART
                     </button>
                     <button
-                        onClick={handleRemoveFromCart}
+                        onClick={handleRemoveFromFavorites}
                         className='inline-flex py-3 flex-1 justify-center items-center bg-red-400 text-white rounded-xl hover:bg-red-500 transition-all'>
                         <FaTrash />
                     </button>
