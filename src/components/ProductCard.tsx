@@ -13,6 +13,7 @@ import { RootState } from "@/redux/store";
 import Loader from "./Loader";
 import Image from "next/image";
 import { shimmer, toBase64 } from "@/utils/clientOnlyUtils";
+import { openCartModal } from "@/redux/slices/uiSlice";
 
 const ProductCard = ({ product }: { product: Product }) => {
   const dispatch = useAppDispatch();
@@ -43,6 +44,8 @@ const ProductCard = ({ product }: { product: Product }) => {
     const res = await dispatch(addToCart({ productId: product.id, quantity: 1 }));
 
     if (res.meta.requestStatus) setLoading(false);
+
+    if(res.meta.requestStatus === 'fulfilled') dispatch(openCartModal());
   }
 
   const handleFavorite = async () => {
