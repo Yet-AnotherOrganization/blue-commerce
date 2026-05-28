@@ -5,6 +5,7 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 import { createProduct } from "@/app/actions/productActions";
 import { toast } from "sonner";
 import { FormEvent } from "react";
+import { CartUIItem } from "@/redux/slices/cartSlice";
 
 export const getActiveUserFromStorage = (): void => {
     if (typeof window !== 'undefined') {
@@ -19,10 +20,11 @@ export const handleLogOut = async (): Promise<void> => {
 }
 
 export const calculateTotalCost =
-    (cart: CartItemWithProduct[]): number => {
+    (cart: CartUIItem[]): number => {
         let price = 0;
 
         cart.map((item, i) => {
+            console.log("CARTITEMS: ", item)
             price += item.product.price * item.quantity
 
             // console.log(price)

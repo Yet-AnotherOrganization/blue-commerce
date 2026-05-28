@@ -3,6 +3,7 @@ import Input from '@/components/Common/Input';
 import SelectWithSearch from '@/components/Common/SelectWithSearch';
 import { countries } from '@/constants/constants';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { CartUIItem } from '@/redux/slices/cartSlice';
 import { onboardingAddData, onboardingNextStep, onboardingPrevStep, onboardingSetData } from '@/redux/slices/uiSlice';
 import axios, { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
@@ -93,7 +94,8 @@ const RegisterForm = (props: Props) => {
             if (onboardingStep < 3) {
                 dispatch(onboardingNextStep());
             } else {
-                axios.post('/api/auth/register', { ...onboardingData, ...stepFields })
+                const cart = (JSON.parse(localStorage.getItem('cart') || '[]') || []).map((item: CartUIItem) => { return { productId: item.product.id, quantity: item.quantity } })
+                axios.post('/api/auth/register', { ...onboardingData, ...stepFields, cart })
                     .then((res) => {
                         if (res.status == 201) {
                             // toast.success('You were successfully registered.');

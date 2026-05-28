@@ -41,11 +41,11 @@ const ProductCard = ({ product }: { product: Product }) => {
   const handleAddToCart = async () => {
     setLoading(true);
 
-    const res = await dispatch(addToCart({ productId: product.id, quantity: 1 }));
+    const res = await dispatch(addToCart({ product: { ...product, price: Number(product.price) }, quantity: 1 }));
 
     if (res.meta.requestStatus) setLoading(false);
 
-    if(res.meta.requestStatus === 'fulfilled') dispatch(openCartModal());
+    if (res.meta.requestStatus === 'fulfilled') dispatch(openCartModal());
   }
 
   const handleFavorite = async () => {

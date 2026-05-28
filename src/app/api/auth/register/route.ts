@@ -14,6 +14,7 @@ emailjs.init({
 const postHandler = async (req: NextRequest) => {
     const body = await req.json();
 
+    console.log('\n\n\n REQUEST BODY: \n\n', body, '\n\n\n')
     const validatedFields = RegisterUserSchema.safeParse(body);
 
     if (!validatedFields.success) {
@@ -32,11 +33,11 @@ const postHandler = async (req: NextRequest) => {
     })
 
     if (userExists) {
-        if(userExists.status !== 'PENDING') throw new APIError('A User with this email already exists.', 400, 'ERR_USER_EXISTS');
+        if (userExists.status !== 'PENDING') throw new APIError('A User with this email already exists.', 400, 'ERR_USER_EXISTS');
 
         await prisma.user.delete({
-            where: {id: userExists.id}
-        })        
+            where: { id: userExists.id }
+        })
     }
 
     // check if passwords match
@@ -62,11 +63,37 @@ const postHandler = async (req: NextRequest) => {
             defaultDeliveryLocation: data.defaultDeliveryLocation,
             newsletter: data.newsletter,
             activateAccountCode: randomHash,
-            cart: {
-                create: {}
-            }
         }
     })
+
+    // create cart
+
+    const cart = await prisma.cart.create({
+        data: {
+            userId: user.id
+        }
+    })
+
+    const products = await prisma.product.findMany({
+        where: { id: { in: data.cart.map(i => i.productId) } }
+    });
+
+    const productSet = new Set(products.map(p => p.id));
+
+    // put the items
+
+    for (const item of data.cart) {
+        if (!productSet.has(item.productId)) continue;
+
+        await prisma.cartItem.create({
+            data: {
+                cartId: cart.id,
+                productId: item.productId,
+                quantity: Number(item.quantity) ?? 1
+            }
+        });
+    }
+
 
     try {
         // SEND MAIL ATTEMPT

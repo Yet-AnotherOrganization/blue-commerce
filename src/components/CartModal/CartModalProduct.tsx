@@ -4,12 +4,12 @@ import { CartItemWithProduct, ProductType } from '../../types/product'
 import Image from 'next/image'
 import { shimmer, toBase64 } from '@/utils/clientOnlyUtils'
 import { useAppDispatch } from '@/redux/hooks'
-import { removeItem } from '@/redux/slices/cartSlice'
+import { CartUIItem, removeItem } from '@/redux/slices/cartSlice'
 import { toast } from 'sonner'
 
 
 type Props = {
-  cartItem: CartItemWithProduct;
+  cartItem: CartUIItem;
 }
 
 const CartModalProduct = ({ cartItem }: Props) => {
@@ -40,7 +40,7 @@ const CartModalProduct = ({ cartItem }: Props) => {
       <button className='flex h-full items-center justify-center' onClick={async () => {
         const res = await dispatch(removeItem(cartItem.id))
 
-        if(res.meta.requestStatus === 'fulfilled') toast.success('Item removed from cart.')
+        if (res.meta.requestStatus === 'fulfilled') toast.success('Item removed from cart.')
       }}>
         < FaTrashAlt />
       </button>

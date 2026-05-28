@@ -10,8 +10,8 @@ import React from 'react'
 type Props = {}
 
 export default async function CheckoutPage(props: Props) {
-    const user = await getUser();
-    const userId = user.id;
+    const session = await getServerSession();
+    const userId = session?.user.id;
 
     if (!userId) redirect('/login');
 

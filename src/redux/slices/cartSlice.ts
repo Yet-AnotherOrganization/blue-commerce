@@ -4,6 +4,7 @@ import { getSession } from "next-auth/react";
 import { CartItemWithProduct } from "../../types/product";
 import { GetCartResponse } from "../../types/api";
 import { toast } from "sonner";
+import { CartItem } from "@/generated/prisma";
 
 // const userSlice = createSlice({
 //     name: "user",
@@ -19,14 +20,32 @@ import { toast } from "sonner";
 //     }
 // })
 
-const cartInitialState: { cart: CartItemWithProduct[], loading: boolean, error: unknown } = {
+export type CartUIItem = {
+    id: string,
+    quantity: number;
+    product: {
+        id: string;
+        name: string;
+        imageUrl: string;
+        price: number;
+        stock: number;
+    }
+}
+
+const cartInitialState: { cart: CartUIItem[], loading: boolean, error: unknown } = {
     cart: [],
     loading: true,
     error: false
 }
 
 interface AddToCartPayload {
-    productId: string;
+    product: {
+        id: string;
+        name: string;
+        imageUrl: string;
+        price: number;
+        stock: number;
+    }
     quantity?: number;
     // userEmail gibi verileri göndermene gerek yok, backend session'dan alacak!
 }
@@ -37,20 +56,40 @@ export const addToCart = createAsyncThunk(
     async (payload: AddToCartPayload, { rejectWithValue }) => {
         try {
 
-            const sendPayload = { ...payload, quantity: payload.quantity ?? 1 }
+            const user = (await getSession())?.user;
 
-            const response = await axios.post('/api/cart', { ...sendPayload, method: 'ADD' });
+            if (user) {
+                const sendPayload = { productId: payload.product.id, quantity: payload.quantity ?? 1 }
 
-            console.log("response: ", response)
-            return response.data.data.data
+                const response = await axios.post('/api/cart', { ...sendPayload, method: 'ADD' });
+                return response.data.data.data
+            }
+
+
+            let cart: AddToCartPayload[] = JSON.parse(localStorage.getItem('cart') || '[]') || [];
+
+            const index = cart.findIndex(item => item.product.id == payload.product.id);
+
+            if (index == -1) cart = [...cart, payload];
+            else {
+                cart.push(payload);
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart))
+
         }
         catch (err) {
-            if (axios.isAxiosError(err)) return rejectWithValue(err.response?.data.message)
+            
+            if (axios.isAxiosError(err)){ console.log(err.response); return rejectWithValue(err.response?.data.message)
+}
 
             if (err instanceof Error)
                 return rejectWithValue(err.message)
 
+
             else rejectWithValue('Unknown error during addToCart request.')
+
+
         }
 
     }
@@ -65,9 +104,10 @@ export const fetchCartAsync = createAsyncThunk(
 
             // see if token exists
             if (!session) {
-                return rejectWithValue("Oturum bulunamadı");
+                return JSON.parse(localStorage.getItem('cart') || '[]') || []
             }
 
+            console.log("fetch")
 
             let response: GetCartResponse = await axios.get(`/api/cart/${session.user.id}`);
 
@@ -181,9 +221,9 @@ const cartSlice = createSlice({
                 toast.success('Item was added to your cart.')
                 console.log("cart payloadı: ", action.payload)
                 // 
-                state.cart.map(item =>  console.log(item , '\n \n',  action.payload));
+                state.cart.map(item => console.log(item, '\n \n', action.payload));
                 let foundItemId = state.cart.findIndex(item => item.product.id === action.payload.product.id)
-                
+
                 if (foundItemId != -1) state.cart[foundItemId] = action.payload;
                 else {
                     state.cart.push(action.payload);

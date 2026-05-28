@@ -13,8 +13,9 @@ export default function InitCart() {
 
     useEffect(() => {
         (async () => {
+
+            const res = await dispatch(fetchCartAsync());
             if (session?.user) {
-                const res = await dispatch(fetchCartAsync());
                 const res2 = await dispatch(fetchFavorites());
             }
         })()

@@ -54,17 +54,17 @@ const CartModal = (props: Props) => {
                                 <CartModalProduct cartItem={item} key={i} />
 
                             )
-                        }):
-                        <div className='w-full h-full flex justify-center items-center'>
-                            Your cart is currently empty.
-                        </div>
+                        }) :
+                            <div className='w-full h-full flex justify-center items-center'>
+                                Your cart is currently empty.
+                            </div>
                         }
 
                     </div>
 
 
                     <div className='flex bg-gray-200 border-t-2 justify-between border-gray-300 px-4 py-2'>
-                        <button className='bg-orange-400 rounded-xl text-white p-2' onClick={() => { dispatch(closeCartModal()); router.push('/cart');}}>GO TO CART</button>
+                        <button className='bg-orange-400 rounded-xl text-white p-2' onClick={() => { dispatch(closeCartModal()); router.push('/cart'); }}>GO TO CART</button>
                         <span className='p-2 rounded-xl text-white bg-blue-300'>TOTAL PRICE: {calculateTotalCost(cart)}</span>
                     </div>
                 </div>
@@ -83,9 +83,25 @@ const CartModal = (props: Props) => {
 
 
 
+                    <div className='h-full px-4 my-5 overflow-auto'>
+
+                        {cart.length >= 1 ? cart?.map((item, i) => {
+
+                            return (
+
+                                <CartModalProduct cartItem={item} key={i} />
+
+                            )
+                        }) :
+                            <div className='w-full h-full flex justify-center items-center'>
+                                Your cart is currently empty.
+                            </div>
+                        }
+
+                    </div>
 
                     <div className='flex bg-gray-200 border-t-2 justify-between border-gray-300 px-4 py-2'>
-                        <button className='bg-orange-600 rounded-xl text-white p-2' onClick={() => { dispatch(closeCartModal()); router.push('/cart');}}>
+                        <button className='bg-orange-600 rounded-xl text-white p-2' onClick={() => { dispatch(closeCartModal()); router.push('/cart'); }}>
                             GO TO CART
                         </button>
                         <span className='p-2 rounded-xl text-white bg-blue-300'>TOTAL PRICE: {calculateTotalCost(cart)}</span>

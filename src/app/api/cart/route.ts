@@ -15,7 +15,7 @@ async function postHandler(req: Request):Promise<Response> {
 
     const validation = AddItemSchema.safeParse(rawBody);
 
-    if (!validation.success) throw new APIError("Body is missing 'quantity' field.", 400, 'NO_QUANTITY', validation.error.toString())
+    if (!validation.success) throw new APIError("Body is missing a field.", 400, 'INV_FIELD', validation.error.toString())
 
     const body = validation.data
 

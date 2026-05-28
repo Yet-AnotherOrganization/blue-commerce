@@ -58,6 +58,10 @@ export const RegisterUserSchema = z.object({
             message: "You must accept the terms and conditions",
         })
     ),
+    cart: z.array(z.object(({
+        productId: z.string(),
+        quantity: z.coerce.string()
+    })))
 })
 
 export type RegisterUserDto = z.infer<typeof RegisterUserSchema>;

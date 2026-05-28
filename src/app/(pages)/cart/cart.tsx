@@ -5,12 +5,12 @@ import { RootState } from '../../../redux/store'
 import { FaBoxOpen, FaMinus, FaPlus, FaShieldAlt, FaTrash, FaTruck } from "react-icons/fa";
 import Link from 'next/link';
 import { useAppDispatch } from '@/redux/hooks';
-import { addToCart, decrementItem, removeItem } from '@/redux/slices/cartSlice';
+import { addToCart, CartUIItem, decrementItem, removeItem } from '@/redux/slices/cartSlice';
 import { CartItemWithProduct } from '@/types/product';
 import Image from 'next/image';
 import { shimmer, toBase64 } from '@/utils/clientOnlyUtils';
 interface CartItemProps {
-    item: CartItemWithProduct
+    item: CartUIItem
     disabled: boolean
 }
 
@@ -58,7 +58,7 @@ export const CartItem = ({ item, disabled }: CartItemProps) => {
                         {item.quantity}
                     </span>
                     <button
-                        onClick={() => { dispatch(addToCart({ productId: item.product.id })) }}
+                        onClick={() => { dispatch(addToCart({ product: item.product })) }}
                         disabled={disabled || item.quantity >= item.product.stock}
                         className="px-3 h-full text-slate-500 hover:bg-slate-100 active:bg-slate-200 disabled:opacity-50 transition-colors"
                         title="Increase quantity"
