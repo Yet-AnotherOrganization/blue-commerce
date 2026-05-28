@@ -7,7 +7,8 @@ interface UIState {
     theme: 'light' | 'dark';
     headerSearchbarVisible: boolean;
     onboardingStep: number;
-    onboardingData: Record<string, any>
+    onboardingData: Record<string, any>,
+    adminSidebarOpen: boolean
 }
 
 
@@ -19,7 +20,8 @@ const initialState: UIState = {
     headerSearchbarVisible: false,
     theme: 'light',
     onboardingStep: 1,
-    onboardingData: {}
+    onboardingData: {},
+    adminSidebarOpen: true,
 }
 
 
@@ -64,7 +66,12 @@ const uiSlice = createSlice({
         },
         onboardingAddData: (state, action: PayloadAction<Record<string, any>>) => {
             state.onboardingData = { ...state.onboardingData, ...action.payload };
-        }
+        },
+
+        openAdminSidebar: (state) => { state.adminSidebarOpen = true },
+        closeAdminSidebar: (state) => { state.adminSidebarOpen = false },
+        toggleAdminSidebar: (state) => { state.adminSidebarOpen = !state.adminSidebarOpen },
+
     }
 })
 
@@ -80,5 +87,8 @@ export const {
     onboardingNextStep,
     onboardingPrevStep,
     onboardingAddData,
-    onboardingSetData
+    onboardingSetData,
+    openAdminSidebar,
+    closeAdminSidebar,
+    toggleAdminSidebar
 } = uiSlice.actions;

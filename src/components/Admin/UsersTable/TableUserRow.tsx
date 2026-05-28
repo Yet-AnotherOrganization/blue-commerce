@@ -13,8 +13,10 @@ const TableUserRow = ({ item }: Props) => {
 
     return (
         <tr className='border-y'>
-            <td className='px-4'>
-                <Image fill sizes="(max-width: 768px) 100vw, 50vw" placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={item.avatar || ''} className='w-12 h-12' alt="" />
+            <td className='px-4 py-2'>
+                <div className='relative aspect-square'>
+                    <Image fill sizes="(max-width: 768px) 100vw, 50vw" placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={item.avatar || ''} className='w-12 h-12' alt="" />
+                </div>
             </td>
             <td>{item.name}</td>
             <td>
