@@ -45,7 +45,6 @@ Migrating to PostgreSQL with Prisma solved this at the schema level:
 | **Auth** | NextAuth.js v4 |
 | **Payments** | Stripe (server-side sessions + webhooks) |
 | **State Management** | Redux Toolkit |
-| **UI Components** | Shadcn/UI + Radix UI |
 | **Styling** | Tailwind CSS |
 | **Search** | Fuse.js |
 | **Image Hosting** | Cloudinary |
@@ -141,13 +140,11 @@ The result is a smaller JavaScript bundle, faster Time-to-Interactive, and a bet
 
 ---
 
-## 🎨 UI / UX — Design System with Shadcn/UI & Tailwind
+## 🎨 UI / UX — Design System with Tailwind & Custom Elements
 
-The component layer is built on **Shadcn/UI**, which provides unstyled, accessible primitives built on **Radix UI**. This is not a component library that imposes a visual style — it's a collection of accessible, headless components that are styled directly with Tailwind CSS utility classes.
+The UI layer features Tailwind CSS for industry-standard prototyping as well as my very own Custom Components such as `SelectWithSearch` or `SearchInput` that allow for a better looking website as well as higher development speed.
 
-This gives complete design control without sacrificing accessibility (ARIA roles, keyboard navigation, focus management) that Radix handles under the hood. The result is a professional, responsive UI that looks custom-built rather than off-the-shelf.
-
-**Framer Motion** is used for micro-interactions and page transitions, adding polish without sacrificing performance.
+**Framer Motion** is used for micro-interactions and page transitions, adding polish without sacrificing the seamless nature of the project.
 
 ---
 
