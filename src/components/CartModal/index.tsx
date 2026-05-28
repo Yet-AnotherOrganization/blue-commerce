@@ -32,7 +32,7 @@ const CartModal = (props: Props) => {
         cartModalOpen &&
         <>
             <div className='relative z-50'>
-                <div className='bg-white text-black border flex-col justify-between overflow-hidden rounded-xl h-[40vh] w-[30vw] sm:w-[40vw] absolute bottom-[-42vh] right-0 z-[200000] hidden md:flex'
+                <div className='bg-white text-black border-2 border-stone-300 flex-col justify-between overflow-hidden rounded-xl h-[40vh] w-[30vw] sm:w-[40vw] absolute bottom-[-42vh] right-0 z-[200000] hidden md:flex'
                 >
                     <div className='flex justify-between items-center text-xl font-semibold px-4 py-2 border-b'><div />
                         <span>CART</span>
@@ -47,14 +47,18 @@ const CartModal = (props: Props) => {
 
                     <div className='h-3/5 px-4 my-5 overflow-auto'>
 
-                        {cart?.map((item, i) => {
+                        {cart.length >= 1 ? cart?.map((item, i) => {
 
                             return (
 
-                                <CartModalProduct product={item.product} key={i} />
+                                <CartModalProduct cartItem={item} key={i} />
 
                             )
-                        })}
+                        }):
+                        <div className='w-full h-full flex justify-center items-center'>
+                            Your cart is currently empty.
+                        </div>
+                        }
 
                     </div>
 

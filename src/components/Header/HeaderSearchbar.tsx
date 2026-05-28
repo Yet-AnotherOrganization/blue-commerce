@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import React, { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react'
 import { FaSearch } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
+import SkeletonLoader from '../Common/SkeletonLoader';
 
 type Props = {
     product: SerializedProduct
@@ -26,8 +27,10 @@ const HeaderProduct = ({ product }: Props) => {
 
 
     return (
-        <div  onMouseUp={() => {dispatch(setSearchbarVisible(false)); router.push(`/product/${product.id}`)}}  className='cursor-pointer flex items-center gap-4 border-b p-2'>
-            <Image fill sizes="(max-width: 768px) 100vw, 50vw" placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={product.imageUrl} className='w-10 h-10 rounded-md' alt="" />
+        <div onMouseUp={() => { dispatch(setSearchbarVisible(false)); router.push(`/product/${product.id}`) }} className='cursor-pointer flex items-center gap-4 border-b p-2'>
+            <div className='relative aspect-square w-12 h-12'>
+                <Image fill sizes="(max-width: 768px) 100vw, 50vw" placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={product.imageUrl} className='w-10 h-10 rounded-md' alt="" />
+            </div>
             <span className='text-ellipsis text-base text-pretty'>{product.name}</span>
 
             <span></span>
@@ -39,6 +42,7 @@ const HeaderProduct = ({ product }: Props) => {
 const HeaderSearchbar = () => {
 
     const [query, setQuery] = useState('');
+    const [loading, setLoading] = useState(true);
     const [foundProducts, setFoundProducts] = useState<SerializedProduct[]>([])
     const dispatch = useAppDispatch();
     const { headerSearchbarVisible: isVisible } = useAppSelector((state: RootState) => state.uiReducer)
@@ -47,6 +51,7 @@ const HeaderSearchbar = () => {
     useEffect(() => {
 
         if (query === '') { setFoundProducts([]); dispatch(setSearchbarVisible(false)); return };
+        setLoading(true);
 
         (async () => {
             const req = await axios.get(`/api/product?query=${query}`);
@@ -54,6 +59,7 @@ const HeaderSearchbar = () => {
 
             console.log(found)
             setFoundProducts(found);
+            setLoading(false);
             dispatch(setSearchbarVisible(true));
         })();
 
@@ -76,7 +82,7 @@ const HeaderSearchbar = () => {
     const onSearch = debounce(async (e: ChangeEvent<HTMLInputElement>) => {
         {
 
-                dispatch(setSearchbarVisible(true));
+            dispatch(setSearchbarVisible(true));
             setQuery(e.target.value)
             // const searchInput = formRef.current as HTMLInputElement
             // const encodedSearchQuery = encodeURI(searchInput.value)
@@ -90,19 +96,26 @@ const HeaderSearchbar = () => {
                 <button className='absolute transform top-[50%] right-4 translate-y-[-50%] text-xl text-gray-500'><FaSearch className='hidden lg:block' /></button>
             </form>
             {
-                isVisible &&
+                isVisible && !loading ?
 
-                <div className='display-products flex flex-col w-[200%] md:w-[150%] xl:w-full min-h-8 p-4 bg-white text-black border-neutral-400 rounded-b-md border-2 z-20 absolute '>
-                    {
-                        foundProducts.slice(0, 8).map((prod) => <HeaderProduct product={prod} key={prod.id} />)
-                    }
-                    {
-                        foundProducts.length > 8 && <div className='pt-4'>{foundProducts.length - 8} more results</div>
-                    }
-                    {
-                        foundProducts.length == 0 && <div className='pt-4'>No products matching your query were found.</div>
-                    }
-                </div>
+                    <div className='display-products flex flex-col w-[200%] md:w-[150%] xl:w-full min-h-8 p-4 bg-white text-black border-neutral-400 rounded-b-md border-2 z-20 absolute '>
+                        {
+                            foundProducts.slice(0, 8).map((prod) => <HeaderProduct product={prod} key={prod.id} />)
+                        }
+                        {
+                            foundProducts.length > 8 && <div className='pt-4'>{foundProducts.length - 8} more results</div>
+                        }
+                        {
+                            foundProducts.length == 0 && <div className=''>No products matching your query were found.</div>
+                        }
+                    </div>
+
+                    :
+
+                    isVisible && loading &&
+                    <div className='display-products flex flex-col w-[200%] md:w-[150%] xl:w-full min-h-8 p-4 bg-white text-black border-neutral-400 rounded-b-md border-2 z-20 absolute '>
+                        <SkeletonLoader />
+                    </div>
             }
         </div>
     )
