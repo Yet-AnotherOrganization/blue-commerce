@@ -11,11 +11,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { shimmer, toBase64 } from "@/utils/clientOnlyUtils";
 import ProductButtons from "@/components/ProductButtons";
+import { ProductWithSeller, SerializedProduct, SerializedProductWithSeller } from "@/types/product";
 
-type ProductWithSeller = Prisma.ProductGetPayload<{ include: { seller: true } }>
 
 const productId = async ({ params }: { params: { productId: string } }) => {
-    const currentProduct: ProductWithSeller | null = await prisma.product.findUnique({
+    const product: ProductWithSeller | null = await prisma.product.findUnique({
         where: {
             id: params.productId
         },
@@ -23,10 +23,12 @@ const productId = async ({ params }: { params: { productId: string } }) => {
             seller: true
         }
     })
-
-    if (!currentProduct) {
+    if (!product) {
         notFound()
     }
+    const currentProduct: SerializedProductWithSeller = { ...product, price: Number(product.price) }
+
+
 
     const seller = currentProduct.seller;
 
@@ -35,7 +37,7 @@ const productId = async ({ params }: { params: { productId: string } }) => {
     return (
         <div className="min-h-screen bg-slate-50 py-8 max-lg:pb-20 px-4 sm:px-6 lg:px-8 mt-20 md:mt-16 lg:mt-0">
             <div className="max-w-7xl mx-auto">
-                
+
                 <nav className="mb-6 text-sm text-slate-500 flex items-center gap-2">
                     <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
                     <span>/</span>
@@ -45,11 +47,11 @@ const productId = async ({ params }: { params: { productId: string } }) => {
                 </nav>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                    
+
                     <div className="lg:col-span-5 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm top-24">
                         <div className="aspect-square relative w-[75%] mx-auto overflow-hidden rounded-xl bg-slate-100 flex items-center justify-center">
-                            <Image width={150} height={150} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} 
-                                src={currentProduct.imageUrl} 
+                            <Image width={150} height={150} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`}
+                                src={currentProduct.imageUrl}
                                 alt={currentProduct.name}
                                 className="object-contain w-full h-full max-h-[500px] hover:scale-105 transition-transform duration-300"
                             />
@@ -69,7 +71,7 @@ const productId = async ({ params }: { params: { productId: string } }) => {
                         <div>
                             {/* Seller Link */}
                             {seller && (
-                                <Link 
+                                <Link
                                     href={`/sellers/${seller.id}`}
                                     className="text-xs font-semibold uppercase tracking-wider text-blue-600 hover:underline"
                                 >
@@ -126,7 +128,7 @@ const productId = async ({ params }: { params: { productId: string } }) => {
 
                         {/* Integrated ProductButtons component */}
                         <div className="w-full">
-                            <ProductButtons style="max-lg:hidden flex flex-wrap flex-col text-white text-md" product={currentProduct.id} />
+                            <ProductButtons style="max-lg:hidden flex flex-wrap flex-col text-white text-md" product={{ ...currentProduct, price: Number(currentProduct.price) }} />
                         </div>
                     </div>
 
@@ -137,7 +139,7 @@ const productId = async ({ params }: { params: { productId: string } }) => {
                     <h2 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-2">
                         Customer Feedback
                     </h2>
-                    
+
                     {/* Render your imported Review and Reviews context components here */}
                     <div className="space-y-6">
                         <Reviews currentProduct={currentProduct} />

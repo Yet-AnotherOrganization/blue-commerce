@@ -1,4 +1,5 @@
-import { Category, Favorite, Product } from "../generated/prisma";
+import { Decimal } from "@/generated/prisma/runtime/client";
+import { Category, Favorite, Prisma, Product } from "../generated/prisma";
 
 export type ProductType = {
     id: string,
@@ -19,6 +20,8 @@ export type ProductWithCategory = Omit<Product, 'category'> & { category: Catego
 export type SerializedProduct = Omit<Product, 'price'> & {
     price: number
 }
+export type ProductWithSeller = Prisma.ProductGetPayload<{ include: { seller: true } }>
+export type SerializedProductWithSeller = Omit<ProductWithSeller, 'price'> & { price: number }
 
 export type SerializedFavorite = Omit<Favorite, 'item'> & {
     item: SerializedProduct

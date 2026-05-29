@@ -1,3 +1,4 @@
+import { SerializedProductWithSeller } from "@/types/product";
 import Loader from "../../../../components/Loader";
 import Review from "../../../../components/Review";
 import { Prisma, Product, Review as ReviewType } from "../../../../generated/prisma";
@@ -8,7 +9,7 @@ type ReviewWithUser = Prisma.ReviewGetPayload<{
     include: { owner: true }
 }>
 
-const Reviews = async ({ currentProduct }: { currentProduct: Product | null }) => {
+const Reviews = async ({ currentProduct }: { currentProduct: SerializedProductWithSeller | null }) => {
 
     const reviews = (await prisma.review.findMany({
         where: {

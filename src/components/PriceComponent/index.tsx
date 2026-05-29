@@ -4,8 +4,9 @@ import { ProductParams } from '../../constants/constants'
 import { Product } from '../../generated/prisma'
 import ProductButtons from '../ProductButtons'
 import { useAppSelector } from '@/redux/hooks'
+import { SerializedProduct } from '@/types/product'
 
-const PriceComponent = ({ currentProduct }: { currentProduct: Product }) => {
+const PriceComponent = ({ currentProduct }: { currentProduct: SerializedProduct }) => {
 
   const {cartModalOpen} = useAppSelector(state => state.uiReducer)
 
@@ -13,7 +14,7 @@ const PriceComponent = ({ currentProduct }: { currentProduct: Product }) => {
   return (
     <div className={`${cartModalOpen && 'hidden'} w-full z-30 flex flex-col text-center items-center price-component bg-white bottom-0 pt-2`}>
       <span className=" font-semibold">${(currentProduct?.price).toString()}</span>
-      <ProductButtons product={currentProduct.id} style='max-lg:flex hidden text-white font-medium pb-2' />
+      <ProductButtons product={currentProduct} style='max-lg:flex hidden text-white font-medium pb-2' />
     </div>
   )
 }
