@@ -90,68 +90,46 @@ const EditProductDetails = ({ product, categories, stores }: Props) => {
                 &gt;
                 <Link className='hover:text-blue-400' href={`#`}>{product?.name}</Link>
             </div>
-            <div className='flex bg-neutral-50 shadow-md border rounded-xl p-[50px] relative  flex-wrap flex-col lg:flex-row'>
-                <div className='flex-1 relative aspect-square '>
-                    <Image fill sizes="(max-width: 768px) 100vw, 50vw" placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`}
-                        src={product?.imageUrl}
-                        alt=""
-                        className='rounded-md shadow-lg aspect-square m-auto mb-0 max-lg:mb-10'
-                    />
-                </div>
-                <div className='flex-[2] flex flex-col lg:border-l-2 md:ml-4'>
-
-                    <ControlBar product={product} />
-
-                    <h1 className='text-center text-xl font-semibold'>Product Details</h1>
-                    <div className='flex pt-4 pl-8 flex-col text-lg  gap-2'>
-                        <ProductDetailInput fieldKey='Name' id='name' value={name} fn={setName} placeholder='product name' />
-                        <ProductDetailInput fieldKey='Slug' value={product.nameSlug || ''} placeholder='Slug' disabled />
-                        <ProductDetailInput fieldKey='ID' value={product.id || ''} placeholder='ID' disabled />
-                        <ProductDetailInput fieldKey='Date Created' value={`${product.createdAt.toLocaleDateString()} - ${product.createdAt.toLocaleTimeString()}` || ''} placeholder='Date Created' disabled />
-                        <ProductDetailInput fieldKey='Date Updated' value={`${product.updatedAt.toLocaleDateString()} - ${product.updatedAt.toLocaleTimeString()}` || ''} placeholder='Date Updated' disabled />
-                        <ProductDetailInput fieldKey='Stock' value={stock} fn={setStock} placeholder='stock' />
-                        <div className='flex items-center'>
-                            <label htmlFor="" className='flex-1 font-semibold'>Status:</label>
-                            <SelectWithSearch classes='flex-1 block' id='status' items={statusOptions} onChange={setStatus} placeholder='Select item status...' defaultSelected={status} />
-                        </div>
-                        <div className='flex items-center'>
-                            <label htmlFor="" className='flex-1 font-semibold'>Category:</label>
-                            <SelectWithSearch classes='flex-1 block' id='category' items={categories.map((cat) => ({ label: cat.name, value: cat.id }))} onChange={setCategory} placeholder='Select new category...' defaultSelected={category} />
-                        </div>
-                        <div className='flex items-center'>
-                            <label htmlFor="" className='flex-1 font-semibold'>Store:</label>
-                            <SelectWithSearch classes='flex-1 block' id='seller' items={stores.map((store) => ({ label: store.storeName, value: store.id }))} onChange={setStore} placeholder='Select seller store...' defaultSelected={store} />
-                        </div>
-                        {/* 
-                        <DetailRow fieldKey='Slug'>
-                            {product.nameSlug || ''}
-                        </DetailRow>
-
-                        <DetailRow fieldKey='Date Created'>
-                            {product.createdAt.toLocaleDateString()} - {product.createdAt.toLocaleTimeString()}
-                        </DetailRow>
-
-                        <DetailRow fieldKey='Last Updated'>
-                            {product.updatedAt.toLocaleDateString()} - {product.updatedAt.toLocaleTimeString()}
-                        </DetailRow>
-
-                        <DetailRow fieldKey='Status'>
-                            <FaCircle size={10} color={product.status === 'ACTIVE' ? 'lightgreen' : product.status === 'DRAFT' ? 'orange' : 'red'} />
-                            {product.status}
-                        </DetailRow>
-
-                        <DetailRow fieldKey='Category'>
-                            {product.category.name}
-                        </DetailRow>
-
-                        <DetailRow fieldKey='Stock'>
-                            {product.stock}
-                        </DetailRow>
-
-                        <DetailRow fieldKey='Seller'>
-                            {product.seller.storeName}
-                        </DetailRow> */}
+            <div className='flex bg-neutral-50 shadow-md border rounded-xl p-[50px] relative flex-wrap flex-col'>
+                <div className="flex">
+                    <div className='flex-1 relative aspect-square '>
+                        <Image fill sizes="(max-width: 768px) 100vw, 50vw" placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`}
+                            src={product?.imageUrl}
+                            alt=""
+                            className='rounded-md shadow-lg aspect-square m-auto mb-0 max-lg:mb-10'
+                        />
                     </div>
+                    <div className='flex-[2] flex flex-col lg:border-l-2 md:ml-4'>
+
+                        <ControlBar product={product} />
+
+                        <h1 className='text-center text-xl font-semibold'>Product Details</h1>
+                        <div className='flex pt-4 pl-8 flex-col text-lg  gap-2'>
+                            <ProductDetailInput fieldKey='Name' id='name' value={name} fn={setName} placeholder='product name' />
+                            <ProductDetailInput fieldKey='Slug' value={product.nameSlug || ''} placeholder='Slug' disabled />
+                            <ProductDetailInput fieldKey='ID' value={product.id || ''} placeholder='ID' disabled />
+                            <ProductDetailInput fieldKey='Date Created' value={`${product.createdAt.toLocaleDateString()} - ${product.createdAt.toLocaleTimeString()}` || ''} placeholder='Date Created' disabled />
+                            <ProductDetailInput fieldKey='Date Updated' value={`${product.updatedAt.toLocaleDateString()} - ${product.updatedAt.toLocaleTimeString()}` || ''} placeholder='Date Updated' disabled />
+                            <ProductDetailInput fieldKey='Stock' id='stock' value={stock} fn={setStock} placeholder='stock' />
+                            <div className='flex items-center'>
+                                <label htmlFor="" className='flex-1 font-semibold'>Status:</label>
+                                <SelectWithSearch classes='flex-1 block' id='status' items={statusOptions} onChange={setStatus} placeholder='Select item status...' defaultSelected={status} />
+                            </div>
+                            <div className='flex items-center'>
+                                <label htmlFor="" className='flex-1 font-semibold'>Category:</label>
+                                <SelectWithSearch classes='flex-1 block' id='category' items={categories.map((cat) => ({ label: cat.name, value: cat.id }))} onChange={setCategory} placeholder='Select new category...' defaultSelected={category} />
+                            </div>
+                            <div className='flex items-center'>
+                                <label htmlFor="" className='flex-1 font-semibold'>Store:</label>
+                                <SelectWithSearch classes='flex-1 block' id='seller' items={stores.map((store) => ({ label: store.storeName, value: store.id }))} onChange={setStore} placeholder='Select seller store...' defaultSelected={store} />
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    AMOGUS
                 </div>
             </div>
         </form>
