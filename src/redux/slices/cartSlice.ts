@@ -3,8 +3,6 @@ import axios, { AxiosError } from 'axios';
 import { getSession } from "next-auth/react";
 import { CartItemWithProduct } from "../../types/product";
 import { GetCartResponse } from "../../types/api";
-import { toast } from "sonner";
-import { CartItem } from "@/generated/prisma";
 
 // const userSlice = createSlice({
 //     name: "user",
@@ -72,7 +70,7 @@ export const addToCart = createAsyncThunk(
 
             if (index == -1) cart = [...cart, payload];
             else {
-                cart.push(payload);
+                (cart[index] as CartItemWithProduct).quantity += 1
             }
 
             localStorage.setItem('cart', JSON.stringify(cart))
@@ -212,13 +210,13 @@ const cartSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload
                 console.log(action.payload)
-                toast.error('Error: ' + action.payload)
+                // // toast.error('Error: ' + action.payload) PURE REDUCER FIX
             })
             // * FULFILLED
             .addCase(addToCart.fulfilled, (state, action: PayloadAction<CartItemWithProduct>) => {
                 state.loading = false;
                 state.error = null;
-                toast.success('Item was added to your cart.')
+                // // toast.success('Item was added to your cart.') PURE REDUCER FIX
                 console.log("cart payloadı: ", action.payload)
                 // 
                 state.cart.map(item => console.log(item, '\n \n', action.payload));
@@ -242,7 +240,7 @@ const cartSlice = createSlice({
             // ! REJECTED
             .addCase(fetchCartAsync.rejected, (state, action) => {
                 state.loading = false;
-                toast.error('Error: ' + action.payload)
+                // // toast.error('Error: ' + action.payload) // PURE REDUCER FIX
                 state.error = action.payload
             })
 
@@ -263,7 +261,7 @@ const cartSlice = createSlice({
             .addCase(removeItem.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload
-                toast.error('Error: ' + action.payload)
+                // // toast.error('Error: ' + action.payload) // PURE REDUCER FIX
                 console.log(action.payload)
             })
             .addCase(removeItem.fulfilled, (state, action) => {
@@ -282,7 +280,7 @@ const cartSlice = createSlice({
             .addCase(decrementItem.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
-                toast.error('Error: ' + action.payload)
+                // toast.error('Error: ' + action.payload)
                 console.log("Error: ", action.payload)
             })
             .addCase(decrementItem.fulfilled, (state, action: PayloadAction<CartItemWithProduct>) => {
@@ -302,7 +300,7 @@ const cartSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
                 console.log(action.payload)
-                toast.error('Error: ' + action.payload)
+                // toast.error('Error: ' + action.payload)
             })
             .addCase(emptyCart.fulfilled, (state) => {
                 state.loading = false;

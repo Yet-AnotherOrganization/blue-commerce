@@ -19,7 +19,7 @@ export async function createCheckoutSession({ userId, orderId }: CheckoutSession
 
   const cartItems = await prisma.cartItem.findMany({
     where: { cart: { userId } },
-    include: { product: true } // Assuming your schema relates cart items to products
+    include: { product: true }
   });
 
   if (!cartItems || cartItems.length === 0) {
@@ -28,13 +28,12 @@ export async function createCheckoutSession({ userId, orderId }: CheckoutSession
 
   const lineItems = cartItems.map((item) => ({
     price_data: {
-      currency: 'usd', // standard ISO currency code
+      currency: 'usd',
       product_data: {
         name: item.product.name,
-        images: [item.product.imageUrl], // Optional
+        images: [item.product.imageUrl],
         description: item.product.description || undefined,
       },
-      // Stripe expects amounts in cents/lowest currency denomination (e.g., $10.00 = 1000)
       unit_amount: Math.round(Number(item.product.price) * 100),
     },
     quantity: item.quantity,

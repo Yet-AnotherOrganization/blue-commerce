@@ -22,7 +22,7 @@ export async function softDeleteProduct(id: string) {
 
 export async function hardDeleteProduct(id: string) {
     return adminAction(async () => {
-        await prisma.product.delete({ where: { id }})
+        await prisma.product.delete({ where: { id } })
         revalidatePath('/admin')
         return { success: true, message: "Successfully deleted the product." }
     })
@@ -108,6 +108,7 @@ export async function editProductAdmin(id: string, formData: FormData) {
         const validatedFields = UpdateProductSchema.safeParse(rawData);
 
         if (validatedFields.success) {
+            console.log(validatedFields.data);
             const rawKeys = Object.keys(rawData);
             const validKeys = Object.keys(validatedFields.data);
 
