@@ -21,7 +21,7 @@ const ProductButtons = ({ product, style }: { product: SerializedProduct, style?
       <button
         className="bg-green-500  max-lg:text-xs shadow-md relative p-2 lg:p-4 max-lg:m-0 m-4 flex flex-1 justify-center items-center rounded-xl hover:translate-y-[-5px] transition-all"
         onClick={async () => {
-          const confirm = await dispatch(addToCart({ product: product }))
+          const confirm = await dispatch(addToCart({ productId: product.id }))
           if (confirm.meta.requestStatus == 'fulfilled') {
             setIsAddClicked(true)
             !isAddClicked ? setTimeout(() => setIsAddClicked(false), 2000) : '';

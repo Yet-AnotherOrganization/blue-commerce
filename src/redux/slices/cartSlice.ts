@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios, { AxiosError } from 'axios';
 import { getSession } from "next-auth/react";
-import { CartItemWithProduct } from "../../types/product";
+import { CartItemWithProduct, GuestCartItem } from "../../types/product";
 import { GetCartResponse } from "../../types/api";
 
 // const userSlice = createSlice({
@@ -37,13 +37,7 @@ const cartInitialState: { cart: CartUIItem[], loading: boolean, error: unknown }
 }
 
 interface AddToCartPayload {
-    product: {
-        id: string;
-        name: string;
-        imageUrl: string;
-        price: number;
-        stock: number;
-    }
+    productId: string;
     quantity?: number;
     // userEmail gibi verileri göndermene gerek yok, backend session'dan alacak!
 }
@@ -57,7 +51,7 @@ export const addToCart = createAsyncThunk(
             const user = (await getSession())?.user;
 
             if (user) {
-                const sendPayload = { productId: payload.product.id, quantity: payload.quantity ?? 1 }
+                const sendPayload = { productId: payload.productId, quantity: payload.quantity ?? 1 }
 
                 const response = await axios.post('/api/cart', { ...sendPayload, method: 'ADD' });
                 return response.data.data.data
@@ -66,20 +60,26 @@ export const addToCart = createAsyncThunk(
 
             let cart: AddToCartPayload[] = JSON.parse(localStorage.getItem('cart') || '[]') || [];
 
-            const index = cart.findIndex(item => item.product.id == payload.product.id);
+            const index = cart.findIndex(item => {
+                console.log(`${item.productId} \n\n\n COMPARE \n\n\n ${payload.productId}`)
+                return (item.productId == payload.productId)});
 
             if (index == -1) cart = [...cart, payload];
             else {
-                (cart[index] as CartItemWithProduct).quantity += 1
+                (cart[index] as GuestCartItem).quantity += 1
             }
+
+            let updatedProduct = cart[index];
 
             localStorage.setItem('cart', JSON.stringify(cart))
 
+            return updatedProduct;
         }
         catch (err) {
-            
-            if (axios.isAxiosError(err)){ console.log(err.response); return rejectWithValue(err.response?.data.message)
-}
+
+            if (axios.isAxiosError(err)) {
+                console.log(err.response); return rejectWithValue(err.response?.data.message)
+            }
 
             if (err instanceof Error)
                 return rejectWithValue(err.message)
@@ -115,7 +115,7 @@ export const fetchCartAsync = createAsyncThunk(
         }
         catch (err: unknown) {
             console.error(err);
-            if (err instanceof AxiosError) {
+            if (axios.isAxiosError(err)) {
                 return rejectWithValue(err.message)
             }
             return rejectWithValue(err instanceof Error ? err.message : err)

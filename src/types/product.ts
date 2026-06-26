@@ -35,6 +35,11 @@ export type CartItemWithProduct = {
     quantity: number
 }
 
+export type GuestCartItem = {
+    productId: string;
+    quantity: number;
+}
+
 interface ClothingSpecs {
     type: 'clothing'; // Ayırt edici etiket
     size: 'XS' | 'S' | 'M' | 'L' | 'XL';

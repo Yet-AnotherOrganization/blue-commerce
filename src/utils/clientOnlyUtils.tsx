@@ -1,11 +1,12 @@
 
 import { ReadonlyURLSearchParams } from "next/navigation";
-import { CartItemWithProduct } from "../types/product";
+import { CartItemWithProduct, GuestCartItem } from "../types/product";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { createProduct } from "@/app/actions/productActions";
 import { toast } from "sonner";
 import { FormEvent } from "react";
 import { CartUIItem } from "@/redux/slices/cartSlice";
+import { Product } from "@/generated/prisma";
 
 export const getActiveUserFromStorage = (): void => {
     if (typeof window !== 'undefined') {
@@ -19,12 +20,24 @@ export const handleLogOut = async (): Promise<void> => {
     localStorage.setItem('tempCart', JSON.stringify([]))
 }
 
+async function hydrateGuestCart(
+    guestCart: GuestCartItem[]
+): Promise<CartUIItem[]> {
+    const products: Product[] = await Promise.all(
+        guestCart.map(item => fetchProduct(item.productId))
+    );
+
+    return guestCart.map((item, i) => ({
+        quantity: item.quantity,
+        product: products[i],
+    }));
+}
+
 export const calculateTotalCost =
     (cart: CartUIItem[]): number => {
         let price = 0;
 
         cart.map((item, i) => {
-            console.log("CARTITEMS: ", item)
             price += item.product.price * item.quantity
 
             // console.log(price)
