@@ -14,6 +14,7 @@ import Loader from "./Loader";
 import Image from "next/image";
 import { shimmer, toBase64 } from "@/utils/clientOnlyUtils";
 import { openCartModal } from "@/redux/slices/uiSlice";
+import { getProduct } from "@/clients/productClient";
 
 const ProductCard = ({ product }: { product: Product }) => {
   const dispatch = useAppDispatch();

@@ -26,15 +26,15 @@ const CartModalProduct = ({ cartItem }: Props) => {
   return (
     <div className='text-center w-full flex text-xl justify-between items-center px-4 my-2 pt-3 border-t-2'>
       <div className='w-[5rem] h-[5rem] relative aspect-square'>
-        <Image fill sizes="(max-width: 768px) 100vw, 50vw" placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={cartItem.product.imageUrl} className='object-contain rounded w-full h-full' alt="" />
+        <Image fill sizes="(max-width: 768px) 100vw, 50vw" placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`} src={cartItem?.product?.imageUrl || ''} className='object-contain rounded w-full h-full' alt="" />
       </div>
 
       <div className='flex w-1/4 h-full items-center justify-center'>
-        <span className='text-ellipsis text-sm'>{cartItem.product.name}</span>
+        <span className='text-ellipsis text-sm'>{cartItem?.product?.name || ''}</span>
       </div>
 
       <div className='flex w-1/4 h-full items-center justify-center'>
-        <span>${cartItem.product.price}</span>
+        <span>${cartItem?.product?.price || ''}</span>
       </div>
 
       <button className='flex h-full items-center justify-center' onClick={async () => {
