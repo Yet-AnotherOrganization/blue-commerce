@@ -1,12 +1,13 @@
 
 import { ReadonlyURLSearchParams } from "next/navigation";
-import { CartItemWithProduct, GuestCartItem } from "../types/product";
+import { CartItemWithProduct, GuestCartItem, ProductWithCategory, ProductWithSeller, SerializedProduct } from "../types/product";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { createProduct } from "@/app/actions/productActions";
 import { toast } from "sonner";
 import { FormEvent } from "react";
 import { CartUIItem } from "@/redux/slices/cartSlice";
 import { Product } from "@/generated/prisma";
+import { getProduct } from "@/clients/productClient";
 
 export const getActiveUserFromStorage = (): void => {
     if (typeof window !== 'undefined') {
@@ -20,36 +21,43 @@ export const handleLogOut = async (): Promise<void> => {
     localStorage.setItem('tempCart', JSON.stringify([]))
 }
 
-async function hydrateGuestCart(
-    guestCart: GuestCartItem[]
-): Promise<CartUIItem[]> {
-    const products: Product[] = await Promise.all(
-        guestCart.map(item => fetchProduct(item.productId))
+export const hydrateGuestCart = async (guestCart: GuestCartItem[]): Promise<CartUIItem[]> => {
+    const products: SerializedProduct[] = await Promise.all(
+        guestCart.map(item => getProduct(item.productId))
     );
 
-    return guestCart.map((item, i) => ({
+    const updatedGuestCart = guestCart.map((item, index) => ({
         quantity: item.quantity,
-        product: products[i],
-    }));
+        id: item.productId,
+        product: { ...products[index] }
+    }))
+
+    return updatedGuestCart;
 }
 
 export const calculateTotalCost =
     (cart: CartUIItem[]): number => {
-        let price = 0;
+        try {
 
-        cart.map((item, i) => {
-            price += item.product.price * item.quantity
+            const price = cart.reduce((accumulator, item) => {
+                const unitPrice = item.product?.price ?? 0;
 
-            // console.log(price)
-            // console.log(item.product.price)
-            // console.log(item.quantity)
-        })
+                return accumulator + (unitPrice * item.quantity);
+            }, 0);
 
-        if (Number.isNaN(price)) console.log(price)
+            if (Number.isNaN(price)) console.log(price)
 
-        return Number(price.toFixed(2));
+            return Number(price.toFixed(2));
+        }
+        catch (err) {
+            return 0
+        }
     };
 
+
+export const getGuestCart = (): GuestCartItem[] => (JSON.parse(localStorage.getItem('cart') || '[]') || []);
+
+export const setGuestCart = (cart: GuestCartItem[]): void => (localStorage.setItem('cart', JSON.stringify(cart)));
 
 export const changePage = (searchParams: ReadonlyURLSearchParams, p: number, router: AppRouterInstance, pathname: string) => {
     const params = new URLSearchParams(searchParams.toString())

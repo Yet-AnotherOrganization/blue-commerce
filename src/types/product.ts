@@ -29,9 +29,9 @@ export type SerializedFavorite = Omit<Favorite, 'item'> & {
 
 export type CartItemWithProduct = {
     id: string,
-    cartId: string,
+    cartId?: string,
     product: ProductType
-    updatedAt: string,
+    updatedAt?: string,
     quantity: number
 }
 

@@ -1,8 +1,9 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import axios, { AxiosError } from 'axios';
 import { getSession } from "next-auth/react";
 import { CartItemWithProduct, GuestCartItem } from "../../types/product";
 import { GetCartResponse } from "../../types/api";
+import { getGuestCart, hydrateGuestCart, setGuestCart } from "@/utils/clientOnlyUtils";
 
 // const userSlice = createSlice({
 //     name: "user",
@@ -45,33 +46,37 @@ interface AddToCartPayload {
 
 export const addToCart = createAsyncThunk(
     'cart/addToCart',
-    async (payload: AddToCartPayload, { rejectWithValue }) => {
+    async (payload: AddToCartPayload, { rejectWithValue, dispatch }) => {
         try {
 
             const user = (await getSession())?.user;
 
             if (user) {
                 const sendPayload = { productId: payload.productId, quantity: payload.quantity ?? 1 }
-
                 const response = await axios.post('/api/cart', { ...sendPayload, method: 'ADD' });
                 return response.data.data.data
             }
 
 
-            let cart: AddToCartPayload[] = JSON.parse(localStorage.getItem('cart') || '[]') || [];
+            let cart: GuestCartItem[] = getGuestCart();
 
             const index = cart.findIndex(item => {
-                console.log(`${item.productId} \n\n\n COMPARE \n\n\n ${payload.productId}`)
-                return (item.productId == payload.productId)});
+                return (item.productId == payload.productId)
+            });
 
-            if (index == -1) cart = [...cart, payload];
+            let updatedProduct = payload;
+
+            if (index == -1) {
+                cart = [...cart, { ...payload, quantity: payload.quantity ?? 1 }]
+            }
             else {
-                (cart[index] as GuestCartItem).quantity += 1
+                cart[index].quantity += 1
+                updatedProduct = cart[index]
             }
 
-            let updatedProduct = cart[index];
+            setGuestCart(cart);
 
-            localStorage.setItem('cart', JSON.stringify(cart))
+            await dispatch(fetchCartAsync());
 
             return updatedProduct;
         }
@@ -102,10 +107,8 @@ export const fetchCartAsync = createAsyncThunk(
 
             // see if token exists
             if (!session) {
-                return JSON.parse(localStorage.getItem('cart') || '[]') || []
+                return hydrateGuestCart(JSON.parse(localStorage.getItem('cart') || '[]') || [])
             }
-
-            console.log("fetch")
 
             let response: GetCartResponse = await axios.get(`/api/cart/${session.user.id}`);
 
@@ -146,12 +149,24 @@ export const emptyCart = createAsyncThunk(
     })
 
 export const removeItem = createAsyncThunk('cart/removeItem',
-    async (payload: string, { rejectWithValue }) => {
+    async (payload: string, { rejectWithValue, dispatch }) => {
 
         try {
-            console.log("The item wanted to delete:", payload)
 
-            const res = await axios.delete(`/api/cart/items/${payload}`);
+            const session = await getSession();
+
+            if (session) {
+                await axios.delete(`/api/cart/items/${payload}`);
+                return;
+            }
+
+            const cart = getGuestCart();
+
+            const filteredCart = cart.filter((item) => item.productId !== payload);
+
+            setGuestCart(filteredCart);
+
+            dispatch(fetchCartAsync());
 
             return;
         }
@@ -200,7 +215,6 @@ const cartSlice = createSlice({
     extraReducers: (builder) => {
         builder
             // ? ADD TO CART
-
             // ^ LOADING
             .addCase(addToCart.pending, (state) => {
                 state.loading = true;
@@ -210,28 +224,24 @@ const cartSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload
                 console.log(action.payload)
-                // // toast.error('Error: ' + action.payload) PURE REDUCER FIX
             })
             // * FULFILLED
-            .addCase(addToCart.fulfilled, (state, action: PayloadAction<CartItemWithProduct>) => {
+            .addCase(addToCart.fulfilled, (state, action: PayloadAction<CartItemWithProduct | CartUIItem>) => {
                 state.loading = false;
                 state.error = null;
-                // // toast.success('Item was added to your cart.') PURE REDUCER FIX
-                console.log("cart payloadı: ", action.payload)
-                // 
-                state.cart.map(item => console.log(item, '\n \n', action.payload));
-                let foundItemId = state.cart.findIndex(item => item.product.id === action.payload.product.id)
-
-                if (foundItemId != -1) state.cart[foundItemId] = action.payload;
-                else {
-                    state.cart.push(action.payload);
+                // for authenticated users the payload is properly formatted CartItemWithProduct
+                // for guest users, fetchCartAsync is dispatched and will handle cart updates
+                // we should nly process if payload has proper CartUIItem structure (has .product.id)
+                if (action.payload && 'product' in action.payload && action.payload.product?.id) {
+                    let foundItemId = state.cart.findIndex(item => item?.product?.id === action.payload.product?.id)
+                    if (foundItemId != -1) state.cart[foundItemId] = action.payload;
+                    else {
+                        state.cart.push(action.payload);
+                    }
                 }
             })
 
-            // -------------------------------------------------------------------
-
             // ? FETCH CART
-
             // ^ LOADING
             .addCase(fetchCartAsync.pending, (state) => {
                 state.loading = true;
@@ -240,12 +250,11 @@ const cartSlice = createSlice({
             // ! REJECTED
             .addCase(fetchCartAsync.rejected, (state, action) => {
                 state.loading = false;
-                // // toast.error('Error: ' + action.payload) // PURE REDUCER FIX
                 state.error = action.payload
             })
 
             // * FULFILLED
-            .addCase(fetchCartAsync.fulfilled, (state, action: PayloadAction<CartItemWithProduct[]>) => {
+            .addCase(fetchCartAsync.fulfilled, (state, action: PayloadAction<CartUIItem[]>) => {
                 state.loading = false;
                 state.error = null;
                 state.cart = action.payload;
@@ -253,15 +262,15 @@ const cartSlice = createSlice({
 
             // ---------------------------------------------------------------------
 
-            // ? Remove
-
+            // ? REMOVE FROM CART
+            // ^ LOADING
             .addCase(removeItem.pending, (state) => {
                 state.loading = true;
             })
+            // ! REJECTED
             .addCase(removeItem.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload
-                // // toast.error('Error: ' + action.payload) // PURE REDUCER FIX
                 console.log(action.payload)
             })
             .addCase(removeItem.fulfilled, (state, action) => {
@@ -272,15 +281,13 @@ const cartSlice = createSlice({
 
             })
 
-            // ? Decrement
-
+            // ? DECREMENT ITEM
             .addCase(decrementItem.pending, (state) => {
                 state.loading = true;
             })
             .addCase(decrementItem.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
-                // toast.error('Error: ' + action.payload)
                 console.log("Error: ", action.payload)
             })
             .addCase(decrementItem.fulfilled, (state, action: PayloadAction<CartItemWithProduct>) => {
@@ -290,7 +297,7 @@ const cartSlice = createSlice({
                 state.cart[changeIndex].quantity = action.payload.quantity
             })
 
-            // ? Empty Cart
+            // ? EMPTY CART
 
             .addCase(emptyCart.pending, (state) => {
                 state.loading = true;
@@ -300,7 +307,6 @@ const cartSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
                 console.log(action.payload)
-                // toast.error('Error: ' + action.payload)
             })
             .addCase(emptyCart.fulfilled, (state) => {
                 state.loading = false;
