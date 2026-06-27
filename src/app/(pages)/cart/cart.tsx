@@ -58,7 +58,7 @@ export const CartItem = ({ item, disabled }: CartItemProps) => {
                         {item.quantity}
                     </span>
                     <button
-                        onClick={() => { dispatch(addToCart({ product: item.product })) }}
+                        onClick={() => { dispatch(addToCart({ productId: item.product.id })) }}
                         disabled={disabled || item.quantity >= item.product.stock}
                         className="px-3 h-full text-slate-500 hover:bg-slate-100 active:bg-slate-200 disabled:opacity-50 transition-colors"
                         title="Increase quantity"

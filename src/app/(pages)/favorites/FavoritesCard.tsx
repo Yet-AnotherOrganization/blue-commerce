@@ -77,7 +77,7 @@ const FavoriteCard = ({ fav }: { fav: SerializedFavorite }) => {
                 </div>
                 <div className='btns flex gap-4 pt-4 max-lg:flex-col'>
                     <button
-                        onClick={() => dispatch(addToCart({ product: fav.item }))}
+                        onClick={() => dispatch(addToCart({ productId: fav.item.id }))}
                         className='block py-2 text-center flex-[3] bg-green-400 rounded-xl text-white hover:bg-green-500 transition-all text-lg'>
                         ADD TO CART
                     </button>

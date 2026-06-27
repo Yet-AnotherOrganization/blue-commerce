@@ -5,6 +5,7 @@ import { countries } from '@/constants/constants';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { CartUIItem } from '@/redux/slices/cartSlice';
 import { onboardingAddData, onboardingNextStep, onboardingPrevStep, onboardingSetData } from '@/redux/slices/uiSlice';
+import { getGuestCart } from '@/utils/clientOnlyUtils';
 import axios, { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import React, { FormEvent, useEffect, useRef, useState } from 'react'
@@ -94,7 +95,8 @@ const RegisterForm = (props: Props) => {
             if (onboardingStep < 3) {
                 dispatch(onboardingNextStep());
             } else {
-                const cart = (JSON.parse(localStorage.getItem('cart') || '[]') || []).map((item: CartUIItem) => { return { productId: item.product.id, quantity: item.quantity } })
+                const cart = getGuestCart().map((item) => { return { productId: item.productId, quantity: item.quantity } })
+                
                 axios.post('/api/auth/register', { ...onboardingData, ...stepFields, cart })
                     .then((res) => {
                         if (res.status == 201) {
