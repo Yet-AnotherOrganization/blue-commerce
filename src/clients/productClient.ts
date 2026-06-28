@@ -1,4 +1,3 @@
-import { Product } from "@/generated/prisma";
 import { ProductWithCategory, ProductWithSeller } from "@/types/product";
 import axios from "axios"
 
