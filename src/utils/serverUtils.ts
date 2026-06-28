@@ -21,7 +21,7 @@ export const res = <T>(
     else return new Response(null, { status: 204 })
 };
 
-
+export const getCustomServerSession = async () => await getServerSession(authOptions);
 
 // define api func type
 type ApiHandler<T> = (req: NextRequest, params: T) => Promise<Response>;
@@ -128,7 +128,7 @@ export async function adminAction(fn: () => Promise<ActionResponse>): Promise<Ac
 
 export const getUser = async (): Promise<User> => {
 
-    const session = await getServerSession(authOptions)
+    const session = await getCustomServerSession();
 
     if (!session) { throw new APIError('Please log in again', 401, 'SESSION_EXPIRED') };
 

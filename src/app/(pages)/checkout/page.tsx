@@ -1,19 +1,20 @@
-import { createCheckoutSession } from '@/app/actions/stripe';
 import CheckoutForm from '@/components/Checkout/CheckoutForm';
 import { prisma } from '@/lib/prisma';
-import { getUser } from '@/utils/serverUtils';
-import { getServerSession } from 'next-auth';
-import { useSession } from 'next-auth/react';
+import { getCustomServerSession } from '@/utils/serverUtils';
 import { redirect } from 'next/navigation';
 import React from 'react'
 
 type Props = {}
 
 export default async function CheckoutPage(props: Props) {
-    const session = await getServerSession();
+    const session = await getCustomServerSession();
     const userId = session?.user.id;
 
-    if (!userId) redirect('/login');
+    if (!userId) {
+        console.log('No user, redirect to login.')
+        console.log('SESSION: \n', session)
+        redirect('/login');
+    }
 
     const cart = await prisma.cart.findFirst({
         where: { userId: userId },
@@ -25,6 +26,7 @@ export default async function CheckoutPage(props: Props) {
     });
 
     if (!cart || cart.items.length === 0) {
+        console.log('No cart, redirect to cart page.')
         redirect("/cart"); // Can't checkout without any items
     }
 

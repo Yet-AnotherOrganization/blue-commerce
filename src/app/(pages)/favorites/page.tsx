@@ -1,6 +1,4 @@
 'use client';
-import { prisma } from '@/lib/prisma'
-import { getServerSession } from 'next-auth'
 import React from 'react'
 import FavoritesGrid from './FavoritesGrid'
 import { useAppSelector } from '@/redux/hooks';

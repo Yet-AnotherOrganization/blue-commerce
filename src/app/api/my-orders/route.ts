@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import APIError from "@/types/api";
 import { getUser, res, withErrorHandler } from "@/utils/serverUtils";
-import { getServerSession } from "next-auth";
 import { NextRequest } from "next/server";
 
 type Params = {
