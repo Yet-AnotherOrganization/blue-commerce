@@ -8,13 +8,14 @@ import ProductCard from "@/components/ProductCard";
 import SkeletonLoader from "@/components/Common/SkeletonLoader";
 import Image from "next/image";
 import { shimmer, toBase64 } from "@/utils/clientOnlyUtils";
+import { SerializedProduct } from "@/types/product";
 
 const MainPage = async ({
   searchParams,
 }: {
   searchParams: { sort: string; category: string };
 }) => {
-  const products: Product[] = await prisma.product.findMany({
+  const products: SerializedProduct[] = (await prisma.product.findMany({
     where: {
       stock: { gt: 0 },
       status: "ACTIVE"
@@ -25,7 +26,7 @@ const MainPage = async ({
     orderBy: {
       createdAt: "desc"
     }
-  })
+  })).map((product: Product) => ({ ...product, price: Number(product.price) }))
 
 
 
@@ -90,7 +91,7 @@ const MainPage = async ({
       {/* Popular Products Section */}
       <div className="flex justify-center">
         <div className="grid-container mx-[3vw] mb-10 md:px-6 px-6 w-[90vw] mt-8">
-          {Array.isArray(products) ? (products.map((product: Product, i: number): React.ReactNode => (<ProductCard key={product.id} product={product} />))) : (<div>Error loading products.</div>)}
+          {Array.isArray(products) ? (products.map((product: SerializedProduct, i: number): React.ReactNode => (<ProductCard key={product.id} product={product} />))) : (<div>Error loading products.</div>)}
         </div>
       </div>
 
@@ -126,12 +127,12 @@ const CarouselSection = async (props: Props) => {
   // await delay(1000)
   const count = 5;
 
-  const randomProducts = await prisma.$queryRaw<(Omit<Product, 'category'> & { category: Category })[]>`
+  const randomProducts = (await prisma.$queryRaw<(Omit<Product, 'category'> & { category: Category })[]>`
   SELECT p.*, c.name AS catName FROM "Product" p 
   JOIN "Category" c ON p."categoryId" = c.id 
   WHERE p.stock > 0 AND p.status = 'ACTIVE'::"ProductStatus"
   ORDER BY RANDOM() 
-  LIMIT ${Number(count)}`
+  LIMIT ${Number(count)}`).map((product) => ({ ...product, price: Number(product.price) }))
 
   const reversedProducts = [...randomProducts].reverse();
   return (

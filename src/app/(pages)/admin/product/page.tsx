@@ -1,7 +1,6 @@
 import ProductsTable from '@/components/Admin/ProductsTable'
 import TableControls from '@/components/Admin/ProductsTable/TableControls'
 import SearchInput from '@/components/Admin/UsersTable/SearchInput'
-import { Product } from '@/generated/prisma'
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 import React from 'react'

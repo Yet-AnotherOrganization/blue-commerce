@@ -1,6 +1,5 @@
 'use client'
 import { activateProduct, hardDeleteProduct, softDeleteProduct } from '@/app/actions/productActions';
-import { Product } from '@/generated/prisma'
 import { SerializedProduct } from '@/types/product';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'

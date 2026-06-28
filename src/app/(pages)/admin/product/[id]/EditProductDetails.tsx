@@ -1,5 +1,5 @@
 'use client';
-import { Category, Product, Store } from '@/generated/prisma'
+import { Category, Store } from '@/generated/prisma'
 import Link from 'next/link'
 import React, { ChangeEvent, FormEvent, useState } from 'react'
 import ControlBar from './ControlBar'

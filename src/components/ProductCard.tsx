@@ -15,8 +15,9 @@ import Image from "next/image";
 import { shimmer, toBase64 } from "@/utils/clientOnlyUtils";
 import { openCartModal } from "@/redux/slices/uiSlice";
 import { getProduct } from "@/clients/productClient";
+import { SerializedProduct } from "@/types/product";
 
-const ProductCard = ({ product }: { product: Product }) => {
+const ProductCard = ({ product }: { product: SerializedProduct }) => {
   const dispatch = useAppDispatch();
   const [id, setId] = useState(null);
   const [loading, setLoading] = useState(false);
