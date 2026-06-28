@@ -3,6 +3,7 @@ import React from "react";
 import { prisma } from "../../lib/prisma";
 import Slider from "../../components/Carousel";
 import { Category, Product } from "../../generated/prisma";
+import { serializeProducts } from "@/utils/clientOnlyUtils";
 
 export default async function CarouselSection() {
     // const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -10,12 +11,12 @@ export default async function CarouselSection() {
     const count = 5;
 
     // Database fetch isolated here
-    const randomProducts = await prisma.$queryRaw<(Omit<Product, 'category'> & { category: Category })[]>`
+    const randomProducts = serializeProducts((await prisma.$queryRaw<(Omit<Product, 'category'> & { category: Category })[]>`
     SELECT p.*, c.name AS catName FROM "Product" p 
     JOIN "Category" c ON p."categoryId" = c.id 
     WHERE p.stock > 0 AND p.status = 'ACTIVE'::"ProductStatus"
     ORDER BY RANDOM() 
-    LIMIT ${Number(count)}`;
+    LIMIT ${Number(count)}`));
 
     const reversedProducts = [...randomProducts].reverse();
 

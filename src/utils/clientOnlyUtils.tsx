@@ -8,6 +8,7 @@ import { FormEvent } from "react";
 import { CartUIItem } from "@/redux/slices/cartSlice";
 import { Product } from "@/generated/prisma";
 import { getProduct } from "@/clients/productClient";
+import { Decimal } from "@/generated/prisma/runtime/client";
 
 export const getActiveUserFromStorage = (): void => {
     if (typeof window !== 'undefined') {
@@ -34,6 +35,8 @@ export const hydrateGuestCart = async (guestCart: GuestCartItem[]): Promise<Cart
 
     return updatedGuestCart;
 }
+
+export const serializeProducts = <T extends { price: Decimal }>(products: T[]): (Omit<T, 'price'> & { price: number })[] => products.map((product) => ({ ...product, price: Number(product.price) }));
 
 export const calculateTotalCost =
     (cart: CartUIItem[]): number => {
@@ -124,15 +127,15 @@ export const toBase64 = (str: string) =>
         : window.btoa(str);
 
 export const shimmer = (w: number, h: number) => `
-<svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <defs>
-    <linearGradient id="g">
-      <stop stop-color="#e2e8f0" offset="20%" />
-      <stop stop-color="#f1f5f9" offset="50%" />
-      <stop stop-color="#e2e8f0" offset="70%" />
-    </linearGradient>
-  </defs>
-  <rect width="${w}" height="${h}" fill="#e2e8f0" />
-  <rect id="r" width="${w}" height="${h}" fill="url(#g)" />
-  <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1s" repeatCount="indefinite" />
-</svg>`;
+            <svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <defs>
+                    <linearGradient id="g">
+                        <stop stop-color="#e2e8f0" offset="20%" />
+                        <stop stop-color="#f1f5f9" offset="50%" />
+                        <stop stop-color="#e2e8f0" offset="70%" />
+                    </linearGradient>
+                </defs>
+                <rect width="${w}" height="${h}" fill="#e2e8f0" />
+                <rect id="r" width="${w}" height="${h}" fill="url(#g)" />
+                <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1s" repeatCount="indefinite" />
+            </svg>`;
