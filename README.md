@@ -3,6 +3,7 @@
 # 🛒 BluE-Commerce
 
 ### A full-stack e-commerce platform built with architectural intent and industry-standard tech stack.
+![ADMIN PANEL](admin_panel.gif)
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?style=for-the-badge&logo=vercel)](https://blue-commerce-frknecn3.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js%2014-App%20Router-black?style=for-the-badge&logo=next.js)](https://nextjs.org)
@@ -30,8 +31,6 @@ Migrating to PostgreSQL with Prisma solved this at the schema level:
 - **JOIN queries** via Prisma replace multiple round-trip Firestore reads.
 - **Transactions** ensure that a payment event and its corresponding order record are always consistent.
 - **Type-safe queries** via Prisma Client eliminate an entire category of runtime errors.
-
-> Choosing the right persistence layer for the domain is a senior-level concern. This migration demonstrates exactly that.
 
 ---
 
