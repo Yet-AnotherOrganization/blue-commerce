@@ -12,21 +12,21 @@ const Links = [
         logo: <FaShoppingBag />
 
     },
-    {
-        name: 'Upload',
-        href: '/product/create',
-        logo: <FaFileUpload />
-    },
-    {
-        name: 'Contact',
-        href: '/Contact',
-        logo: <MdOutlineSupportAgent />
-    },
-    {
-        name: 'About Us',
-        href: '/about',
-        logo: <MdContactSupport />
-    },
+    // {
+    //     name: 'Upload',
+    //     href: '/product/create',
+    //     logo: <FaFileUpload />
+    // },
+    // {
+    //     name: 'Contact',
+    //     href: '/Contact',
+    //     logo: <MdOutlineSupportAgent />
+    // },
+    // {
+    //     name: 'About Us',
+    //     href: '/about',
+    //     logo: <MdContactSupport />
+    // },
 
 ]
 

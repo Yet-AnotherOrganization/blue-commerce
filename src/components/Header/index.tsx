@@ -1,149 +1,76 @@
 import Sidebar from '../Sidebar'
-import { FaHeart} from "react-icons/fa";
-import Link from 'next/link';
-import CartAndControls from './CartAndControls';
-import HeaderSearchbar from './HeaderSearchbar';
+import { FaHeart } from 'react-icons/fa'
+import { FiPackage, FiTag, FiHelpCircle, FiShoppingBag } from 'react-icons/fi'
+import Link from 'next/link'
+import CartAndControls from './CartAndControls'
+import HeaderSearchbar from './HeaderSearchbar'
 
+const utilityLinks = [
+  { href: '/orders', label: 'My Orders', icon: FiPackage },
+  { href: '#', label: 'Amazing Opportunities', icon: FiTag },
+  { href: '#', label: 'Customer Services', icon: FiHelpCircle },
+  { href: '#', label: 'Become a Seller', icon: FiShoppingBag },
+]
 
 const Header = () => {
-  // const headerRef = useRef(null)
-
-  // const cartText = useRef(null)
-  // const formRef = useRef<HTMLInputElement>(null)
-
-
-
-
-
-  // useEffect(() => {
-  //   const headerInfo = () => {
-
-  //     // const storedCartData = JSON.parse(localStorage.getItem('cart'));
-  //     // const cartLength = storedCartData ? storedCartData.length : 0; // Use 0 if the cart data is not available
-  //     // setCartLen(cartLength);
-
-  //     // setIsMobile(window.innerWidth < 768 ? true : false)
-  //   };
-
-  //   headerInfo()
-
-
-
-  //   const fetch = async () => {
-
-  //     // const currentUser = JSON.parse(localStorage.getItem('user'));
-  //     // setUser(currentUser ? currentUser : { uid: randomUUID() })
-  //     // if (currentUser) {
-  //     //   await listenCart(currentUser.uid);
-
-  //     // } else {
-  //     //   console.log("Couldn't fetch current user");
-  //     // }
-  //   };
-
-  //   fetch();
-
-  //   const header = headerRef.current;
-  //   let prevScrollPos = window.scrollY;
-
-  //   // const scrollHandler = () => {
-  //   //   let currentScrollPos = window.scrollY;
-
-  //   //   if (currentScrollPos > prevScrollPos) {
-  //   //     header?.classList.add('collapse');
-  //   //     header?.classList.remove('show');
-  //   //   } else if (currentScrollPos < prevScrollPos) {
-  //   //     header?.classList.remove('collapse');
-  //   //     header?.classList.add('show');
-  //   //   }
-
-  //   //   prevScrollPos = currentScrollPos;
-  //   // };
-
-  //   // window.addEventListener('scroll', scrollHandler);
-
-  //   // return () => window.removeEventListener('scroll', scrollHandler);
-  // }
-  //   , [cart]); // cart was added later on
-
-  // useEffect(() => {
-
-  //   // if (cartLen > prevCartLen) {
-  //   //   if (cartText.current instanceof HTMLElement) {
-  //   //     cartText.current.style.color = 'rgb(0,255,0)';
-  //   //     setTimeout(() => {
-  //   //       cartText.current.style.color = 'rgb(83, 176, 255)';
-  //   //     }, 2000);
-  //   //   }
-  //   // } else if (cartLen < prevCartLen) {
-  //   //   if (cartText.current instanceof HTMLElement) {
-  //   //     cartText.current.style.color = 'red';
-  //   //     setTimeout(() => {
-  //   //       cartText.current.style.color = 'rgb(83, 176, 255)';
-  //   //     }, 2000);
-  //   //   }
-  //   // }
-
-  //   // Update the previous cart length
-  //   // setPrevCartLen(cartLen);
-  // }, []);
-
-
-
-
-
-
-
-
-
-
   return (
-    <header className='text-md max-lg:text-sm'>
-
-      <div style={{ 'zIndex': '10000' }} className=' w-[100vw] bg-[#1e3a8a] text-white flex flex-col border-b-8 border-blue-100 p-4 px-2 md:px-8 lg:px-16 gap-2'>
-
-        <div className='flex justify-end gap-4 text-neutral-200 text-[10px] md:text-xs max-lg:hidden'>
-          <Link href="/orders">My Orders</Link>
-          <Link href="#">Amazing Opportunities</Link>
-          <Link href="#">Customer Services</Link>
-          <Link href="#">Become a Seller</Link>
-        </div>
-
-        <div className='flex justify-between  items-center w-full'>
-          <div className='flex items-center justify-center gap-2 h-full lg:flex'>
-            <Link href="/" className='flex gap-2'>
-              {/* <img loading='lazy' src="" alt="" className='object-cover w-[4rem] h-auto lg:w-[5rem] rounded-[50%] border-4 border-black-800' /> */}
-              <h1 className='hidden lg:flex items-center font-bold md:text-[15px] lg:text-[20px]'>
-                <span className='text-blue-500'>Blu</span>E-Commerce</h1>
-              <h1 className='lg:hidden flex text-[22px] max-lg:text-sm px-10 max-lg:px-2 font-bold'>BluE</h1>
+    <header className="sticky top-0 z-[10000] text-md max-lg:text-sm">
+      {/* Üst yardımcı bar */}
+      <div className="hidden md:block bg-blue-950/95 backdrop-blur-sm text-neutral-300">
+        <div className="mx-auto flex max-w-screen-2xl justify-end gap-6 px-8 py-1.5 text-[11px] lg:px-16">
+          {utilityLinks.map(({ href, label, icon: Icon }) => (
+            <Link
+              key={label}
+              href={href}
+              className="group flex items-center gap-1.5 transition-colors hover:text-white"
+            >
+              <Icon className="text-[13px] opacity-70 group-hover:opacity-100" />
+              <span className="relative after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-white after:transition-all after:duration-300 group-hover:after:w-full">
+                {label}
+              </span>
             </Link>
-          </div>
-
-
-          <HeaderSearchbar />
-
-          {/* <Link href="/cart"> */}
-          <CartAndControls />
-
-
-          <Link
-            href='/favorites'
-            className='inline-flex items-center justify-center gap-1 bg-white text-blue-400 px-2 py-2 border-2 rounded-xl hover:text-red-600 hover:border-red-600 transition-all duration-300'>
-            <FaHeart /> <span className='max-lg:hidden inline'>Favorites</span>
-          </Link>
-
-
-
-          <div className='flex gap-[20px] justify-between items-center'>
-            <Sidebar />
-
-          </div>
+          ))}
         </div>
-
       </div>
 
+      {/* Ana bar */}
+      <div className="border-b border-blue-900/40 bg-gradient-to-r from-[#1e3a8a] via-[#1e40af] to-[#1e3a8a] text-white shadow-lg shadow-blue-950/20">
+        <div className="mx-auto flex max-w-screen-2xl items-center gap-4 px-4 py-3 md:gap-6 md:px-8 lg:px-16">
+          {/* Logo */}
+          <Link href="/" className="flex shrink-0 items-center gap-2" aria-label="BluE-Commerce anasayfa">
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-white/10 ring-1 ring-white/20 backdrop-blur-sm">
+              <FiShoppingBag className="text-lg text-blue-200" />
+            </span>
+            <h1 className="hidden items-center text-xl font-extrabold tracking-tight lg:flex">
+              <span className="text-blue-300">Blu</span>E-Commerce
+            </h1>
+            <h1 className="flex text-lg font-extrabold lg:hidden">
+              <span className="text-blue-300">Blu</span>E
+            </h1>
+          </Link>
 
+          {/* Arama */}
+          <div className="flex-1">
+            <HeaderSearchbar />
+          </div>
 
+          {/* Sağ kontroller */}
+          <div className="flex shrink-0 items-center gap-2 md:gap-3">
+            <CartAndControls />
+
+            <Link
+              href="/favorites"
+              aria-label="Favoriler"
+              className="group inline-flex items-center justify-center gap-1.5 rounded-xl bg-white px-3 py-2 font-medium text-blue-600 shadow-sm transition-all duration-300 hover:bg-red-50 hover:text-red-600 hover:shadow-md active:scale-95"
+            >
+              <FaHeart className="transition-transform duration-300 group-hover:scale-110" />
+              <span className="hidden lg:inline">Favorites</span>
+            </Link>
+
+            <Sidebar />
+          </div>
+        </div>
+      </div>
     </header>
   )
 }

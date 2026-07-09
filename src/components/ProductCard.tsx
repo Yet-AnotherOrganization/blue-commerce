@@ -7,7 +7,11 @@ import { Product } from "../generated/prisma";
 import { addToCart } from "../redux/slices/cartSlice";
 import { useAppDispatch } from "../redux/hooks";
 import { IoHeart, IoHeartOutline } from "react-icons/io5";
-import { addToFavorites, removeFromFavorites, selectFavoriteById } from "../redux/slices/favoriteSlice";
+import {
+  addToFavorites,
+  removeFromFavorites,
+  selectFavoriteById,
+} from "../redux/slices/favoriteSlice";
 import Link from "next/link";
 import { RootState } from "@/redux/store";
 import Loader from "./Loader";
@@ -25,43 +29,38 @@ const ProductCard = ({ product }: { product: SerializedProduct }) => {
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
   const [isDivHovered, setIsDivHovered] = useState<boolean>(false);
-  const [width, setWidth] = useState<number>(0)
-  const isFavorite = useSelector((state: RootState) => !!selectFavoriteById(state, product.id))
-
+  const [width, setWidth] = useState<number>(0);
+  const isFavorite = useSelector(
+    (state: RootState) => !!selectFavoriteById(state, product.id),
+  );
   useEffect(() => {
     // const userExists = JSON.parse(localStorage.getItem("user"));
     // const randomID = randomUUID();
     // setId(userExists ? JSON.parse(localStorage.getItem("user")).uid : randomID);
     // window?setIsClient(true):''
   }, []);
-
   useEffect(() => {
-    isClient ? setWidth(window.innerWidth) : ''
-  }, [isClient])
-
-
+    isClient ? setWidth(window.innerWidth) : "";
+  }, [isClient]);
   const handleAddToCart = async () => {
     setLoading(true);
-
-    const res = await dispatch(addToCart({ productId: product.id, quantity: 1 }));
-
+    const res = await dispatch(
+      addToCart({ productId: product.id, quantity: 1 }),
+    );
     if (res.meta.requestStatus) setLoading(false);
-
-    if (res.meta.requestStatus === 'fulfilled') dispatch(openCartModal());
-  }
-
+    if (res.meta.requestStatus === "fulfilled") dispatch(openCartModal());
+  };
   const handleFavorite = async () => {
     setLoading(true);
-
-    const res = !isFavorite ? await dispatch(addToFavorites(product?.id)) : await dispatch(removeFromFavorites(product?.id))
-
+    const res = !isFavorite
+      ? await dispatch(addToFavorites(product?.id))
+      : await dispatch(removeFromFavorites(product?.id));
     if (res.meta.requestStatus) setLoading(false);
-  }
-
+  };
   return (
     <div
       style={{ zIndex: `${isHovered ? "9999999999" : "1"}` }}
-      className={` relative grid-container group`}
+      className={` relative grid-container group h-full`}
       onMouseEnter={() => {
         setIsDivHovered(true);
       }}
@@ -69,21 +68,25 @@ const ProductCard = ({ product }: { product: SerializedProduct }) => {
         setIsDivHovered(false);
       }}
     >
-      <div className="flex-col justify-between hover:translate-y-[-1px] hover:shadow-gray-200 transition-all border border-gray-150 shadow-md shadow-gray-100 rounded-xl flex group">
-        <button className="opacity-0 group-hover:opacity-100 absolute top-3 right-3 z-20 bg-white rounded-full p-1 hover:scale-110 transition hover:text-red-600"
+      <div className="flex-col justify-between h-full overflow-hidden bg-white hover:-translate-y-1 hover:shadow-lg hover:shadow-gray-200 transition-all duration-300 border border-gray-200 shadow-md shadow-gray-100 rounded-xl flex group">
+        <button
+          className="opacity-0 group-hover:opacity-100 max-lg:opacity-100 absolute top-3 right-3 z-20 bg-white rounded-full p-2 shadow-md hover:scale-110 transition hover:text-red-600"
           onClick={handleFavorite}
         >
           {isFavorite ? <IoHeart color="red" /> : <IoHeartOutline />}
         </button>
         <Link className="text-center relative" href={`/product/${product.id}`}>
-          <div className="flex justify-center items-center relative">
-            {
-              loading &&
+          <div className="flex justify-center items-center relative overflow-hidden rounded-t-xl bg-white h-44 p-4">
+            {loading && (
               <div className="absolute z-50 flex bottom-0 top-0 left-0 right-0 items-center justify-center backdrop-blur-[1px]">
                 <Loader />
               </div>
-            }
-            <Image width={150} height={150} placeholder="blur" blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`}
+            )}
+            <Image
+              width={150}
+              height={150}
+              placeholder="blur"
+              blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(70, 70))}`}
               // onMouseEnter={() => {
               //   setIsHovered(true);
               // }}
@@ -93,15 +96,13 @@ const ProductCard = ({ product }: { product: SerializedProduct }) => {
               src={product?.imageUrl}
               style={{ zIndex: `${isHovered ? "3" : "1"}` }}
               alt=""
-              className={`${isHovered ? "scale-[150%]" : "scale-100"
-                }  transition-all w-full h-full relative rounded-t-xl  object-scale-up border-x-2 border-t-2 border-neutral-50 aspect-square p-1`}
+              className={`${isHovered ? "scale-105" : "scale-100"} transition-transform duration-300 w-full h-full object-contain`}
             />
           </div>
-
           {/* NAME */}
           <div className="flex my-2">
             {product ? (
-              <p className=" ml-2 font-normal text-[12px] p-1 overflow-auto">
+              <p className="px-2 font-medium text-[13px] text-left line-clamp-2 min-h-[2.5rem] text-gray-800">
                 {product.name}
               </p>
             ) : (
@@ -109,7 +110,7 @@ const ProductCard = ({ product }: { product: SerializedProduct }) => {
             )}
           </div>
           {/* STARS */}
-          <div className="flex items-center text-yellow-500">
+          <div className="flex items-center px-2 text-yellow-500">
             {/* {[...Array(5)].map((_, index) => {
               return index < (product.stars?.stars || 3) ? (
                 <FaStar key={index} />
@@ -117,11 +118,9 @@ const ProductCard = ({ product }: { product: SerializedProduct }) => {
                 <FaRegStar key={index} />
               );
             })} */}
-
             {/* <span className="text-black px-1">{product.stars?.count || 0}</span> */}
           </div>
         </Link>
-
         {/* PRICE AND BUTTONS */}
         <div className="flex flex-col justify-center items-center gap-2">
           <motion.div
@@ -139,10 +138,8 @@ const ProductCard = ({ product }: { product: SerializedProduct }) => {
               <span>1Y Warranty</span>
             </div> */}
           </motion.div>
-
-          <div className="flex items-center justify-between h-8 w-[95%] bg-gray-100 rounded-b-lg px-2 mb-1">
-
-            <span className="md:text-[1rem] text-[1rem] font-medium">
+          <div className="flex items-center justify-between h-9 w-[95%] bg-gray-50 ring-1 ring-gray-100 rounded-lg px-3 mb-2">
+            <span className="md:text-[1rem] text-[1rem] font-semibold text-blue-700">
               ${product?.price.toString()}
             </span>
             <motion.button
@@ -151,28 +148,37 @@ const ProductCard = ({ product }: { product: SerializedProduct }) => {
                 opacity: isDivHovered ? 100 : width < 1024 ? 100 : 0,
               }}
               transition={{ duration: 0.5 }}
-              className="bg-[#7bd0ec] 
-             text-white block md:p-1 md:px-2 md:m-2 m-1 p-1 rounded-xl hover:brightness-125 
-            relative transition
+              className="bg-[#7bd0ec] hover:bg-[#5fc3e6]
+              text-white block md:p-1.5 md:px-2.5 md:m-2 m-1 p-1.5 px-2.5 rounded-xl hover:brightness-110 shadow-sm
+             relative transition
             border-black text-[0.7rem] md:text-[0.5rem]"
               onClick={handleAddToCart}
             >
               <motion.span
-                animate={{ y: isClicked ? 30 : 0, opacity: isClicked ? 0 : 100 }}
+                animate={{
+                  y: isClicked ? 30 : 0,
+                  opacity: isClicked ? 0 : 100,
+                }}
                 transition={{ duration: 0.3 }}
                 className="text-xs"
               >
                 <FaCartPlus />
               </motion.span>
-
-              <motion.div
-                className="absolute left-1/2 top-1/2 transform translate-y-[-50%] translate-x-[-50%] w-full h-full">
-                {isClient ? <motion.span
-                  className="absolute top-0 left-0 bottom-0 right-0 h-full w-full"
-                  animate={{ y: isClicked ? 10 : -30, opacity: isClicked ? 100 : 0 }}
-                  transition={{ duration: 0.3 }}
-                >ITEM ADDED
-                </motion.span> : ''}
+              <motion.div className="absolute left-1/2 top-1/2 transform translate-y-[-50%] translate-x-[-50%] w-full h-full">
+                {isClient ? (
+                  <motion.span
+                    className="absolute top-0 left-0 bottom-0 right-0 h-full w-full"
+                    animate={{
+                      y: isClicked ? 10 : -30,
+                      opacity: isClicked ? 100 : 0,
+                    }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    ITEM ADDED
+                  </motion.span>
+                ) : (
+                  ""
+                )}
               </motion.div>
             </motion.button>
           </div>
@@ -181,5 +187,4 @@ const ProductCard = ({ product }: { product: SerializedProduct }) => {
     </div>
   );
 };
-
 export default ProductCard;
