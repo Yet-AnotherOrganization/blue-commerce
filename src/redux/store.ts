@@ -2,17 +2,20 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import cartSlice from './slices/cartSlice';
 import uiSlice from "./slices/uiSlice";
 import favoriteSlice from "./slices/favoriteSlice";
+import { listenerMiddleware } from "./listenerMiddleware";
 
 
 export const makeStore = () => {
 
-    return configureStore(({
+    return configureStore({
         reducer: {
             cartReducer: cartSlice.reducer,
             uiReducer: uiSlice.reducer,
             favoriteReducer: favoriteSlice.reducer
-        }
-    }))
+        },
+        middleware: (getDefault) => getDefault().prepend(listenerMiddleware.middleware)
+
+    })
 
 }
 
