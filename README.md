@@ -4,8 +4,9 @@
 
 ### A full-stack e-commerce platform built with architectural intent and industry-standard tech stack.
 ![ADMIN PANEL](admin_panel.gif)
+![alt text](cart.png)
 
-[![CLICK HERE FOR LIVE DEMO](https://img.shields.io/badge/Live%20Demo-Vercel-black?style=for-the-badge&logo=vercel)](https://blue-commerce-frknecn3.vercel.app)
+<h3><a href="https://blue-commerce-frknecn3.vercel.app" target="_blank">CLICK HERE FOR LIVE DEMO</a></h3>
 <br><br>
 [![Next.js](https://img.shields.io/badge/Next.js%2014-App%20Router-black?style=for-the-badge&logo=next.js)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-97%25-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org)
