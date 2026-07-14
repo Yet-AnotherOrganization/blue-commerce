@@ -14,18 +14,41 @@ export type ProductType = {
     sellerId: string
 }
 
-export type ProductWithCategory = Omit<SerializedProduct, 'category'> & { category: Category }
+export type Serialized<T> =
+    T extends Decimal ? number :
+    T extends Date ? string :
+    T extends Array<infer U> ? Array<Serialized<U>> :
+    T extends object ? { [K in keyof T]: Serialized<T[K]> } :
+    T
 
-
-export type SerializedProduct = Omit<Product, 'price'> & {
-    price: number
+export const productArgs = {
+    withReviews: Prisma.validator<Prisma.ProductDefaultArgs>()({
+        include: { reviews: true },
+    }),
+    withSeller: Prisma.validator<Prisma.ProductDefaultArgs>()({
+        include: { seller: true },
+    }),
+    withReviewsAndSeller: Prisma.validator<Prisma.ProductDefaultArgs>()({
+        include: { reviews: true, seller: true },
+    }),
+    full: Prisma.validator<Prisma.ProductDefaultArgs>()({
+        include: {
+            reviews: { include: { owner: true } },
+            seller: true,
+            category: true,
+        },
+    }),
 }
-export type ProductWithSeller = Prisma.ProductGetPayload<{ include: { seller: true } }>
-export type SerializedProductWithSeller = Omit<ProductWithSeller, 'price'> & { price: number }
 
-export type SerializedFavorite = Omit<Favorite, 'item'> & {
-    item: SerializedProduct
-}
+
+export type ProductWithReviews =
+    Serialized<Prisma.ProductGetPayload<typeof productArgs.withReviews>>
+
+export type ProductWithSeller =
+    Serialized<Prisma.ProductGetPayload<typeof productArgs.withSeller>>
+
+export type ProductFull =
+    Serialized<Prisma.ProductGetPayload<typeof productArgs.full>>
 
 export type CartItemWithProduct = {
     id: string,

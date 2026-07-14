@@ -1,6 +1,6 @@
 
 import { ReadonlyURLSearchParams } from "next/navigation";
-import { CartItemWithProduct, GuestCartItem, ProductWithCategory, ProductWithSeller, SerializedProduct } from "../types/product";
+import { CartItemWithProduct, GuestCartItem, Serialized } from "../types/product";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { createProduct } from "@/app/actions/productActions";
 import { toast } from "sonner";
@@ -23,7 +23,7 @@ export const handleLogOut = async (): Promise<void> => {
 }
 
 export const hydrateGuestCart = async (guestCart: GuestCartItem[]): Promise<CartUIItem[]> => {
-    const products: SerializedProduct[] = await Promise.all(
+    const products: Serialized<Product>[] = await Promise.all(
         guestCart.map(item => getProduct(item.productId))
     );
 
@@ -140,3 +140,6 @@ export const shimmer = (w: number, h: number) => `
                 <animate xlink:href="#r" attributeName="x" from="-${w}" to="${w}" dur="1s" repeatCount="indefinite" />
             </svg>`;
 
+export const SerializeProduct = (product: Product) => {
+    return { ...product, price: Number(product.price), createdAt: product.createdAt.toString(), updatedAt: product.updatedAt.toString() }
+}
