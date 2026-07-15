@@ -1,10 +1,10 @@
 'use client'
 import { ProductParams } from '../../../constants/constants';
 import { calculateTotalCost } from '../../../utils/clientOnlyUtils';
-import { CartItemWithProduct, ProductType } from '../../../types/product';
 import { FaTrash } from 'react-icons/fa';
 import { useAppDispatch } from '../../../redux/hooks';
 import { emptyCart } from '../../../redux/slices/cartSlice';
+import { CartItemWithProduct } from '@/types/cart';
 
 type TotalComponentProps = { cart: CartItemWithProduct[] }
 

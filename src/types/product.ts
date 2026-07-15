@@ -1,18 +1,5 @@
 import { Decimal } from "@/generated/prisma/runtime/client";
-import { Category, Favorite, Prisma, Product } from "../generated/prisma";
-
-export type ProductType = {
-    id: string,
-    name: string,
-    description: string,
-    price: number,
-    imageUrl: string,
-    createdAt: string,
-    updatedAt: string,
-    categoryId: string,
-    stock: number,
-    sellerId: string
-}
+import { Prisma } from "../generated/prisma";
 
 export type Serialized<T> =
     T extends Decimal ? number :
@@ -50,18 +37,6 @@ export type ProductWithSeller =
 export type ProductFull =
     Serialized<Prisma.ProductGetPayload<typeof productArgs.full>>
 
-export type CartItemWithProduct = {
-    id: string,
-    cartId?: string,
-    product: ProductType
-    updatedAt?: string,
-    quantity: number
-}
-
-export type GuestCartItem = {
-    productId: string;
-    quantity: number;
-}
 
 interface ClothingSpecs {
     type: 'clothing'; // Ayırt edici etiket

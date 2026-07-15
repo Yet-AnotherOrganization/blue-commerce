@@ -4,7 +4,7 @@ import { useConfirm } from "@/context/ConfirmContext";
 import { useAppDispatch } from "@/redux/hooks";
 import { addToCart } from "@/redux/slices/cartSlice";
 import { removeFromFavorites } from "@/redux/slices/favoriteSlice";
-import { SerializedFavorite } from "@/types/product";
+import { SerializedFavorite } from "@/types/favorite";
 import { shimmer, toBase64 } from "@/utils/clientOnlyUtils";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,7 +12,11 @@ import { useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { toast } from "sonner";
 
-const FavoriteCard = ({ fav }: { fav: SerializedFavorite }) => {
+type Props = {
+    fav: SerializedFavorite
+}
+
+const FavoriteCard = ({ fav }: Props) => {
 
     const [loading, setLoading] = useState(false);
 
